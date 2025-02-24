@@ -15,24 +15,25 @@ const LONGEST_WORD = sports.reduce((longest, current) => {
 }, sports[0]);
 
 export default function StartPage() {
-
-  const quizStarted = false;
-
   return (
-    <main className="bg-[#E3FFCD] flex flex-col items-center justify-center h-screen gap-6">
+    <main className="bg-hero flex flex-col items-center justify-center h-screen gap-6">
       <div className="text-6xl font-black text-center">
         <h2>
           <span>Play</span>
-          <span className="bg-white rounded-2xl inline-block px-4 py-1 text-left ml-2 text-primary">
+          <span className="bg-white rounded-2xl inline-block px-4 py-1 ml-2 text-primary">
             <WordCycle words={sports} />
             <span className="invisible">{LONGEST_WORD}</span>
           </span>
         </h2>
         <h2>with friendly strangers</h2>
       </div>
-      <Button>
-        Take the quiz
+
+      <Button asChild>
+        <Link href="/sign-up">
+          Take the quiz
+        </Link>
       </Button>
+
       <Button variant="ghost" asChild>
         <Link className="text-subtle-foreground" href="/sign-in">
           I already have an account

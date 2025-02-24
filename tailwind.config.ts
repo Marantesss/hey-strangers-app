@@ -7,6 +7,7 @@ const config = {
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
+    "./features/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {
@@ -55,6 +56,10 @@ const config = {
         subtle: {
           DEFAULT: "hsl(var(--subtle))",
           foreground: "hsl(var(--subtle-foreground))",
+        },
+        hero: {
+          DEFAULT: "hsl(var(--hero))",
+          foreground: "hsl(var(--hero-foreground))",
         },
       },
       borderRadius: {

@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import './styles.css';
+import { useQuiz } from '../../hooks/quiz.hook';
 
 interface WordCycleProps extends React.HTMLAttributes<HTMLSpanElement> {
   words: string[];
@@ -9,6 +10,16 @@ interface WordCycleProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const WordCycle: React.FC<WordCycleProps> = ({ words, interval = 3_000, className, ...rest }) => {
+  const quiz = useQuiz()
+
+  const sport = quiz.answers.sport
+  
+  if (sport) {
+    return (
+      <span className='absolute'>{sport}</span>
+    )
+  }
+
   return (
     <div
       {...rest}
