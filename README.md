@@ -6,7 +6,7 @@
   - Fonts?
   - Icons?
 - Queremos guardar a informação do quiz para que?
-
+- Definir algumas das cores que estão hardcoded no design file!
 ---
 
 <a href="https://demo-nextjs-with-supabase.vercel.app/">

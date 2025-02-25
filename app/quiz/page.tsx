@@ -1,29 +1,15 @@
 import { Button } from "@/components/ui/button";
 import WordCycle from "@/features/quiz/components/WordCycle";
+import { NextPage } from "next";
 import Link from "next/link";
 
-const sports = [
-  'Soccer',
-  'Basketball',
-  'Tennis',
-  'Volleyball',
-  'Badminton',
-]
-
-const LONGEST_WORD = sports.reduce((longest, current) => {
-  return current.length > longest.length ? current : longest;
-}, sports[0]);
-
-export default function StartPage() {
+const StartPage: NextPage = () => {
   return (
     <main className="bg-hero flex flex-col items-center justify-center h-screen gap-6">
       <div className="text-6xl font-black text-center">
         <h2>
           <span>Play</span>
-          <span className="bg-white rounded-2xl inline-block px-4 py-1 ml-2 text-primary">
-            <WordCycle words={sports} />
-            <span className="invisible">{LONGEST_WORD}</span>
-          </span>
+          <WordCycle />
         </h2>
         <h2>with friendly strangers</h2>
       </div>
@@ -42,3 +28,5 @@ export default function StartPage() {
     </main>
   );
 }
+
+export default StartPage;
