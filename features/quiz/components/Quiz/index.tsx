@@ -6,6 +6,8 @@ import { useQuiz } from '../../hooks/quiz.hook';
 import { cn } from '@/lib/utils';
 import { Check } from 'lucide-react';
 import { useState } from 'react';
+import GameCard from '@/features/game/components/GameCard';
+import RegisterForm from '../RegisterForm';
 
 
 const Quiz: React.FC = () => {
@@ -77,9 +79,18 @@ const Quiz: React.FC = () => {
           </div>
         </>
       ) : (
-        <pre>
-          {JSON.stringify(quiz.answers, null, 2)}
-        </pre>
+        <>
+          <h2 className='text-3xl font-bold text-center'>
+            We found 10+ games that match your skills
+          </h2>
+
+          <div className='space-y-4'>
+            <GameCard />
+            <GameCard />
+          </div>
+
+          <RegisterForm />
+        </>
       )}
     </div>
   );
