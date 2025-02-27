@@ -12,7 +12,7 @@ const AppLayout: React.FC<PropsWithChildren> = async ({ children }) => {
         <Logo />
         <div className="flex items-center gap-4">
           <Button variant="ghost" onClick={signOutAction}>
-              Sign Out
+            Sign Out
           </Button>
           <Button >
             O meu espaço
