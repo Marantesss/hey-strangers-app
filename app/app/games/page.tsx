@@ -2,9 +2,9 @@ import { NextPage } from "next";
 
 const GamesPage: NextPage = () => {
   return (
-    <div>
+    <main>
       <h1>Games</h1>
-    </div>
+    </main>
   )
 }
 
