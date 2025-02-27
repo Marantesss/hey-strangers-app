@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import WordCycle from "@/features/quiz/components/WordCycle";
+import WordCycle from "@/features/auth/components/WordCycle";
 import { NextPage } from "next";
 import Link from "next/link";
 

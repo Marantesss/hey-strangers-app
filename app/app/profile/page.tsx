@@ -3,7 +3,8 @@ import { createClient } from "@/utils/supabase/server";
 import { InfoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
-export default async function ProtectedPage() {
+// TODO update this from the old boilerplate code
+export default async function ProfilePage() {
   const supabase = await createClient();
 
   const {
