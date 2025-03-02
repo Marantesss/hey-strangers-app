@@ -5,7 +5,7 @@
  */
 create type public.field_type as enum ('indoor', 'outdoor', 'hybrid', 'other');
 create type public.flooring_type as enum ('natural_grass', 'artificial_turf', 'hybrid_turf', 'clay', 'hard_court', 'rubber', 'polyurethane', 'wood', 'sand', 'concrete', 'other');
-create type public.sport_type as enum ('soccer', 'paddle', 'tennis', 'basketball', 'volleyball', 'multi_purpose', 'other');
+create type public.field_sport_type as enum ('soccer', 'paddle', 'tennis', 'basketball', 'volleyball', 'multi_purpose', 'other');
 
 create table public.field (
   id uuid primary key default gen_random_uuid(),
@@ -15,7 +15,7 @@ create table public.field (
 
   type field_type not null,
   flooring flooring_type not null,
-  sport sport_type not null,
+  sport field_sport_type not null,
   -- Timestamps
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone not null default now(),

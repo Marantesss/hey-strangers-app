@@ -137,6 +137,7 @@ export type Database = {
           max_players: number
           name: string
           price: number
+          sport: Database["public"]["Enums"]["game_sport_type"]
           start_time: string
           updated_at: string | null
         }
@@ -150,6 +151,7 @@ export type Database = {
           max_players: number
           name: string
           price: number
+          sport: Database["public"]["Enums"]["game_sport_type"]
           start_time: string
           updated_at?: string | null
         }
@@ -163,6 +165,7 @@ export type Database = {
           max_players?: number
           name?: string
           price?: number
+          sport?: Database["public"]["Enums"]["game_sport_type"]
           start_time?: string
           updated_at?: string | null
         }
@@ -279,6 +282,12 @@ export type Database = {
         | "sand"
         | "concrete"
         | "other"
+      game_sport_type:
+        | "soccer"
+        | "paddle"
+        | "tennis"
+        | "basketball"
+        | "volleyball"
       sport_type:
         | "soccer"
         | "paddle"

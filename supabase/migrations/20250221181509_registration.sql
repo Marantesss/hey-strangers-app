@@ -10,8 +10,8 @@ create table public.registration (
   user_id uuid not null references public.user,
 
   -- Timestamps
-  created_at timestamp with time zone default now(),
-  updated_at timestamp with time zone default now(),
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
   deleted_at timestamp with time zone
 );
 
