@@ -30,6 +30,24 @@ const DUMMY_GAMES = [
       updated_at: "2025-03-01T08:00:00Z",
       sport: 'soccer',
     },
+    registrations: [
+      {
+        id: '1',
+        full_name: 'John Doe',
+        city: 'Lisbon',
+        created_at: "2025-03-01T08:00:00Z",
+        deleted_at: null,
+        updated_at: "2025-03-01T08:00:00Z",
+      },
+      {
+        id: '2',
+        full_name: 'Jane Doe',
+        city: 'Lisbon',
+        created_at: "2025-03-01T08:00:00Z",
+        deleted_at: null,
+        updated_at: "2025-03-01T08:00:00Z",
+      },
+    ],
   }),
   Game.from({
     id: '2',
@@ -60,7 +78,7 @@ const DUMMY_GAMES = [
 
 const AgendaPage: NextPage = () => {
   return (
-    <main className="space-y-4">
+    <main className="space-y-8">
       <h1 className="text-5xl font-bold text-center">Book your next game</h1>
 
       <div className="max-w-xs mx-auto space-y-4">

@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Game } from "../../models/Game";
 import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 export interface GameCardProps {
   game: Game
@@ -45,17 +46,33 @@ const GameCard: React.FC<GameCardProps> = ({
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <div>
-          <span className="font-bold">{gameStartTime}</span>
-          • ({game.durationInMinutes}min.)
-        </div>
-        <div className="text-[#454745]">
-          {game.description} - {fieldFlooring}
+          <div>
+            <span className="font-bold">{gameStartTime}</span>
+            • ({game.durationInMinutes}min.)
+          </div>
+          <div className="text-[#454745]">
+            {game.description} - {fieldFlooring}
+          </div>
         </div>
         {!simple && (
           <>
-            <hr className="my-4"/>
+            <Collapsible className="mt-4">
+              <CollapsibleTrigger className="text-secondary font-bold">
+                More info
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div>
+                  <div>
+                    <span className="font-bold">
+                      
+                    </span>
+                  </div>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+            <hr/>
             <div className="text-lg font-bold">
               {price}
             </div>

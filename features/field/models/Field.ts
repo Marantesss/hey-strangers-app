@@ -1,10 +1,13 @@
 import { Tables } from "@/utils/supabase/types";
 
 type FieldRow = Tables<'field'>;
+type FieldAmenityRow = Tables<'field_amenity'>;
 
 type FieldType = FieldRow['type'];
 type FlooringType = FieldRow['flooring'];
 type FieldSportType = FieldRow['sport'];
+
+type FieldAmenity = FieldAmenityRow['type']
 
 type FieldConstructorParams = FieldRow;
 
@@ -18,6 +21,8 @@ export class Field {
   readonly updatedAt: Date;
   readonly deletedAt: Date | null;
   readonly sport: FieldSportType;
+
+  private readonly _amenities?: FieldAmenity[]
 
   private constructor(data: FieldConstructorParams) {
     this.id = data.id;
@@ -34,6 +39,14 @@ export class Field {
   // Factory method
   static from(data: FieldConstructorParams): Field {
     return new Field(data);
+  }
+
+  get amenities(): FieldAmenity[] {
+    if (!this._amenities) {
+      throw new Error("Amenities not expanded")
+    }
+
+    return this._amenities
   }
 
   get typeHumanized(): string {
