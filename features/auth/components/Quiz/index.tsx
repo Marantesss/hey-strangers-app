@@ -8,6 +8,7 @@ import { Check } from 'lucide-react';
 import { useState } from 'react';
 import GameCard from '@/features/game/components/GameCard';
 import RegisterForm from '../RegisterForm';
+import { Game } from '@/features/game/models/Game';
 
 
 const Quiz: React.FC = () => {
@@ -85,8 +86,9 @@ const Quiz: React.FC = () => {
           </h2>
 
           <div className='space-y-4'>
-            <GameCard />
-            <GameCard />
+            {Game.dummy.map((game) => (
+              <GameCard key={game.id} game={game} />
+            ))}
           </div>
 
           <RegisterForm />

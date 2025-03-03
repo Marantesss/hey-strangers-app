@@ -67,7 +67,7 @@ export type Database = {
           flooring: Database["public"]["Enums"]["flooring_type"]
           id: string
           name: string
-          sport: Database["public"]["Enums"]["sport_type"]
+          sport: Database["public"]["Enums"]["field_sport_type"]
           type: Database["public"]["Enums"]["field_type"]
           updated_at: string
         }
@@ -78,7 +78,7 @@ export type Database = {
           flooring: Database["public"]["Enums"]["flooring_type"]
           id?: string
           name: string
-          sport: Database["public"]["Enums"]["sport_type"]
+          sport: Database["public"]["Enums"]["field_sport_type"]
           type: Database["public"]["Enums"]["field_type"]
           updated_at?: string
         }
@@ -89,7 +89,7 @@ export type Database = {
           flooring?: Database["public"]["Enums"]["flooring_type"]
           id?: string
           name?: string
-          sport?: Database["public"]["Enums"]["sport_type"]
+          sport?: Database["public"]["Enums"]["field_sport_type"]
           type?: Database["public"]["Enums"]["field_type"]
           updated_at?: string
         }
@@ -128,7 +128,7 @@ export type Database = {
       }
       game: {
         Row: {
-          created_at: string | null
+          created_at: string
           deleted_at: string | null
           description: string | null
           end_time: string
@@ -139,10 +139,10 @@ export type Database = {
           price: number
           sport: Database["public"]["Enums"]["game_sport_type"]
           start_time: string
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           deleted_at?: string | null
           description?: string | null
           end_time: string
@@ -153,10 +153,10 @@ export type Database = {
           price: number
           sport: Database["public"]["Enums"]["game_sport_type"]
           start_time: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           deleted_at?: string | null
           description?: string | null
           end_time?: string
@@ -167,7 +167,7 @@ export type Database = {
           price?: number
           sport?: Database["public"]["Enums"]["game_sport_type"]
           start_time?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: [
           {
@@ -180,27 +180,27 @@ export type Database = {
       }
       registration: {
         Row: {
-          created_at: string | null
+          created_at: string
           deleted_at: string | null
           game_id: string
           id: string
-          updated_at: string | null
+          updated_at: string
           user_id: string
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           deleted_at?: string | null
           game_id: string
           id?: string
-          updated_at?: string | null
+          updated_at?: string
           user_id: string
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           deleted_at?: string | null
           game_id?: string
           id?: string
-          updated_at?: string | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: [
@@ -269,6 +269,14 @@ export type Database = {
         | "wifi"
         | "lighting"
         | "scoreboard"
+      field_sport_type:
+        | "soccer"
+        | "paddle"
+        | "tennis"
+        | "basketball"
+        | "volleyball"
+        | "multi_purpose"
+        | "other"
       field_type: "indoor" | "outdoor" | "hybrid" | "other"
       flooring_type:
         | "natural_grass"
@@ -288,14 +296,6 @@ export type Database = {
         | "tennis"
         | "basketball"
         | "volleyball"
-      sport_type:
-        | "soccer"
-        | "paddle"
-        | "tennis"
-        | "basketball"
-        | "volleyball"
-        | "multi_purpose"
-        | "other"
     }
     CompositeTypes: {
       [_ in never]: never
