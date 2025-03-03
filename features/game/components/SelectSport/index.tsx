@@ -1,11 +1,12 @@
 "use client"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Database } from "@/utils/supabase/types"
+import { Enums } from "@/utils/supabase/types"
 import { useRouter, useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 
 type SelectableSport = {
-  id: Database['public']['Enums']['sport_type']
+  id: Enums<'field_sport_type'>
   name: string
 }
 
@@ -36,7 +37,7 @@ const SELECTABLE_SPORTS: SelectableSport[] = [
   },
 ] as const
 
-const SelectCity: React.FC = () => {
+const SelectSport: React.FC = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const currentSport = searchParams.get('sport')
@@ -63,4 +64,8 @@ const SelectCity: React.FC = () => {
   )
 }
 
-export default SelectCity
+export default () => (
+  <Suspense>
+    <SelectSport />
+  </Suspense>
+)

@@ -2,6 +2,7 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useRouter, useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 
 const SELECTABLE_CITIES = [
   {
@@ -41,4 +42,8 @@ const SelectCity: React.FC = () => {
   )
 }
 
-export default SelectCity
+export default () => (
+  <Suspense>
+    <SelectCity />
+  </Suspense>
+)
