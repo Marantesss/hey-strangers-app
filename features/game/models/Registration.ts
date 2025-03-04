@@ -25,8 +25,6 @@ export class Registration {
 
     this._userId = data.user_id;
     this._user = data.user ? User.from(data.user) : undefined;
-
-    console.log(data);
   }
 
   get game(): Game {
