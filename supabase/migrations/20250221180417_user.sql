@@ -16,9 +16,10 @@ create table public.user (
   updated_at timestamp with time zone not null default now(),
   deleted_at timestamp with time zone
 );
-alter table public.user enable row level security;
-create policy "Can view own user data." on public.user for select using ((select auth.uid()) = id);
-create policy "Can update own user data." on public.user for update using ((select auth.uid()) = id);
+
+-- alter table public.user enable row level security;
+-- create policy "Can view own user data." on public.user for select using ((select auth.uid()) = id);
+-- create policy "Can update own user data." on public.user for update using ((select auth.uid()) = id);
 
 /** This trigger automatically creates a user entry when a new user signs up via Supabase Auth */
 create function public.handle_new_user()

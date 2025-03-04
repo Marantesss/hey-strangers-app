@@ -1,11 +1,15 @@
 import GameCard from "@/features/game/components/GameCard";
 import SelectCity from "@/features/game/components/SelectCity";
 import SelectSport from "@/features/game/components/SelectSport";
-import { Game } from "@/features/game/models/Game";
+import { GameService } from "@/features/game/services/GameService";
+import { createClient } from "@/utils/supabase/server";
 import { NextPage } from "next";
 
 
-const AgendaPage: NextPage = () => {
+const AgendaPage: NextPage = async () => {
+  const supabase = await createClient();
+  const games = await GameService.with(supabase).getGames({ expand: { field: true, registrations: true } });
+
   return (
     <main className="space-y-8">
       <h1 className="text-5xl font-bold text-center">Book your next game</h1>
@@ -16,7 +20,7 @@ const AgendaPage: NextPage = () => {
       </div>
 
       <div className="max-w-lg mx-auto space-y-4">
-        {Game.dummy.map((game) => (
+        {games.map((game) => (
           <GameCard key={game.id} game={game} />
         ))}
       </div>

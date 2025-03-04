@@ -1,17 +1,9 @@
-import { Enums, Tables } from "@/utils/supabase/types";
-import { Field, FieldData } from "../../field/models/Field";
-import { User, UserData } from "@/features/user/models/User";
-
-type GameRow = Tables<'game'>;
+import { Enums } from "@/utils/supabase/types";
+import { Field } from "../../field/models/Field";
+import { GameData } from "../dto/GameDto";
+import { Registration } from "./Registration";
 
 type GameSport = Enums<'game_sport_type'>;
-
-type GameRelations = {
-  field: FieldData;
-  registrations: UserData[];
-}
-
-export type GameData = GameRow & Partial<GameRelations>;
 
 export class Game {
   readonly id: string;
@@ -30,7 +22,7 @@ export class Game {
   private readonly _field?: Field;
   private readonly _fieldId: string;
 
-  private readonly _registrations?: User[];
+  private readonly _registrations?: Registration[];
 
   private constructor(data: GameData) {
     this.id = data.id;
@@ -49,7 +41,7 @@ export class Game {
     this._fieldId = data.field_id;
     this._field = data.field ? Field.from(data.field) : undefined;
 
-    this._registrations = data.registrations?.map(user => User.from(user));
+    this._registrations = data.registrations?.map(registration => Registration.from(registration));
   }
 
   // Getters for relations
@@ -60,7 +52,7 @@ export class Game {
     return this._field;
   }
 
-  get registrations(): User[] {
+  get registrations(): Registration[] {
     if (!this._registrations) {
       throw new Error('Registrations not found');
     }
@@ -137,19 +129,35 @@ export class Game {
         registrations: [
           {
             id: '1',
-            full_name: 'John Doe',
-            city: 'Lisbon',
             created_at: "2025-03-01T08:00:00Z",
             deleted_at: null,
             updated_at: "2025-03-01T08:00:00Z",
+            game_id: '1',
+            user_id: '1',
+            user: {
+              id: '1',
+              full_name: 'John Doe',
+              city: 'Lisbon',
+              created_at: "2025-03-01T08:00:00Z",
+              deleted_at: null,
+              updated_at: "2025-03-01T08:00:00Z",
+            },
           },
           {
             id: '2',
-            full_name: 'Jane Doe',
-            city: 'Lisbon',
             created_at: "2025-03-01T08:00:00Z",
             deleted_at: null,
             updated_at: "2025-03-01T08:00:00Z",
+            game_id: '1',
+            user_id: '2',
+            user: {
+              id: '2',
+              full_name: 'Jane Doe',
+              city: 'Lisbon',
+              created_at: "2025-03-01T08:00:00Z",
+              deleted_at: null,
+              updated_at: "2025-03-01T08:00:00Z",
+            },
           },
         ],
       }),
