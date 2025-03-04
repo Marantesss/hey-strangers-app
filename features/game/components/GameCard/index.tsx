@@ -59,18 +59,32 @@ const GameCard: React.FC<GameCardProps> = ({
         {!simple && (
           <>
             <Collapsible className="mt-4">
+              <CollapsibleContent className="space-y-4 my-2">
+                <div>
+                  <h4 className="font-bold">Facility information</h4>
+                  <ul className="text-subtle-foreground list-disc list-inside text-sm">
+                    {game.field.amenitiesHumanized.map(amenity => (
+                      <li className="ml-2" key={amenity}>
+                        {amenity}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="font-bold">Registered Players</h4>
+                  <ul className="text-subtle-foreground list-disc list-inside text-sm">
+                    {game.registrations.map(user => (
+                      <li className="ml-2" key={user.id}>
+                        {user.privateName}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </CollapsibleContent>
               <CollapsibleTrigger className="text-secondary font-bold">
                 More info
               </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div>
-                  <div>
-                    <span className="font-bold">
-                      
-                    </span>
-                  </div>
-                </div>
-              </CollapsibleContent>
             </Collapsible>
             <hr/>
             <div className="text-lg font-bold">

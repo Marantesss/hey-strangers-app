@@ -9,7 +9,27 @@ type FieldSportType = FieldRow['sport'];
 
 type FieldAmenity = FieldAmenityRow['type']
 
-type FieldConstructorParams = FieldRow;
+export type FieldData = FieldRow & {
+  amenities?: FieldAmenity[]
+};
+
+const AMENITIES_HUMANIZED: Record<FieldAmenity, string> = {
+  cafe: 'Café',
+  parking: 'Parking',
+  wifi: 'WiFi',
+  changing_rooms: 'Changing Rooms',
+  equipment_rental: 'Equipment Rental',
+  lockers: 'Lockers',
+  storage_space: 'Storage Space',
+  water_fountain: 'Water Fountain',
+  vending_machines: 'Vending Machines',
+  seating_area: 'Seating Area',
+  restrooms: 'Restrooms',
+  showers: 'Showers',
+  first_aid_station: 'First Aid Station',
+  lighting: 'Lighting',
+  scoreboard: 'Scoreboard',
+}
 
 export class Field {
   readonly id: string;
@@ -24,7 +44,7 @@ export class Field {
 
   private readonly _amenities?: FieldAmenity[]
 
-  private constructor(data: FieldConstructorParams) {
+  private constructor(data: FieldData) {
     this.id = data.id;
     this.name = data.name;
     this.address = data.address;
@@ -34,10 +54,12 @@ export class Field {
     this.createdAt = new Date(data.created_at);
     this.updatedAt = new Date(data.updated_at);
     this.deletedAt = data.deleted_at ? new Date(data.deleted_at) : null;
+
+    this._amenities = data.amenities;
   }
 
   // Factory method
-  static from(data: FieldConstructorParams): Field {
+  static from(data: FieldData): Field {
     return new Field(data);
   }
 
@@ -47,6 +69,10 @@ export class Field {
     }
 
     return this._amenities
+  }
+
+  get amenitiesHumanized(): string[] {
+    return this.amenities.map(amenity => AMENITIES_HUMANIZED[amenity])
   }
 
   get typeHumanized(): string {
@@ -96,7 +122,7 @@ export class Field {
     }
   }
 
-  public toSerializable(): FieldConstructorParams {
+  public toSerializable(): FieldData {
     return {
       id: this.id,
       name: this.name,

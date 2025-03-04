@@ -1,10 +1,8 @@
 import { Tables } from "@/utils/supabase/types";
-import { Game } from "@/features/game/models/Game";
 
 type UserRow = Tables<'user'>;
 
-
-type UserConstructorParams = UserRow;
+export type UserData = UserRow;
 
 export class User {
   readonly id: string;
@@ -14,7 +12,7 @@ export class User {
   readonly updatedAt: Date;
   readonly deletedAt: Date | null;
 
-  private constructor(data: UserConstructorParams) {
+  private constructor(data: UserData) {
     this.id = data.id;
     this.fullName = data.full_name;
     this.city = data.city;
@@ -39,11 +37,11 @@ export class User {
   
 
   // Factory method
-  static from(data: UserConstructorParams): User {
+  static from(data: UserData): User {
     return new User(data);
   }
 
-  public toSerializable(): UserConstructorParams {
+  public toSerializable(): UserData {
     return {
       id: this.id,
       full_name: this.fullName,

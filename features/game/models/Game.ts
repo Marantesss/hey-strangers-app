@@ -1,19 +1,17 @@
-import { Tables } from "@/utils/supabase/types";
-import { Field } from "../../field/models/Field";
-import { User } from "@/features/user/models/User";
+import { Enums, Tables } from "@/utils/supabase/types";
+import { Field, FieldData } from "../../field/models/Field";
+import { User, UserData } from "@/features/user/models/User";
 
 type GameRow = Tables<'game'>;
-type FieldRow = Tables<'field'>;
-type UserRow = Tables<'user'>;
 
-type GameSport = GameRow['sport'];
+type GameSport = Enums<'game_sport_type'>;
 
 type GameRelations = {
-  field: FieldRow;
-  registrations: UserRow[];
+  field: FieldData;
+  registrations: UserData[];
 }
 
-type GameConstructorParams = GameRow & Partial<GameRelations>;
+export type GameData = GameRow & Partial<GameRelations>;
 
 export class Game {
   readonly id: string;
@@ -34,7 +32,7 @@ export class Game {
 
   private readonly _registrations?: User[];
 
-  private constructor(data: GameConstructorParams) {
+  private constructor(data: GameData) {
     this.id = data.id;
     this.name = data.name;
     this.description = data.description;
@@ -87,11 +85,11 @@ export class Game {
   }
 
   // Factory method
-  static from(data: GameConstructorParams): Game {
+  static from(data: GameData): Game {
     return new Game(data);
   }
 
-  public toSerializable(): GameConstructorParams {
+  public toSerializable(): GameData {
     return {
       id: this.id,
       name: this.name,
@@ -134,6 +132,7 @@ export class Game {
           created_at: "2025-03-01T08:00:00Z",
           updated_at: "2025-03-01T08:00:00Z",
           sport: 'soccer',
+          amenities: ['restrooms', 'showers', 'first_aid_station', 'lighting', 'scoreboard']
         },
         registrations: [
           {
@@ -177,7 +176,9 @@ export class Game {
           created_at: "2025-03-01T08:00:00Z",
           deleted_at: null,
           updated_at: "2025-03-01T08:00:00Z",
+          amenities: ['cafe', 'parking', 'wifi', 'changing_rooms', 'equipment_rental', 'lockers', 'storage_space', 'water_fountain']
         },
+        registrations: [],
       }),
     ]
   }
