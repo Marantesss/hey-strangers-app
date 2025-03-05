@@ -8,13 +8,15 @@ export interface GameCardProps {
   topPick?: boolean
   disabled?: boolean
   simple?: boolean
+  showPrice?: boolean
 }
 
 const GameCard: React.FC<GameCardProps> = ({ 
   game,
   disabled = false,
-  topPick = true,
+  topPick = false,
   simple = false,
+  showPrice = true,
 }) => {
   const gameDay = game.startTime.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
   const gameStartTime = game.startTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
@@ -86,6 +88,10 @@ const GameCard: React.FC<GameCardProps> = ({
                 More info
               </CollapsibleTrigger>
             </Collapsible>
+          </>
+        )}
+        {showPrice && (
+          <>
             <hr/>
             <div className="text-lg font-bold">
               {price}

@@ -24,18 +24,76 @@ export class GameService {
     return new GameService(supabase);
   }
 
-  async getGames({ limit = 10, page = 1, expand }: GetGamesParams = {}) {
-    const offset = (page - 1) * limit;
+  private getSelectString(expand?: GameExpand) {
     const selectString = ['*', expand?.registrations && 'registration(*, user(*))', expand?.field && 'field(*, field_amenity(*))']
       .filter(Boolean)
       .join(',');
 
+    return selectString;
+  }
+
+  async getGames({ limit = 10, page = 1, expand }: GetGamesParams = {}) {
+    const offset = (page - 1) * limit;
+    const selectString = this.getSelectString(expand);
+    
     const { data, error } = await this.supabase
       .from('game')
       .select(selectString)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
       .returns<any[]>();
+
+    if (error) {
+      throw Error(error.message);
+    }
+
+    const gameDataArray = data.map(({ registration, ...game }) => {
+      const { field_amenity, ...field } = game.field ?? {};
+
+      const amenities = FieldService.prepareAmenities(field_amenity ?? []);
+
+
+      return {
+        ...game,
+        registrations: registration ?? [],
+        field: {
+          ...field,
+          amenities,
+        },
+      } as GameData;
+    })
+
+    return gameDataArray.map(Game.from);
+  }
+
+  async getGamesWhereUserIsRegistered(
+    userId: string,
+    timeFrame: 'past' | 'future' | 'all' = 'all',
+    { limit = 10, page = 1, expand }: GetGamesParams = {}
+  ) {
+    const offset = (page - 1) * limit;
+    const selectString = this.getSelectString(expand);
+
+    // we need to include the registration table in the query to filter by user_id
+    const _selectString = selectString.includes('registration')
+      ? selectString
+      : `${selectString}, registration(user_id)`;
+
+    const query = this.supabase
+      .from('game')
+      .select(_selectString)
+      .eq('registration.user_id', userId)
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1)
+
+    const nowString = new Date().toISOString();
+    if (timeFrame === 'past') {
+      query.lt('start_time', nowString);
+    } else if (timeFrame === 'future') {
+      query.gt('start_time', nowString);
+    }
+
+    const { data, error } = await query.returns<any[]>();
 
     if (error) {
       throw Error(error.message);
