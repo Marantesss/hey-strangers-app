@@ -23,7 +23,7 @@ const GamesPage: NextPage<PageProps> = async ({ searchParams }) => {
     { expand: { field: true } }
   );
 
-  const selectedStyle = 'bg-[#E3FFCD] text-[#0C363C]';
+  const selectedStyle = 'bg-[#E3FFCD] text-primary';
   const defaultStyle = 'bg-[#F9F9FB] text-[#454745]';
 
   return (
