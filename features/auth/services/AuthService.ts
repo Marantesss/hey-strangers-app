@@ -11,7 +11,7 @@ export class AuthService {
     return new AuthService(supabase);
   }
 
-  async getCurrentUser() {
+  async getAuthUser() {
     const { data: { user }, error: authError } = await this.supabase.auth.getUser();
 
     if (authError) {
@@ -22,10 +22,16 @@ export class AuthService {
       throw Error('User not found');
     }
 
+    return user;
+  }
+
+  async getCurrentUser() {
+    const authUser = await this.getAuthUser();
+
     const { data: userData, error: userError } = await this.supabase
       .from('user')
       .select('*')
-      .eq('id', user.id)
+      .eq('id', authUser.id)
       .single();
 
     if (userError) {
@@ -33,5 +39,38 @@ export class AuthService {
     } 
 
     return User.from(userData);
+  }
+
+  async updateProfile(data: { 
+    email?: string;
+    phone?: string;
+    fullName?: string;
+    city?: string;
+  }) {
+    const authUser = await this.getAuthUser();
+
+    const { error } = await this.supabase.auth.updateUser({
+      email: data.email,
+      phone: data.phone,
+    });
+
+    if (error) {
+      throw Error(error.message);
+    }
+
+    const { error: userError } = await this.supabase
+      .from('user')
+      .update({
+        full_name: data.fullName,
+        city: data.city,
+      })
+      .eq('id', authUser.id);
+
+    if (userError) {
+      throw Error(userError.message);
+    }
+
+    // Refresh and return the updated user
+    return this.getCurrentUser();
   }
 }

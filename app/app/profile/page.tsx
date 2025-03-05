@@ -1,39 +1,65 @@
-import FetchDataSteps from "@/components/tutorial/fetch-data-steps";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ProfileForm from "@/features/auth/components/ProfileForm";
+import { AuthService } from "@/features/auth/services/AuthService";
 import { createClient } from "@/utils/supabase/server";
-import { InfoIcon } from "lucide-react";
-import { redirect } from "next/navigation";
+import { NextPage } from "next";
 
-// TODO update this from the old boilerplate code
-export default async function ProfilePage() {
+type ProfilePageProps = {
+  searchParams: Promise<{
+    success?: string;
+    error?: string;
+  }>;
+};
+
+const ProfilePage: NextPage<ProfilePageProps> = async ({ searchParams }) => {
   const supabase = await createClient();
+  const authUser = await AuthService.with(supabase).getAuthUser();
+  const user = await AuthService.with(supabase).getCurrentUser();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return redirect("/sign-in");
-  }
+  const { success, error } = await searchParams;
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-12">
-      <div className="w-full">
-        <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
-          <InfoIcon size="16" strokeWidth={2} />
-          This is a protected page that you can only see as an authenticated
-          user
+    <main className="my-8 space-y-8 max-w-lg mx-auto">
+      
+      {success && (
+        <div className="bg-green-200 text-primary p-4 rounded-lg">
+          {success}
         </div>
-      </div>
-      <div className="flex flex-col gap-2 items-start">
-        <h2 className="font-bold text-2xl mb-4">Your user details</h2>
-        <pre className="text-xs font-mono p-3 rounded border max-h-32 overflow-auto">
-          {JSON.stringify(user, null, 2)}
-        </pre>
-      </div>
-      <div>
-        <h2 className="font-bold text-2xl mb-4">Next steps</h2>
-        <FetchDataSteps />
-      </div>
-    </div>
+      )}
+      {error && (
+        <div className="bg-red-200 text-red-500 p-4 rounded-lg">
+          {error}
+        </div>
+      )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            Basic Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ProfileForm
+            authUser={authUser}
+            user={user.toSerializable()}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            Payment Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>
+            You are currently on the free plan.
+          </p>
+        </CardContent>
+      </Card>
+    </main>
   );
 }
+
+export default ProfilePage;

@@ -11,7 +11,7 @@ const AgendaPage: NextPage = async () => {
   const games = await GameService.with(supabase).getGames({ expand: { field: true, registrations: true } });
 
   return (
-    <main className="space-y-8">
+    <main className="space-y-8 my-8">
       <h1 className="text-5xl font-bold text-center">Book your next game</h1>
 
       <div className="max-w-xs mx-auto space-y-4">
