@@ -1,5 +1,5 @@
-import WordCycle from "@/features/auth/components/WordCycle";
-import QuizProvider from "@/features/auth/providers/quiz.provider";
+import WordCycle from "@/features/user/components/WordCycle";
+import QuizProvider from "@/features/user/providers/quiz.provider";
 
 export default async function Layout({
   children,

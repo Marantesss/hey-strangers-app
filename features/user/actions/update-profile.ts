@@ -2,7 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { encodedRedirect } from "@/utils/utils";
-import { AuthService } from "../services/AuthService";
+import { UserService } from "../services/UserService";
 
 type ProfileFormData = {
   fullName: string
@@ -13,9 +13,9 @@ type ProfileFormData = {
 
 const updateProfileAction = async (data: ProfileFormData) => {
   const supabase = await createClient();
-  const authService = AuthService.with(supabase)
+  const userService = UserService.with(supabase)
 
-  await authService.updateProfile(data);
+  await userService.updateProfile(data);
 
   encodedRedirect("success", "/app/profile", "Profile updated");
 };

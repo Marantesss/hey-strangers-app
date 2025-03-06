@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ProfileForm from "@/features/auth/components/ProfileForm";
-import { AuthService } from "@/features/auth/services/AuthService";
+import ProfileForm from "@/features/user/components/ProfileForm";
+import { UserService } from "@/features/user/services/UserService";
 import { createClient } from "@/utils/supabase/server";
 import { NextPage } from "next";
 
@@ -13,8 +13,8 @@ type ProfilePageProps = {
 
 const ProfilePage: NextPage<ProfilePageProps> = async ({ searchParams }) => {
   const supabase = await createClient();
-  const authUser = await AuthService.with(supabase).getAuthUser();
-  const user = await AuthService.with(supabase).getCurrentUser();
+  const authUser = await UserService.with(supabase).getAuthUser();
+  const user = await UserService.with(supabase).getCurrentUser();
 
   const { success, error } = await searchParams;
 

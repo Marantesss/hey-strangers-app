@@ -1,6 +1,6 @@
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
-import { signOutAction } from "@/features/auth/actions";
+import { signOutAction } from "@/features/user/actions";
 import { PropsWithChildren } from "react";
 import AppNavigationMenu from "@/components/common/AppNavigationMenu";
 

@@ -1,5 +1,5 @@
-import Progress from "@/features/auth/components/Progress";
-import Quiz from "@/features/auth/components/Quiz";
+import Progress from "@/features/user/components/Progress";
+import Quiz from "@/features/user/components/Quiz";
 import { NextPage } from "next";
 
 const SignupPage: NextPage = () => {

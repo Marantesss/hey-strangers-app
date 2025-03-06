@@ -1,6 +1,6 @@
-import { AuthService } from "@/features/auth/services/AuthService";
 import GameCard from "@/features/game/components/GameCard";
 import { GameService } from "@/features/game/services/GameService";
+import { UserService } from "@/features/user/services/UserService";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/server";
 import { NextPage } from "next";
@@ -16,7 +16,7 @@ const GamesPage: NextPage<PageProps> = async ({ searchParams }) => {
   const { timeFrame = 'past'} = await searchParams;
 
   const supabase = await createClient();
-  const user = await AuthService.with(supabase).getCurrentUser();
+  const user = await UserService.with(supabase).getCurrentUser();
   const games = await GameService.with(supabase).getGamesWhereUserIsRegistered(
     user.id,
     timeFrame,

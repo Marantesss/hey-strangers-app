@@ -1,4 +1,4 @@
-import { signOutAction } from "@/features/auth/actions";
+import { signOutAction } from "@/features/user/actions";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { createClient } from "@/utils/supabase/server";

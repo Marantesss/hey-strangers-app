@@ -2,13 +2,13 @@ import { Database } from "@/utils/supabase/types";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { User } from "@/features/user/models/User";
 
-export class AuthService {
+export class UserService {
   private constructor(
     private readonly supabase: SupabaseClient<Database, 'public'>
   ) {}
 
   static with(supabase: SupabaseClient<Database, 'public'>) {
-    return new AuthService(supabase);
+    return new UserService(supabase);
   }
 
   async getAuthUser() {

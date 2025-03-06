@@ -25,7 +25,7 @@ export default function SignUpUserSteps() {
             <Link
               className="text-primary hover:text-foreground"
               href={
-                "https://supabase.com/dashboard/project/_/auth/url-configuration"
+                "https://supabase.com/dashboard/project/_/user/url-configuration"
               }
             >
               update your Supabase project
@@ -62,7 +62,7 @@ export default function SignUpUserSteps() {
             </li>
           </ul>
           <Link
-            href="https://supabase.com/docs/guides/auth/redirect-urls#vercel-preview-urls"
+            href="https://supabase.com/docs/guides/user/redirect-urls#vercel-preview-urls"
             target="_blank"
             className="text-primary/50 hover:text-primary flex items-center text-sm gap-1 mt-4"
           >
