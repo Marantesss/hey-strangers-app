@@ -1,4 +1,4 @@
-import { Database } from "@/utils/supabase/types";
+import { Database, Enums } from "@/utils/supabase/types";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Game } from "../models/Game";
 import { GameData } from "../dto/GameDto";
@@ -15,6 +15,12 @@ type GetGamesParams = {
   expand?: GameExpand;
 }
 
+type GetGamesFilter = {
+  city?: string;
+  sport?: Enums<'game_sport_type'>;
+  timeFrame?: 'past' | 'future' | 'all';
+}
+
 export class GameService {
   private constructor(
     private readonly supabase: SupabaseClient<Database, 'public'>
@@ -25,27 +31,60 @@ export class GameService {
   }
 
   private getSelectString(expand?: GameExpand) {
-    const selectString = ['*', expand?.registrations && 'registration(*, user(*))', expand?.field && 'field(*, field_amenity(*))']
+    const selectString = [
+      '*',
+      // DO NOT use inner join because some games have no registrations
+      expand?.registrations && 'registration(*, user(*))',
+      // use inner join because we need to filter by field.address
+      expand?.field && 'field!inner(*, field_amenity(*))'
+    ]
       .filter(Boolean)
       .join(',');
 
     return selectString;
   }
 
-  async getGames({ limit = 10, page = 1, expand }: GetGamesParams = {}) {
+  private queryByTimeFrame(query: any, timeFrame: 'past' | 'future' | 'all') {
+    const nowString = new Date().toISOString();
+    if (timeFrame === 'past') {
+      query.lt('start_time', nowString);
+    } else if (timeFrame === 'future') {
+      query.gt('start_time', nowString);
+    }
+  }
+
+  private queryByCity(query: any, city: string) {
+    query.ilike('field.address', `%${city}%`)
+  }
+
+  private queryBySport(query: any, sport: string) {
+    query.eq('sport', sport);
+  }
+
+  async getGames(
+    { city, sport, timeFrame }: GetGamesFilter,
+    { limit = 10, page = 1, expand }: GetGamesParams = {}
+  ) {
     const offset = (page - 1) * limit;
     const selectString = this.getSelectString(expand);
     
-    const { data, error } = await this.supabase
+    const query = this.supabase
       .from('game')
       .select(selectString)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
-      .returns<any[]>();
+
+    timeFrame && this.queryByTimeFrame(query, timeFrame);
+    city && this.queryByCity(query, city);
+    sport && this.queryBySport(query, sport);
+
+    const { data, error } = await query.returns<any[]>();
 
     if (error) {
       throw Error(error.message);
     }
+
+    console.log(data);
 
     const gameDataArray = data.map(({ registration, ...game }) => {
       const { field_amenity, ...field } = game.field ?? {};
@@ -68,7 +107,7 @@ export class GameService {
 
   async getGamesWhereUserIsRegistered(
     userId: string,
-    timeFrame: 'past' | 'future' | 'all' = 'all',
+    { city, sport, timeFrame = 'all' }: GetGamesFilter,
     { limit = 10, page = 1, expand }: GetGamesParams = {}
   ) {
     const offset = (page - 1) * limit;
@@ -86,12 +125,9 @@ export class GameService {
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
-    const nowString = new Date().toISOString();
-    if (timeFrame === 'past') {
-      query.lt('start_time', nowString);
-    } else if (timeFrame === 'future') {
-      query.gt('start_time', nowString);
-    }
+    timeFrame && this.queryByTimeFrame(query, timeFrame);
+    city && this.queryByCity(query, city);
+    sport && this.queryBySport(query, sport);
 
     const { data, error } = await query.returns<any[]>();
 

@@ -19,7 +19,7 @@ const GamesPage: NextPage<PageProps> = async ({ searchParams }) => {
   const user = await UserService.with(supabase).getCurrentUser();
   const games = await GameService.with(supabase).getGamesWhereUserIsRegistered(
     user.id,
-    timeFrame,
+    { timeFrame },
     { expand: { field: true } }
   );
 

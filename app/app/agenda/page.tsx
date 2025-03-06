@@ -3,12 +3,23 @@ import SelectCity from "@/features/game/components/SelectCity";
 import SelectSport from "@/features/game/components/SelectSport";
 import { GameService } from "@/features/game/services/GameService";
 import { createClient } from "@/utils/supabase/server";
+import { Enums } from "@/utils/supabase/types";
 import { NextPage } from "next";
 
+type AgendaPageProps = {
+  searchParams: Promise<{
+    city?: string;
+    sport?: string;
+  }>;
+}
 
-const AgendaPage: NextPage = async () => {
+const AgendaPage: NextPage<AgendaPageProps> = async ({ searchParams }) => {
+  const { city, sport } = await searchParams;
   const supabase = await createClient();
-  const games = await GameService.with(supabase).getGames({ expand: { field: true, registrations: true } });
+  const games = await GameService.with(supabase).getGames(
+    { city, sport: sport as Enums<'game_sport_type'>, timeFrame: 'future' },
+    { expand: { field: true, registrations: true } }
+  );
 
   return (
     <main className="space-y-8 my-8">

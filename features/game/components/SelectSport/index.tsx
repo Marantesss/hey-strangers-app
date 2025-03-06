@@ -3,10 +3,10 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Enums } from "@/utils/supabase/types"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Suspense } from "react"
+import { Suspense, useState } from "react"
 
 type SelectableSport = {
-  id: Enums<'field_sport_type'>
+  id: Enums<'game_sport_type'>
   name: string
 }
 
@@ -31,20 +31,21 @@ const SELECTABLE_SPORTS: SelectableSport[] = [
     id: 'volleyball',
     name: "Volleyball",
   },
-  {
-    id: 'multi_purpose',
-    name: "Multi-Purpose",
-  },
 ] as const
 
 const SelectSport: React.FC = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const currentSport = searchParams.get('sport')
+  const [currentSport, setCurrentSport] = useState<string | null>(searchParams.get('sport') ?? 'all')
 
   const onSelectSport = (id: string) => {
+    setCurrentSport(id)
     const params = new URLSearchParams(searchParams)
-    params.set('sport', id)
+    if (id === 'all') {
+      params.delete('sport')
+    } else {
+      params.set('sport', id)
+    }
     router.push(`?${params.toString()}`)
   }
 
@@ -54,6 +55,7 @@ const SelectSport: React.FC = () => {
         <SelectValue placeholder="Select sport" />
       </SelectTrigger>
       <SelectContent>
+        <SelectItem value="all">All Sports</SelectItem>
         {SELECTABLE_SPORTS.map((sport) => (
           <SelectItem key={sport.id} value={sport.id}>
             {sport.name}
