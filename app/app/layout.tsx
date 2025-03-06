@@ -1,4 +1,4 @@
-import Logo from "@/components/Logo";
+import Logo from "@/components/common/Logo";
 import { Button } from "@/components/ui/button";
 import { signOutAction } from "@/features/user/actions";
 import { PropsWithChildren } from "react";
