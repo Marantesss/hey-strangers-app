@@ -5,7 +5,7 @@
  */
 create type public.field_type as enum ('indoor', 'outdoor', 'hybrid', 'other');
 create type public.flooring_type as enum ('natural_grass', 'artificial_turf', 'hybrid_turf', 'clay', 'hard_court', 'rubber', 'polyurethane', 'wood', 'sand', 'concrete', 'other');
-create type public.field_sport_type as enum ('soccer', 'paddle', 'tennis', 'basketball', 'volleyball', 'multi_purpose', 'other');
+create type public.field_sport_type as enum ('soccer', 'padel', 'tennis', 'basketball', 'volleyball', 'multi_purpose', 'other');
 
 create table public.field (
   id uuid primary key default gen_random_uuid(),

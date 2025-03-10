@@ -38,17 +38,17 @@ values
    40.00, 8, 'tennis', 'e84e1d00-ff37-4202-989c-a393960a2a93'),
 
   ------ PADEL ------
-  -- Paddle games at Padel Belém
-  ('b814a5f1-bb1c-4600-a372-cfd5131cf35f', 'Morning Paddle Session', 'Beginner-friendly paddle session', 
+  -- padel games at Padel Belém
+  ('b814a5f1-bb1c-4600-a372-cfd5131cf35f', 'Morning Padel Session', 'Beginner-friendly Padel session', 
    now() + interval '2 days' + interval '8 hours',
    now() + interval '2 days' + interval '9 hours',
-   15.00, 4, 'paddle', '97e07dbc-9efd-4822-bcd5-9d4a2815fdc2'),
+   15.00, 4, 'padel', '97e07dbc-9efd-4822-bcd5-9d4a2815fdc2'),
 
-  -- Paddle games at Clube Padel Porto
-  ('086fb6cd-75b6-4853-806b-fd440aef963e', 'Morning Paddle Session', 'Beginner-friendly paddle session', 
+  -- padel games at Clube Padel Porto
+  ('086fb6cd-75b6-4853-806b-fd440aef963e', 'Morning Padel Session', 'Beginner-friendly Padel session', 
    now() + interval '2 days' + interval '8 hours',
    now() + interval '2 days' + interval '9 hours',
-   15.00, 4, 'paddle', 'b6e5cd28-a70d-4b8c-874b-fdc5433ea96b'),
+   15.00, 4, 'padel', 'b6e5cd28-a70d-4b8c-874b-fdc5433ea96b'),
 
   ------ BASKETBALL ------
   -- Basketball games at Downtown Basketball Court

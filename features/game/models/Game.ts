@@ -65,7 +65,7 @@ export class Game {
       soccer: '⚽️',
       basketball: '🏀',
       tennis: '🎾',
-      paddle: '🎱',
+      padel: '🎱',
       volleyball: '🏐',
     }
 

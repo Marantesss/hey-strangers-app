@@ -1,13 +1,12 @@
-import { Tables } from "@/utils/supabase/types";
+import { Enums, Tables } from "@/utils/supabase/types";
 
 type FieldRow = Tables<'field'>;
-type FieldAmenityRow = Tables<'field_amenity'>;
 
-type FieldType = FieldRow['type'];
-type FlooringType = FieldRow['flooring'];
-type FieldSportType = FieldRow['sport'];
+type FieldType = Enums<'field_type'>;
+type FlooringType = Enums<'flooring_type'>;
+type FieldSportType = Enums<'field_sport_type'>;
 
-type FieldAmenity = FieldAmenityRow['type']
+type FieldAmenity = Enums<'field_amenity_type'>
 
 export type FieldData = FieldRow & {
   amenities?: FieldAmenity[]
@@ -115,8 +114,8 @@ export class Field {
         return 'tennis';
       case 'volleyball':
         return 'volleyball';
-      case 'paddle':
-        return 'paddle';
+      case 'padel':
+        return 'padel';
       default:
         return this.sport;
     }

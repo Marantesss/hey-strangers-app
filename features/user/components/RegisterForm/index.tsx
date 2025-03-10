@@ -4,7 +4,11 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 
 const RegisterForm: React.FC = () => {
-  const form = useForm()
+  const form = useForm({
+    values: {
+      phone: "",
+    }
+  })
 
   return (
     <Form {...form}>

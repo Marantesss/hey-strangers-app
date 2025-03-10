@@ -24,8 +24,8 @@ const SELECTABLE_SPORTS: SelectableSport[] = [
     name: "Tennis",
   },
   {
-    id: 'paddle',
-    name: "Paddle",
+    id: 'padel',
+    name: "Padel",
   },
   {
     id: 'volleyball',

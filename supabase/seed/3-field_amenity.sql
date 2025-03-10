@@ -21,7 +21,7 @@ values
   ('e84e1d00-ff37-4202-989c-a393960a2a93', 'equipment_rental'),
   ('e84e1d00-ff37-4202-989c-a393960a2a93', 'water_fountain'),
   
-  -- Paddle Paradise amenities
+  -- ªadel Paradise amenities
   ('97e07dbc-9efd-4822-bcd5-9d4a2815fdc2', 'parking'),
   ('97e07dbc-9efd-4822-bcd5-9d4a2815fdc2', 'restrooms'),
   ('97e07dbc-9efd-4822-bcd5-9d4a2815fdc2', 'changing_rooms'),

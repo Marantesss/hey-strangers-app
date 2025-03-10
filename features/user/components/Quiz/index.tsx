@@ -87,7 +87,7 @@ const Quiz: React.FC = () => {
 
           <div className='space-y-4'>
             {Game.dummy.map((game) => (
-              <GameCard key={game.id} game={game} />
+              <GameCard key={game.id} game={game} simple hidePrice />
             ))}
           </div>
 

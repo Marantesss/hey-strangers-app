@@ -3,7 +3,7 @@
  * game
  * ================================
  */
-create type public.game_sport_type as enum ('soccer', 'paddle', 'tennis', 'basketball', 'volleyball');
+create type public.game_sport_type as enum ('soccer', 'padel', 'tennis', 'basketball', 'volleyball');
 
 create table public.game (
   id uuid primary key default gen_random_uuid(),

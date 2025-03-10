@@ -5,7 +5,7 @@ import { NextPage } from "next";
 const SignupPage: NextPage = () => {
   return (
     <main className="relative h-full flex flex-col justify-center items-center">
-      <div className="w-full absolute top-2 right-2 flex justify-end">
+      <div className="w-full absolute top-8 right-0 flex justify-end">
         <Progress />
       </div>
       <Quiz />

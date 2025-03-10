@@ -11,8 +11,8 @@ values
   ('2bdf130d-b6ac-463e-8617-02c237326550', 'Centro de Ténis do Porto', 'Rua da Boavista 654, Porto', 'indoor', 'hard_court', 'tennis'),
   
   -- Paddle courts
-  ('97e07dbc-9efd-4822-bcd5-9d4a2815fdc2', 'Padel Belém', 'Rua de Belém 987, Lisboa', 'outdoor', 'artificial_turf', 'paddle'),
-  ('b6e5cd28-a70d-4b8c-874b-fdc5433ea96b', 'Clube Padel Porto', 'Rua Santa Catarina 147, Porto', 'indoor', 'artificial_turf', 'paddle'),
+  ('97e07dbc-9efd-4822-bcd5-9d4a2815fdc2', 'Padel Belém', 'Rua de Belém 987, Lisboa', 'outdoor', 'artificial_turf', 'padel'),
+  ('b6e5cd28-a70d-4b8c-874b-fdc5433ea96b', 'Clube Padel Porto', 'Rua Santa Catarina 147, Porto', 'indoor', 'artificial_turf', 'padel'),
   
   -- Basketball courts
   ('6d64c9e4-ba34-4561-b110-c30c4878fa97', 'Pavilhão do Sporting', 'Rua do Sporting 258, Lisboa', 'indoor', 'wood', 'basketball'),

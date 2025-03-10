@@ -3,14 +3,17 @@
 import { cn } from '@/lib/utils';
 import './styles.css';
 import { useQuiz } from '../../hooks/quiz.hook';
+import { Enums } from '@/utils/supabase/types';
 
-const sports = [
-  'Soccer',
-  'Basketball',
-  'Tennis',
-  'Volleyball',
-  'Badminton',
-] as const
+const sportMap: Record<Enums<'game_sport_type'>, string> = {
+  'soccer': 'Soccer',
+  'padel': 'Padel',
+  'tennis': 'Tennis',
+  'basketball': 'Basketball',
+  'volleyball': 'Volleyball',
+} as const
+
+const sports = Object.values(sportMap)
 
 const LONGEST_WORD = sports.reduce((longest, current) => {
   return current.length > longest.length ? current : longest;
@@ -32,7 +35,7 @@ const WordCycle: React.FC<WordCycleProps> = ({ className, ...rest }) => {
       )}
     >
       { !!sport
-      ? <span>{sport}</span>
+      ? <span>{sportMap[sport]}</span>
       : (
         <>
           <span className="slidingVertical">

@@ -1,7 +1,8 @@
+import { Enums } from "@/utils/supabase/types"
 import { createContext } from "react"
 
 export interface Answers {
-  sport: 'soccer' | 'padel' | 'tennis' | 'golf' | null
+  sport: Enums<'game_sport_type'> | null
   location: 'lisbon' | 'porto' | null
   skill: 'beginner' | 'intermediate' | 'advanced' | null
   frequency: 'rarely' | 'a_few_times_a_month' | 'weekly_or_more' | null

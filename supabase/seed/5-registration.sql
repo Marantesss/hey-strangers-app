@@ -14,7 +14,7 @@ values
   ('616d52da-4dfe-49a6-ae8f-3400befda263', 'd2b98ec1-1b4a-4b7a-9680-0090708a7221', 'b601e01c-9465-431f-819e-19ef73bdef97'),
   ('0c031fe9-67c6-4c4b-84a8-93bfd335b6fc', 'd2b98ec1-1b4a-4b7a-9680-0090708a7221', 'e42d0ee0-dab3-4551-b07a-b6f608fbc714'),
   
-  -- Morning Paddle Session
+  -- Morning Padel Session
   ('b4c51861-3783-485b-9fa5-282deb8df1d9', 'b814a5f1-bb1c-4600-a372-cfd5131cf35f', '3d55b69b-561d-4068-a891-202820d3d864'),
   ('36244f5f-0b71-4f70-9248-b8601d106006', 'b814a5f1-bb1c-4600-a372-cfd5131cf35f', 'b601e01c-9465-431f-819e-19ef73bdef97'),
   ('a234e5bc-f6e5-47d5-ae94-cc9fb50204ce', 'b814a5f1-bb1c-4600-a372-cfd5131cf35f', 'e42d0ee0-dab3-4551-b07a-b6f608fbc714'),

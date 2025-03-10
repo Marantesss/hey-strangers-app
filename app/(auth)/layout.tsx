@@ -19,7 +19,7 @@ export default async function Layout({
           </div>
         </div>
 
-        <div className="col-span-1">
+        <div className="col-span-1 container">
           {children}
         </div>
       </div>

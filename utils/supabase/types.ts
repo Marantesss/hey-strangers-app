@@ -271,7 +271,7 @@ export type Database = {
         | "scoreboard"
       field_sport_type:
         | "soccer"
-        | "paddle"
+        | "padel"
         | "tennis"
         | "basketball"
         | "volleyball"
@@ -292,7 +292,7 @@ export type Database = {
         | "other"
       game_sport_type:
         | "soccer"
-        | "paddle"
+        | "padel"
         | "tennis"
         | "basketball"
         | "volleyball"
