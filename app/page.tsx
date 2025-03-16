@@ -505,7 +505,7 @@ export default async function Home() {
       </section>
 
       {/* Numbers Section */}
-      <section className="container space-y-20">
+      <section className="container space-y-20 py-20">
         <h2 className="text-4xl font-bold text-center">Hey Stranger in numbers</h2>
 
         <div className="grid grid-cols-2 md:grid-cols-8">
