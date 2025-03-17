@@ -1,8 +1,7 @@
-import { Database, Tables } from "@/utils/supabase/types";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { Payload } from "payload";
 import { Field, FieldData } from "../models/Field";
+import { Field as PayloadField } from "@payload-types";
 
-type FieldAmenityRow = Tables<'field_amenity'>;
 
 export type FieldExpand = {
   field?: boolean;
@@ -17,11 +16,11 @@ type GetFieldsParams = {
 
 export class FieldService {
   private constructor(
-    private readonly supabase: SupabaseClient<Database, 'public'>
+    private readonly payload: Payload
   ) {}
 
-  static with(supabase: SupabaseClient<Database, 'public'>) {
-    return new FieldService(supabase);
+  static with(payload: Payload) {
+    return new FieldService(payload);
   }
 
   static prepareAmenities(amenityRows: FieldAmenityRow[]): FieldData['amenities'] {
@@ -33,23 +32,19 @@ export class FieldService {
   }
 
   async getFieldForGameId(gameId: string): Promise<Field> {
-    const { data, error } = await this.supabase
-      .from('game')
-      .select('field(*, field_amenity(*))')
-      .eq('id', gameId)
-      .single();
+    const game = await this.payload.findByID({
+      collection: 'games',
+      id: gameId,
+      depth: 2
+    });
 
-    if (error) {
-      throw Error(error.message);
-    }
-
-    if (!data?.field) {
+    if (!game?.field) {
       throw Error('Field not found for game');
     }
 
     const field = {
-      ...data.field,
-      amenities: FieldService.prepareAmenities(data.field.field_amenity),
+      ...game.field,
+      amenities: FieldService.prepareAmenities(game.field.fieldAmenities ?? []),
     } satisfies FieldData;
 
     return Field.from(field);

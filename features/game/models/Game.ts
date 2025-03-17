@@ -1,9 +1,9 @@
-import { Enums } from "@/utils/supabase/types";
+import { Game as PayloadGame } from "@payload-types";
 import { Field } from "../../field/models/Field";
 import { GameData } from "../dto/GameDto";
 import { Registration } from "./Registration";
 
-type GameSport = Enums<'game_sport_type'>;
+type GameSport = PayloadGame['sport'];
 
 export class Game {
   readonly id: string;
@@ -120,43 +120,45 @@ export class Game {
           address: '123 Main St',
           type: 'indoor',
           flooring: 'artificial_turf',
-          deleted_at: null,
-          created_at: "2025-03-01T08:00:00Z",
-          updated_at: "2025-03-01T08:00:00Z",
+          deletedAt: null,
+          createdAt: "2025-03-01T08:00:00Z",
+          updatedAt: "2025-03-01T08:00:00Z",
           sport: 'soccer',
           amenities: ['restrooms', 'showers', 'first_aid_station', 'lighting', 'scoreboard']
         },
         registrations: [
           {
             id: '1',
-            created_at: "2025-03-01T08:00:00Z",
-            deleted_at: null,
-            updated_at: "2025-03-01T08:00:00Z",
-            game_id: '1',
-            user_id: '1',
+            createdAt: "2025-03-01T08:00:00Z",
+            deletedAt: null,
+            updatedAt: "2025-03-01T08:00:00Z",
+            gameId: '1',
+            userId: '1',
             user: {
               id: '1',
-              full_name: 'John Doe',
+              name: 'John Doe',
               city: 'Lisbon',
-              created_at: "2025-03-01T08:00:00Z",
-              deleted_at: null,
-              updated_at: "2025-03-01T08:00:00Z",
+              phoneNumber: '+351 912 345 678',
+              createdAt: "2025-03-01T08:00:00Z",
+              deletedAt: null,
+              updatedAt: "2025-03-01T08:00:00Z",
             },
           },
           {
             id: '2',
             created_at: "2025-03-01T08:00:00Z",
-            deleted_at: null,
-            updated_at: "2025-03-01T08:00:00Z",
-            game_id: '1',
-            user_id: '2',
+            deletedAt: null,
+            updatedAt: "2025-03-01T08:00:00Z",
+            gameId: '1',
+            userId: '2',
             user: {
               id: '2',
-              full_name: 'Jane Doe',
+              name: 'Jane Doe',
               city: 'Lisbon',
-              created_at: "2025-03-01T08:00:00Z",
-              deleted_at: null,
-              updated_at: "2025-03-01T08:00:00Z",
+              phoneNumber: '+351 912 345 678',
+              createdAt: "2025-03-01T08:00:00Z",
+              deletedAt: null,
+              updatedAt: "2025-03-01T08:00:00Z",
             },
           },
         ],
@@ -181,9 +183,9 @@ export class Game {
           type: 'indoor',
           flooring: 'artificial_turf',
           sport: 'soccer',
-          created_at: "2025-03-01T08:00:00Z",
-          deleted_at: null,
-          updated_at: "2025-03-01T08:00:00Z",
+          createdAt: "2025-03-01T08:00:00Z",
+          deletedAt: null,
+          updatedAt: "2025-03-01T08:00:00Z",
           amenities: ['cafe', 'parking', 'wifi', 'changing_rooms', 'equipment_rental', 'lockers', 'storage_space', 'water_fountain']
         },
         registrations: [],

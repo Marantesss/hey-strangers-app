@@ -1,14 +1,8 @@
-import { Enums, Tables } from "@/utils/supabase/types";
+import { Field as PayloadField } from "@payload-types";
 
-type FieldRow = Tables<'field'>;
+type FieldAmenity = NonNullable<PayloadField['amenities']>[number];
 
-type FieldType = Enums<'field_type'>;
-type FlooringType = Enums<'flooring_type'>;
-type FieldSportType = Enums<'field_sport_type'>;
-
-type FieldAmenity = Enums<'field_amenity_type'>
-
-export type FieldData = FieldRow & {
+export type FieldData = PayloadField & {
   amenities?: FieldAmenity[]
 };
 
@@ -30,16 +24,19 @@ const AMENITIES_HUMANIZED: Record<FieldAmenity, string> = {
   scoreboard: 'Scoreboard',
 }
 
+/**
+ * @deprecated
+ */
 export class Field {
   readonly id: string;
   readonly name: string;
   readonly address: string;
-  readonly type: FieldType;
-  readonly flooring: FlooringType;
+  readonly type: PayloadField['type'];
+  readonly flooring: PayloadField['flooring'];
   readonly createdAt: Date;
   readonly updatedAt: Date;
   readonly deletedAt: Date | null;
-  readonly sport: FieldSportType;
+  readonly sport: PayloadField['sport'];
 
   private readonly _amenities?: FieldAmenity[]
 
@@ -50,9 +47,9 @@ export class Field {
     this.type = data.type;
     this.flooring = data.flooring;
     this.sport = data.sport;
-    this.createdAt = new Date(data.created_at);
-    this.updatedAt = new Date(data.updated_at);
-    this.deletedAt = data.deleted_at ? new Date(data.deleted_at) : null;
+    this.createdAt = new Date(data.createdAt);
+    this.updatedAt = new Date(data.updatedAt);
+    this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : null;
 
     this._amenities = data.amenities;
   }
@@ -129,9 +126,9 @@ export class Field {
       type: this.type,
       flooring: this.flooring,
       sport: this.sport,
-      created_at: this.createdAt.toISOString(),
-      updated_at: this.updatedAt.toISOString(),
-      deleted_at: this.deletedAt?.toISOString() ?? null,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+      deletedAt: this.deletedAt?.toISOString() ?? null,
     };
   }
 }

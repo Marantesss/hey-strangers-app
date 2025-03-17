@@ -1,76 +1,62 @@
-import { Database } from "@/utils/supabase/types";
-import { SupabaseClient } from "@supabase/supabase-js";
-import { User } from "@/features/user/models/User";
+import { Payload, getPayload } from 'payload'
+import { User } from '@/features/user/models/User'
+import config from '@payload-config'
+import { headers } from 'next/headers'
 
 export class UserService {
   private constructor(
-    private readonly supabase: SupabaseClient<Database, 'public'>
+    private readonly payload: Payload
   ) {}
 
-  static with(supabase: SupabaseClient<Database, 'public'>) {
-    return new UserService(supabase);
+  static async init() {
+    const payload = await getPayload({ config })
+    return new UserService(payload)
   }
 
   async getAuthUser() {
-    const { data: { user }, error: authError } = await this.supabase.auth.getUser();
+    const _headers = await headers()
+    try {
+      const { user } = await this.payload.auth({ headers: _headers })
 
-    if (authError) {
-      throw Error(authError.message);
+      if (!user) {
+        throw Error('User not found')
+      }
+
+      return user
+    } catch (error) {
+      throw Error(error instanceof Error ? error.message : 'Failed to get authenticated user')
     }
-
-    if (!user) {
-      throw Error('User not found');
-    }
-
-    return user;
   }
 
-  async getCurrentUser() {
-    const authUser = await this.getAuthUser();
-
-    const { data: userData, error: userError } = await this.supabase
-      .from('user')
-      .select('*')
-      .eq('id', authUser.id)
-      .single();
-
-    if (userError) {
-      throw Error(userError.message);
-    } 
-
-    return User.from(userData);
-  }
-
-  async updateProfile(data: { 
-    email?: string;
-    phone?: string;
-    fullName?: string;
-    city?: string;
+  async updateProfile(data: {
+    email?: string
+    phoneNumber?: string
+    name?: string
+    city?: string
   }) {
-    const authUser = await this.getAuthUser();
+    try {
+      const authUser = await this.getAuthUser()
 
-    const { error } = await this.supabase.auth.updateUser({
-      email: data.email,
-      phone: data.phone,
-    });
-
-    if (error) {
-      throw Error(error.message);
-    }
-
-    const { error: userError } = await this.supabase
-      .from('user')
-      .update({
-        full_name: data.fullName,
-        city: data.city,
+      // Update user in Payload
+      const updatedUser = await this.payload.update({
+        collection: 'users',
+        id: authUser.id,
+        data: {
+          email: data.email,
+          name: data.name,
+          city: data.city,
+          phoneNumber: data.phoneNumber,
+        },
       })
-      .eq('id', authUser.id);
 
-    if (userError) {
-      throw Error(userError.message);
+      if (!updatedUser) {
+        throw Error('Failed to update user')
+      }
+
+      // Return the updated user through our model
+      return User.from(updatedUser)
+    } catch (error) {
+      throw Error(error instanceof Error ? error.message : 'Failed to update profile')
     }
-
-    // Refresh and return the updated user
-    return this.getCurrentUser();
   }
 }
