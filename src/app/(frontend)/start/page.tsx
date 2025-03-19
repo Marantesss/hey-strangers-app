@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button'
 import { NextPage } from 'next'
 import Link from 'next/link'
 
+export const revalidate = 60
+
 const StartPage: NextPage = () => {
   return (
     <main className="bg-hero flex flex-col items-center justify-center h-screen gap-6">

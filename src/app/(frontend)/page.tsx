@@ -57,6 +57,12 @@ const FAKE_GAMES = [
   },
 ]
 
+// Option 1: Force dynamic rendering
+// export const dynamic = 'force-dynamic'
+
+// Option 2: Revalidate the page every X seconds (e.g., 60 seconds)
+export const revalidate = 60
+
 export default async function Home() {
   const payload = await getPayload({ config })
 
