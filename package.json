@@ -1,45 +1,74 @@
 {
-  "private": true,
+  "name": "hey-strangers-payload",
+  "version": "1.0.0",
+  "description": "A blank template to get started with Payload 3.0",
+  "license": "MIT",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
+    "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+    "lint": "cross-env NODE_OPTIONS=--no-deprecation next lint",
+    "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+    "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
+    "seed": "cross-env NODE_OPTIONS=--no-deprecation payload run src/database/seed"
   },
   "dependencies": {
-    "@hookform/resolvers": "^4.1.2",
+    "@hookform/resolvers": "^4.1.3",
+    "@payloadcms/db-postgres": "^3.28.1",
+    "@payloadcms/next": "^3.28.1",
+    "@payloadcms/payload-cloud": "^3.28.1",
+    "@payloadcms/richtext-lexical": "^3.28.1",
+    "@payloadcms/storage-s3": "^3.28.1",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-avatar": "^1.1.3",
-    "@radix-ui/react-checkbox": "^1.1.1",
+    "@radix-ui/react-checkbox": "^1.1.4",
     "@radix-ui/react-collapsible": "^1.1.3",
-    "@radix-ui/react-dropdown-menu": "^2.1.1",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
     "@radix-ui/react-label": "^2.1.2",
     "@radix-ui/react-navigation-menu": "^1.2.5",
     "@radix-ui/react-select": "^2.1.6",
     "@radix-ui/react-slot": "^1.1.2",
-    "@supabase/ssr": "latest",
-    "@supabase/supabase-js": "latest",
-    "autoprefixer": "10.4.20",
-    "class-variance-authority": "^0.7.0",
+    "autoprefixer": "^10.4.21",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.468.0",
-    "next": "latest",
-    "next-themes": "^0.4.3",
-    "prettier": "^3.3.3",
+    "cross-env": "^7.0.3",
+    "graphql": "^16.8.1",
+    "jose": "^6.0.10",
+    "lucide-react": "^0.482.0",
+    "next": "15.2.2",
+    "next-themes": "^0.4.6",
+    "payload": "latest",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-hook-form": "^7.54.2",
+    "sharp": "0.32.6",
+    "sonner": "^2.0.1",
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@types/node": "22.10.2",
-    "@types/react": "^19.0.2",
-    "@types/react-dom": "19.0.2",
-    "postcss": "8.4.49",
-    "supabase": "^2.12.1",
+    "@eslint/eslintrc": "^3.2.0",
+    "@types/node": "^22.5.4",
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4",
+    "eslint": "^9.16.0",
+    "eslint-config-next": "15.2.2",
+    "postcss": "^8.5.3",
+    "prettier": "^3.4.2",
     "tailwind-merge": "^2.5.2",
     "tailwindcss": "3.4.17",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "5.7.2"
+    "typescript": "5.7.3"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "engines": {
+    "node": "^18.20.2 || >=20.9.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp"
+    ]
+  },
+  "packageManager": "pnpm@10.0.0+sha512.b8fef5494bd3fe4cbd4edabd0745df2ee5be3e4b0b8b08fa643aa3e4c6702ccc0f00d68fa8a8c9858a735a0032485a44990ed2810526c875e416f001b17df12b"
 }
