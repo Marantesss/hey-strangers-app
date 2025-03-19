@@ -5,6 +5,7 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import { migrations } from './database/migrations'
 
 import { Users, Fields, Games, Registrations, Admins, Media } from './collections'
 import { Home } from './globals'
@@ -31,6 +32,7 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
+    prodMigrations: migrations,
     migrationDir: path.resolve(dirname, 'database/migrations'),
   }),
   sharp,
