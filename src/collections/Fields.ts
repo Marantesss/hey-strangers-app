@@ -50,6 +50,7 @@ export const Fields: CollectionConfig = {
     useAsTitle: 'name',
   },
   fields: [
+    // --- FIELDS
     {
       name: 'name',
       type: 'text',
@@ -64,8 +65,8 @@ export const Fields: CollectionConfig = {
       name: 'type',
       type: 'select',
       required: true,
-      options: fieldTypes.map(type => ({
-        label: type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      options: fieldTypes.map((type) => ({
+        label: type.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
         value: type,
       })),
     },
@@ -73,8 +74,8 @@ export const Fields: CollectionConfig = {
       name: 'flooring',
       type: 'select',
       required: true,
-      options: flooringTypes.map(type => ({
-        label: type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      options: flooringTypes.map((type) => ({
+        label: type.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
         value: type,
       })),
     },
@@ -82,8 +83,8 @@ export const Fields: CollectionConfig = {
       name: 'sport',
       type: 'select',
       required: true,
-      options: sportTypes.map(type => ({
-        label: type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      options: sportTypes.map((type) => ({
+        label: type.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
         value: type,
       })),
     },
@@ -91,8 +92,8 @@ export const Fields: CollectionConfig = {
       name: 'amenities',
       type: 'select',
       hasMany: true,
-      options: amenityTypes.map(type => ({
-        label: type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      options: amenityTypes.map((type) => ({
+        label: type.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
         value: type,
       })),
     },
@@ -103,5 +104,13 @@ export const Fields: CollectionConfig = {
         position: 'sidebar',
       },
     },
+    // --- relations and joins
+    {
+      name: 'games',
+      type: 'join',
+      collection: 'games',
+      on: 'field',
+      hasMany: true,
+    },
   ],
-} 
+}

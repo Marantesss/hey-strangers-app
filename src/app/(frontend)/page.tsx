@@ -14,6 +14,13 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from '@/components/ui/accordion'
+import { getPayload } from 'payload'
+import config from '@payload-config'
+import Link from 'next/link'
+import WordCycle from '@/components/common/WordCycle'
+import { getNextGame } from '@/domains/games/shared/GameService'
+import Countdown from '@/components/common/Countdown'
+import { Media } from '@/payload-types'
 
 const FAKE_GAMES = [
   {
@@ -51,56 +58,69 @@ const FAKE_GAMES = [
 ]
 
 export default async function Home() {
+  const payload = await getPayload({ config })
+
+  const home = await payload.findGlobal({ slug: 'home' })
+
+  const nextGame = await getNextGame()
+
   return (
     <main>
       {/* Hero Section */}
       <section className="bg-[#F5F7F9]">
         <div className="min-h-screen container py-8 flex flex-col items-center justify-between gap-8">
-          {/* Hero Section */}
           <nav className="flex items-center justify-between w-full">
             <Logo />
             <div className="flex items-center gap-4">
-              <Button variant="ghost">Registo</Button>
-              <Button>O meu espaço</Button>
+              <Button asChild variant="ghost">
+                <Link href="/sign-up">Registo</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/app">O meu espaço</Link>
+              </Button>
             </div>
           </nav>
 
           {/* Center Section */}
           <div className="text-center space-y-8">
             <h1 className="text-4xl md:text-6xl font-bold">
-              Hey strangers!
+              {home.hero.title}
               <br />
-              <span className="text-[#1BA781]">Let's play together.</span>
+              <span className="text-[#1BA781]">{home.hero.subtitle}</span>
             </h1>
 
-            <p className="max-w-lg">
-              Play ceas with friendly strangers—matched to your skills and preferences by AI.
-            </p>
+            <p className="max-w-lg">{home.hero.description}</p>
 
             <Select>
               <SelectTrigger>
                 <SelectValue placeholder="Select a city" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1">1</SelectItem>
-                <SelectItem value="2">2</SelectItem>
-                <SelectItem value="3">3</SelectItem>
+                <SelectItem value="porto">Porto</SelectItem>
+                <SelectItem value="lisboa">Lisboa</SelectItem>
               </SelectContent>
             </Select>
 
-            <p className="max-w-lg">
-              Next match in: <span className="font-bold">1 day 9 hours 33 min 12 seconds</span>
-            </p>
+            {nextGame && (
+              <p className="max-w-lg">
+                Next match in:
+                <Countdown className="font-bold" date={nextGame.startsAt} />
+              </p>
+            )}
 
-            <Button>Join the fun</Button>
+            <Button asChild>
+              <Link href="/sign-up">{home.hero.buttonLabel}</Link>
+            </Button>
           </div>
 
           {/* Partner Logos */}
           <div className="flex flex-wrap justify-between mt-4 w-full max-w-xl">
-            <Image src="/partners/sic.png" alt="Partner 3" width={100} height={40} />
-            <Image src="/partners/time-out.png" alt="Partner 4" width={100} height={40} />
-            <Image src="/partners/nit.png" alt="Partner 2" width={100} height={40} />
-            <Image src="/partners/business-insider.png" alt="Partner 1" width={100} height={40} />
+            {home.hero.partners.map((logo) => {
+              const media = logo.logo as Media
+              return (
+                <Image key={logo.id} src={media.url!} alt={media.alt!} width={100} height={40} />
+              )
+            })}
           </div>
         </div>
       </section>
@@ -156,33 +176,14 @@ export default async function Home() {
       {/* How it Works Section */}
       <section className="container space-y-20 py-20">
         <div className="text-center space-y-4">
-          <h2 className="text-2xl font-bold">How the magic happens</h2>
-          <p>Making social sports easy, fun, and friendly.</p>
+          <h2 className="text-2xl font-bold">{home.howItWorks.title}</h2>
+          <p>{home.howItWorks.subtitle}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          {[
-            {
-              icon: '/how-icons/quiz.png',
-              title: 'Take our quick 3-minute skills tests',
-              description:
-                "Your skills help us find the right group for you. Don't worry—your data is 100% protected.",
-            },
-            {
-              icon: '/how-icons/schedule.png',
-              title: 'Choose your game and time',
-              description:
-                'Browse pre-planned games with set locations and times—just pick what works best for you.',
-            },
-            {
-              icon: '/how-icons/show-up.png',
-              title: 'Show up and say hey strangers',
-              description:
-                'We handle all the planning. Just show up, meet new friends, play your favorite sports, and enjoy the experience!',
-            },
-          ].map((item, index) => (
+          {home.howItWorks.steps.map((item, index) => (
             <div key={index} className="flex flex-col gap-4">
-              <Image src={item.icon} alt={item.title} width={32} height={32} />
+              <Image src={(item.icon as Media).url!} alt={item.title} width={32} height={32} />
               <h3 className="font-bold">{item.title}</h3>
               <p className="text-muted-foreground">{item.description}</p>
             </div>
@@ -190,7 +191,9 @@ export default async function Home() {
         </div>
 
         <div className="flex justify-center">
-          <Button>Choose your game</Button>
+          <Button asChild>
+            <Link href="/sign-up">{home.howItWorks.buttonLabel}</Link>
+          </Button>
         </div>
       </section>
 
@@ -198,29 +201,9 @@ export default async function Home() {
       <section className="container py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="flex flex-col gap-8">
-            <h2 className="text-2xl font-bold">
-              Facts facts about
-              <br />
-              Hey Strangers
-            </h2>
+            <h2 className="text-2xl font-bold">{home.stats.title}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                {
-                  value: 95,
-                  label: 'of players',
-                  description: "say they were perfectly matched with their group's skill level.",
-                },
-                {
-                  value: 82,
-                  label: 'of participants',
-                  description: 'would recommend Hey Stranger to their friends.',
-                },
-                {
-                  value: 78,
-                  label: 'of players',
-                  description: 'have made lasting connections through our sports activities.',
-                },
-              ].map((item, index) => (
+              {home.stats.statistics.map((item, index) => (
                 <div key={index} className="flex flex-col gap-2 p-6 border rounded-2xl">
                   <p className="text-4xl font-bold text-[#1BA781]">{item.value}%</p>
                   <p className="">{item.label}</p>
@@ -232,8 +215,8 @@ export default async function Home() {
 
           <div className="relative rounded-2xl overflow-hidden min-h-[300px]">
             <Image
-              src="/stats/running.jpg"
-              alt="Players enjoying a game"
+              src={(home.stats.image as Media).url!}
+              alt={(home.stats.image as Media).alt!}
               fill
               className="object-cover"
             />
@@ -244,38 +227,19 @@ export default async function Home() {
       {/* Love Letters Section */}
       <section className="bg-[#F5F7F9] py-20">
         <div className="container space-y-20">
-          <h2 className="text-5xl font-bold text-center">Love letters</h2>
+          <h2 className="text-5xl font-bold text-center">{home.testimonials.title}</h2>
           <div className="relative">
             {/* Testimonials Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[
-                {
-                  quote:
-                    "Joining Hey Stranger has been a game-changer! I was nervous about meeting new people, but the matching process was spot on. Now, I have a regular group for soccer, and it's the highlight of my week!",
-                  author: 'Alex S.',
-                  image: '/strangers/alex.jpg',
-                },
-                {
-                  quote:
-                    "I love how easy it is to find games that fit my schedule. The platform takes all the hassle out of organizing, and I've met some amazing paddle buddies along the way!",
-                  author: 'Rita M.',
-                  image: '/strangers/rita.jpg',
-                },
-                {
-                  quote:
-                    "As someone new to the city, Hey Stranger made it so easy to connect with people who share my love for tennis. It's like having a ready-made community waiting for you.",
-                  author: 'Sara C.',
-                  image: '/strangers/sara.jpg',
-                },
-              ].map((testimonial, index) => (
+              {home.testimonials.reviews.map((testimonial) => (
                 <div
-                  key={index}
+                  key={testimonial.id}
                   className="bg-primary text-white p-8 rounded-2xl flex flex-col justify-between gap-8"
                 >
                   <p className="text-lg">"{testimonial.quote}"</p>
                   <div className="flex items-center gap-3">
                     <Image
-                      src={testimonial.image}
+                      src={(testimonial.image as Media).url!}
                       alt={testimonial.author}
                       width={32}
                       height={32}
@@ -288,7 +252,7 @@ export default async function Home() {
             </div>
 
             {/* Navigation Buttons */}
-            <div className="flex justify-center gap-4 mt-8">
+            {/* <div className="flex justify-center gap-4 mt-8">
               <button
                 className="w-12 h-12 rounded-full bg-[#F5F7F9] flex items-center justify-center hover:bg-gray-200 transition-colors"
                 aria-label="Previous testimonial"
@@ -317,7 +281,7 @@ export default async function Home() {
                   />
                 </svg>
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
@@ -327,8 +291,8 @@ export default async function Home() {
         <div className="bg-[#E3FFCD] rounded-3xl p-12 flex flex-col md:flex-row justify-between gap-12">
           {/* Left Side */}
           <div className="flex flex-col gap-4 justify-center">
-            <p className="text-sm">Take our skill test</p>
-            <h2 className="text-4xl font-bold">Ready to start playing?</h2>
+            <p className="text-sm">{home.cta.subtitle}</p>
+            <h2 className="text-4xl font-bold">{home.cta.title}</h2>
           </div>
 
           {/* Right Side - Quiz Card */}
@@ -361,19 +325,19 @@ export default async function Home() {
 
             {/* Sport Options Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              {[
-                { name: 'Soccer', image: '/games/soccer.jpg' },
-                { name: 'Padel', image: '/games/padel.jpg', selected: true },
-                { name: 'Tennis', image: '/games/tennis.jpg' },
-                { name: 'Golf', image: '/games/golf.jpg' },
-              ].map((sport) => (
+              {home.cta.sports.map((sport) => (
                 <div
                   key={sport.name}
                   className={`relative aspect-square rounded-2xl overflow-hidden cursor-pointer group ${
                     sport.selected ? 'ring-2 ring-primary' : ''
                   }`}
                 >
-                  <Image src={sport.image} alt={sport.name} fill className="object-cover" />
+                  <Image
+                    src={(sport.image as Media).url!}
+                    alt={(sport.image as Media).alt!}
+                    fill
+                    className="object-cover"
+                  />
                   {sport.selected && (
                     <div className="absolute top-2 right-2">
                       <svg
@@ -402,18 +366,17 @@ export default async function Home() {
             </div>
 
             {/* Start Button */}
-            <Button className="w-full" size="lg">
-              Start Now
+            <Button asChild className="w-full" size="lg">
+              <Link href="/sign-up">{home.cta.buttonLabel}</Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Meet Strangers Section */}
+      {/* Strangers Section */}
       <section className="container space-y-12 py-20">
-        <h2 className="text-4xl font-bold text-center">Meet some of our strangers</h2>
+        <h2 className="text-4xl font-bold text-center">{home.strangers.title}</h2>
 
-        {/* Sport Filter */}
         <div className="flex justify-center gap-4">
           <div className="flex gap-2">
             <span className="px-4 py-2 rounded-lg font-semibold bg-[#E3FFCD] text-primary">
@@ -431,44 +394,14 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* Strangers Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[
-            {
-              name: 'Emma Carter',
-              age: '25 years',
-              bio: 'A passionate tennis player who loves both competition and casual matches. Always seeking partners to practice on sunny courts.',
-              sport: 'Tennis',
-              image: '/strangers/emma.jpg',
-            },
-            {
-              name: 'Lucas Martins',
-              age: '22 years',
-              bio: 'A dedicated golf enthusiast known for his great spirit and sharp strokes. Enjoys connecting with other golf fans for pickup games.',
-              sport: 'Golf',
-              image: '/strangers/lucas.jpg',
-            },
-            {
-              name: 'Jake Thompson',
-              age: '19 years',
-              bio: 'An aspiring young padel player who loves honing his skills and learning from teammates. Looks for new challenges.',
-              sport: 'Padel',
-              image: '/strangers/jake.jpg',
-            },
-            {
-              name: 'Logan Brown',
-              age: '29 years',
-              bio: 'A padel player who balances work with her love for the sport. Always up for a competitive yet fun game on the weekends.',
-              sport: 'Padel',
-              image: '/strangers/logan.jpg',
-            },
-          ].map((stranger) => (
+          {home.strangers.strangers.map((stranger) => (
             <div key={stranger.name} className="p-6 rounded-2xl border border-gray-200 space-y-4">
               <div className="flex gap-4">
                 <div className="relative">
                   <Image
-                    src={stranger.image}
-                    alt={stranger.name}
+                    src={(stranger.image as Media).url!}
+                    alt={(stranger.image as Media).alt!}
                     width={48}
                     height={48}
                     className="rounded-full object-cover aspect-square"
@@ -491,16 +424,16 @@ export default async function Home() {
       <section className="bg-[#F5F7F9] py-20">
         <div className="container space-y-12">
           <div className="text-center space-y-4">
-            <h2 className="text-4xl font-bold">When & Where</h2>
-            <p className="text-muted-foreground">Your perfect game, at the perfect time.</p>
+            <h2 className="text-4xl font-bold">{home.whenAndWhere.title}</h2>
+            <p className="text-muted-foreground">{home.whenAndWhere.subtitle}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {/* Left Side - Image */}
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden">
               <Image
-                src="/games/padel-2.jpg"
-                alt="Player preparing for a game"
+                src={(home.whenAndWhere.image as Media).url!}
+                alt={(home.whenAndWhere.image as Media).alt!}
                 fill
                 className="object-cover"
               />
@@ -508,61 +441,21 @@ export default async function Home() {
 
             {/* Right Side - Features */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Feature 1 */}
-              <div className="space-y-4">
-                <div className="w-10 h-10 rounded-full bg-[#E3FFCD] flex items-center justify-center">
-                  <span className="text-xl">🎾</span>
+              {home.whenAndWhere.features.map((feature) => (
+                <div key={feature.title} className="space-y-4">
+                  <div className="w-10 h-10 rounded-full bg-[#E3FFCD] flex items-center justify-center">
+                    <span className="text-xl">{feature.emoji}</span>
+                  </div>
+                  <h3 className="font-semibold text-lg">{feature.title}</h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
                 </div>
-                <h3 className="font-semibold text-lg">
-                  Pre-scheduled games at convenient locations
-                </h3>
-                <p className="text-muted-foreground">
-                  We plan everything for you! Games are hosted at top-rated venues, so you always
-                  know exactly where to go.
-                </p>
-              </div>
-
-              {/* Feature 2 */}
-              <div className="space-y-4">
-                <div className="w-10 h-10 rounded-full bg-[#E3FFCD] flex items-center justify-center">
-                  <span className="text-xl">⏰</span>
-                </div>
-                <h3 className="font-semibold text-lg">Choose the time that works for you</h3>
-                <p className="text-muted-foreground">
-                  Our schedule offers a variety of times to fit your day—whether it's a morning
-                  tennis match or an evening soccer game, you'll find a slot that suits you.
-                </p>
-              </div>
-
-              {/* Feature 3 */}
-              <div className="space-y-4">
-                <div className="w-10 h-10 rounded-full bg-[#E3FFCD] flex items-center justify-center">
-                  <span className="text-xl">📍</span>
-                </div>
-                <h3 className="font-semibold text-lg">Easy access to all locations</h3>
-                <p className="text-muted-foreground">
-                  Each game's location is easily accessible and shared in advance. Whether it's a
-                  park, court, or sports facility, you'll get all the details upfront.
-                </p>
-              </div>
-
-              {/* Feature 4 */}
-              <div className="space-y-4">
-                <div className="w-10 h-10 rounded-full bg-[#E3FFCD] flex items-center justify-center">
-                  <span className="text-xl">📅</span>
-                </div>
-                <h3 className="font-semibold text-lg">Flexible options for every schedule</h3>
-                <p className="text-muted-foreground">
-                  Can't make a match? No problem—just choose another time or day that works better
-                  for you!
-                </p>
-              </div>
+              ))}
             </div>
           </div>
 
           <div className="flex justify-center">
-            <Button className="bg-[#E3FFCD] hover:bg-[#D1F7B0] border-0 text-primary font-semibold">
-              Book your game now
+            <Button asChild>
+              <Link href="/sign-up">{home.whenAndWhere.buttonLabel}</Link>
             </Button>
           </div>
         </div>
@@ -570,33 +463,33 @@ export default async function Home() {
 
       {/* Numbers Section */}
       <section className="container space-y-20 py-20">
-        <h2 className="text-4xl font-bold text-center">Hey Stranger in numbers</h2>
+        <h2 className="text-4xl font-bold text-center">{home.numbers.title}</h2>
 
         <div className="grid grid-cols-2 md:grid-cols-8">
           {/* Cities */}
           <div className="bg-primary p-12 flex flex-col gap-6 justify-end text-white md:col-span-2 md:row-span-2">
-            <p className="text-5xl font-bold">200</p>
-            <p className="text-lg font-medium">cities</p>
+            <p className="text-5xl font-bold">{home.numbers.numbers[0].value}</p>
+            <p className="text-lg font-medium">{home.numbers.numbers[0].label}</p>
           </div>
 
           <div className="bg-[#F5F7F9] p-12 flex flex-col justify-between items-end md:col-span-3 rounded-bl-[16rem] aspect-square">
-            <p className="text-5xl font-bold text-primary">85</p>
-            <p className="text-lg text-primary">countries</p>
+            <p className="text-5xl font-bold text-primary">{home.numbers.numbers[1].value}</p>
+            <p className="text-lg text-primary">{home.numbers.numbers[1].label}</p>
           </div>
 
           <div className="bg-[#E3FFCD] p-12 flex flex-col justify-between items-end md:col-span-3 aspect-square rounded-l-[16rem]">
-            <p className="text-5xl font-bold text-primary">120 000</p>
-            <p className="text-lg text-primary">Strangers played together</p>
+            <p className="text-5xl font-bold text-primary">{home.numbers.numbers[2].value}</p>
+            <p className="text-lg text-primary">{home.numbers.numbers[2].label}</p>
           </div>
 
           <div className="bg-[#F5F7F9] p-12 flex flex-col justify-between items-start md:col-span-3 rounded-tr-[16rem] aspect-square">
-            <p className="text-5xl font-bold text-primary">1000</p>
-            <p className="text-lg text-primary">scored points/goals</p>
+            <p className="text-5xl font-bold text-primary">{home.numbers.numbers[3].value}</p>
+            <p className="text-lg text-primary">{home.numbers.numbers[3].label}</p>
           </div>
 
           <div className="bg-primary p-12 flex flex-col justify-between items-start text-[#E3FFCD] md:col-span-3 aspect-square rounded-[4rem]">
-            <p className="text-5xl font-bold">14 000</p>
-            <p className="text-lg">Games</p>
+            <p className="text-5xl font-bold">{home.numbers.numbers[4].value}</p>
+            <p className="text-lg">{home.numbers.numbers[4].label}</p>
           </div>
         </div>
       </section>
@@ -605,46 +498,15 @@ export default async function Home() {
       <section className="container space-y-12 py-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
-            <h2 className="text-4xl font-bold">Frequently asked questions</h2>
+            <h2 className="text-4xl font-bold">{home.faq.title}</h2>
           </div>
 
           <div className="md:col-span-2">
             <Accordion type="single" collapsible>
-              {[
-                {
-                  value: 'item-1',
-                  question: 'How does the skill matching system work?',
-                  answer:
-                    'Our AI-powered matching system considers your experience level, playing style, and preferences to connect you with players of similar skill levels. This ensures balanced, enjoyable games for everyone involved.',
-                },
-                {
-                  value: 'item-2',
-                  question: 'What happens if I need to cancel a game?',
-                  answer:
-                    "You can cancel a game up to 24 hours before the scheduled time without any penalty. We'll notify other players and help find a replacement to ensure the game can still go ahead.",
-                },
-                {
-                  value: 'item-3',
-                  question: 'Are the venues and equipment provided?',
-                  answer:
-                    "All venues are pre-booked and included in the game fee. For equipment, it varies by sport and venue - we'll clearly indicate what's provided and what you need to bring in the game details.",
-                },
-                {
-                  value: 'item-4',
-                  question: 'How do I pay for games?',
-                  answer:
-                    'Payment is handled securely through our platform. You can pay per game or opt for a membership plan if you play regularly. We accept all major credit cards and digital payment methods.',
-                },
-                {
-                  value: 'item-5',
-                  question: 'Is there a minimum commitment required?',
-                  answer:
-                    "No minimum commitment! You can join games as frequently or infrequently as you like. Some players join weekly regular games, while others play occasionally - it's entirely up to you.",
-                },
-              ].map((item) => (
+              {home.faq.questions.map((item) => (
                 <AccordionItem
-                  key={item.value}
-                  value={item.value}
+                  key={item.question}
+                  value={item.question}
                   className="border border-[#EBEBEB]"
                 >
                   <AccordionTrigger className="px-6 data-[state=open]:bg-[#F5F7F9] data-[state=open]:text-primary data-[state=open]:rounded-b-none">
@@ -658,45 +520,30 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* CTA Section 2 */}
       <section className="bg-primary py-20">
         <div className="container gap-8 flex flex-col items-center">
-          <h2 className="text-4xl font-bold text-[#E3FFCD]">
-            Hey Stranger, ready to take a chance?
-          </h2>
-          <Button className="bg-[#E3FFCD] hover:bg-[#D1F7B0] border-0 text-primary font-semibold">
-            Choose your game
+          <h2 className="text-4xl font-bold text-[#E3FFCD]">{home.cta2.title}</h2>
+          <Button
+            asChild
+            className="bg-[#E3FFCD] hover:bg-[#D1F7B0] border-0 text-primary font-semibold"
+          >
+            <Link href="/sign-up">{home.cta2.buttonLabel}</Link>
           </Button>
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="bg-[#0B0F12] text-white py-8">
         <div className="container flex md:flex-row md:justify-between flex-col gap-8">
           <ul className="flex flex-wrap gap-6 justify-center">
-            <li className="text-center">
-              <a href="#" className="hover:text-[#E3FFCD] transition-colors">
-                Contact Us
-              </a>
-            </li>
-            <li className="text-center">
-              <a href="#" className="hover:text-[#E3FFCD] transition-colors">
-                Safety Tips & Rules
-              </a>
-            </li>
-            <li className="text-center">
-              <a href="#" className="hover:text-[#E3FFCD] transition-colors">
-                Community Guidelines
-              </a>
-            </li>
-            <li className="text-center">
-              <a href="#" className="hover:text-[#E3FFCD] transition-colors">
-                Terms & Conditions
-              </a>
-            </li>
-            <li className="text-center">
-              <a href="#" className="hover:text-[#E3FFCD] transition-colors">
-                Privacy Policy
-              </a>
-            </li>
+            {home.footer.links.map((link) => (
+              <li key={link.label} className="text-center">
+                <a href={link.url} className="hover:text-[#E3FFCD] transition-colors">
+                  {link.label}
+                </a>
+              </li>
+            ))}
           </ul>
           <div className="flex gap-4 justify-center">
             <a href="#" className="hover:text-[#E3FFCD] transition-colors">

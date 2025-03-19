@@ -32,14 +32,19 @@ const deleteAll = async (payload: Payload) => {
     collection: 'users',
     where: { id: { exists: true } },
   })
+
+  // await payload.delete({
+  //   collection: 'media',
+  //   where: { id: { exists: true } },
+  // })
 }
 
 const seed = async () => {
   const payload = await getPayload({ config })
 
-  await seedHome(payload)
-
   await deleteAll(payload)
+
+  await seedHome(payload)
 
   await seedAdmins(payload)
   await seedUsers(payload)

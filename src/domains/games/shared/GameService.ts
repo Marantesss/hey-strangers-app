@@ -125,3 +125,48 @@ export async function getGames(
 
   return docs.map((game) => GameModel.from(game))
 }
+
+export async function getNextGame(
+  options: {
+    city?: string
+    sport?: GameModel['sport']
+  } = {},
+  { expand }: { expand?: ExpandOptions } = {},
+): Promise<GameModel | null> {
+  const payload = await getPayload({ config })
+  const now = new Date()
+
+  const query = {
+    collection: 'games' as const,
+    where: {
+      ...(options.city
+        ? {
+            'field.address': {
+              contains: options.city,
+            },
+          }
+        : {}),
+      ...(options.sport
+        ? {
+            sport: {
+              equals: options.sport,
+            },
+          }
+        : {}),
+      startsAt: {
+        greater_than: now.toISOString(),
+      },
+    },
+    sort: 'startsAt',
+    limit: 1,
+    depth: expand?.field || expand?.registrations ? 2 : 1,
+  }
+
+  const { docs } = await payload.find(query)
+
+  if (docs.length === 0) {
+    return null
+  }
+
+  return GameModel.from(docs[0])
+}

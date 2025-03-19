@@ -7,6 +7,15 @@ export const Registrations: CollectionConfig = {
     defaultColumns: ['game', 'user'],
   },
   fields: [
+    // --- FIELDS
+    {
+      name: 'deletedAt',
+      type: 'date',
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    // --- relations and joins
     {
       name: 'game',
       type: 'relationship',
@@ -19,12 +28,5 @@ export const Registrations: CollectionConfig = {
       relationTo: 'users',
       required: true,
     },
-    {
-      name: 'deletedAt',
-      type: 'date',
-      admin: {
-        position: 'sidebar',
-      },
-    },
   ],
-} 
+}

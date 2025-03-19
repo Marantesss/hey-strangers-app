@@ -6,6 +6,9 @@ const HASH_LENGTH = 8
 export const Media: CollectionConfig = {
   slug: 'media',
   upload: true,
+  access: {
+    read: () => true,
+  },
   fields: [
     {
       name: 'alt',

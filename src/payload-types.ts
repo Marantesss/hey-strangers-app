@@ -77,7 +77,17 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    users: {
+      registrations: 'registrations';
+    };
+    fields: {
+      games: 'games';
+    };
+    games: {
+      registrations: 'registrations';
+    };
+  };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     fields: FieldsSelect<false> | FieldsSelect<true>;
@@ -164,6 +174,11 @@ export interface User {
   name?: string | null;
   city?: string | null;
   deletedAt?: string | null;
+  registrations?: {
+    docs?: (string | Registration)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -186,6 +201,41 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registrations".
+ */
+export interface Registration {
+  id: string;
+  deletedAt?: string | null;
+  game: string | Game;
+  user: string | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "games".
+ */
+export interface Game {
+  id: string;
+  name: string;
+  description?: string | null;
+  startsAt: string;
+  endsAt: string;
+  price: number;
+  maxPlayers: number;
+  sport: 'soccer' | 'padel' | 'tennis' | 'basketball' | 'volleyball';
+  field: string | Field;
+  deletedAt?: string | null;
+  registrations?: {
+    docs?: (string | Registration)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -229,36 +279,11 @@ export interface Field {
       )[]
     | null;
   deletedAt?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "games".
- */
-export interface Game {
-  id: string;
-  name: string;
-  description?: string | null;
-  startsAt: string;
-  endsAt: string;
-  price: number;
-  maxPlayers: number;
-  sport: 'soccer' | 'padel' | 'tennis' | 'basketball' | 'volleyball';
-  field: string | Field;
-  deletedAt?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "registrations".
- */
-export interface Registration {
-  id: string;
-  game: string | Game;
-  user: string | User;
-  deletedAt?: string | null;
+  games?: {
+    docs?: (string | Game)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -380,6 +405,7 @@ export interface UsersSelect<T extends boolean = true> {
   name?: T;
   city?: T;
   deletedAt?: T;
+  registrations?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -395,6 +421,7 @@ export interface FieldsSelect<T extends boolean = true> {
   sport?: T;
   amenities?: T;
   deletedAt?: T;
+  games?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -412,6 +439,7 @@ export interface GamesSelect<T extends boolean = true> {
   sport?: T;
   field?: T;
   deletedAt?: T;
+  registrations?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -420,9 +448,9 @@ export interface GamesSelect<T extends boolean = true> {
  * via the `definition` "registrations_select".
  */
 export interface RegistrationsSelect<T extends boolean = true> {
+  deletedAt?: T;
   game?: T;
   user?: T;
-  deletedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -500,23 +528,17 @@ export interface Home {
   id: string;
   hero: {
     title: string;
+    subtitle: string;
     description: string;
-    cyclingWords?:
-      | {
-          word?: string | null;
-          id?: string | null;
-        }[]
-      | null;
-    partnerLogos?:
-      | {
-          logo: string | Media;
-          alt: string;
-          id?: string | null;
-        }[]
-      | null;
+    buttonLabel: string;
+    partners: {
+      logo: string | Media;
+      name: string;
+      id?: string | null;
+    }[];
   };
-  nextGames?: {
-    title?: string | null;
+  nextGames: {
+    title: string;
     sportCategories?:
       | {
           name: string;
@@ -525,66 +547,101 @@ export interface Home {
         }[]
       | null;
   };
-  howItWorks?: {
-    title?: string | null;
-    subtitle?: string | null;
-    steps?:
-      | {
-          icon: string | Media;
-          title: string;
-          description: string;
-          id?: string | null;
-        }[]
-      | null;
+  howItWorks: {
+    title: string;
+    subtitle: string;
+    buttonLabel: string;
+    steps: {
+      icon: string | Media;
+      title: string;
+      description: string;
+      id?: string | null;
+    }[];
   };
   stats: {
-    title?: string | null;
-    statistics?:
-      | {
-          value: number;
-          label: string;
-          description: string;
-          id?: string | null;
-        }[]
-      | null;
+    title: string;
+    statistics: {
+      value: number;
+      label: string;
+      description: string;
+      id?: string | null;
+    }[];
     image: string | Media;
   };
-  testimonials?: {
-    title?: string | null;
-    reviews?:
-      | {
-          quote: string;
-          author: string;
-          image: string | Media;
-          id?: string | null;
-        }[]
-      | null;
+  testimonials: {
+    title: string;
+    reviews: {
+      quote: string;
+      author: string;
+      image: string | Media;
+      id?: string | null;
+    }[];
   };
-  faq?: {
-    title?: string | null;
-    questions?:
-      | {
-          question: string;
-          answer: string;
-          id?: string | null;
-        }[]
-      | null;
+  cta: {
+    title: string;
+    subtitle: string;
+    buttonLabel: string;
+    sports: {
+      name: string;
+      image: string | Media;
+      selected: boolean;
+      id?: string | null;
+    }[];
   };
-  footer?: {
-    links?:
-      | {
-          label: string;
-          url: string;
-          id?: string | null;
-        }[]
-      | null;
-    socialLinks?:
-      | {
-          platform: 'Facebook' | 'YouTube' | 'LinkedIn' | 'Instagram';
-          url: string;
-          id?: string | null;
-        }[]
-      | null;
+  strangers: {
+    title: string;
+    strangers: {
+      name: string;
+      age: number;
+      bio: string;
+      sport: string;
+      image: string | Media;
+      id?: string | null;
+    }[];
+  };
+  whenAndWhere: {
+    title: string;
+    subtitle: string;
+    buttonLabel: string;
+    image: string | Media;
+    features: {
+      emoji: string;
+      title: string;
+      description: string;
+      id?: string | null;
+    }[];
+  };
+  numbers: {
+    title: string;
+    numbers: {
+      value: number;
+      label: string;
+      id?: string | null;
+    }[];
+  };
+  faq: {
+    title: string;
+    questions: {
+      question: string;
+      answer: string;
+      id?: string | null;
+    }[];
+  };
+  cta2: {
+    title: string;
+    buttonLabel: string;
+  };
+  footer: {
+    links: {
+      label: string;
+      url: string;
+      id?: string | null;
+    }[];
+    socialLinks: {
+      platform: 'Facebook' | 'YouTube' | 'LinkedIn' | 'Instagram';
+      url: string;
+      id?: string | null;
+    }[];
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -598,18 +655,14 @@ export interface HomeSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
+        subtitle?: T;
         description?: T;
-        cyclingWords?:
-          | T
-          | {
-              word?: T;
-              id?: T;
-            };
-        partnerLogos?:
+        buttonLabel?: T;
+        partners?:
           | T
           | {
               logo?: T;
-              alt?: T;
+              name?: T;
               id?: T;
             };
       };
@@ -630,6 +683,7 @@ export interface HomeSelect<T extends boolean = true> {
     | {
         title?: T;
         subtitle?: T;
+        buttonLabel?: T;
         steps?:
           | T
           | {
@@ -666,6 +720,64 @@ export interface HomeSelect<T extends boolean = true> {
               id?: T;
             };
       };
+  cta?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+        buttonLabel?: T;
+        sports?:
+          | T
+          | {
+              name?: T;
+              image?: T;
+              selected?: T;
+              id?: T;
+            };
+      };
+  strangers?:
+    | T
+    | {
+        title?: T;
+        strangers?:
+          | T
+          | {
+              name?: T;
+              age?: T;
+              bio?: T;
+              sport?: T;
+              image?: T;
+              id?: T;
+            };
+      };
+  whenAndWhere?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+        buttonLabel?: T;
+        image?: T;
+        features?:
+          | T
+          | {
+              emoji?: T;
+              title?: T;
+              description?: T;
+              id?: T;
+            };
+      };
+  numbers?:
+    | T
+    | {
+        title?: T;
+        numbers?:
+          | T
+          | {
+              value?: T;
+              label?: T;
+              id?: T;
+            };
+      };
   faq?:
     | T
     | {
@@ -677,6 +789,12 @@ export interface HomeSelect<T extends boolean = true> {
               answer?: T;
               id?: T;
             };
+      };
+  cta2?:
+    | T
+    | {
+        title?: T;
+        buttonLabel?: T;
       };
   footer?:
     | T

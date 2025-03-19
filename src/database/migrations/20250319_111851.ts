@@ -11,7 +11,11 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TABLE IF NOT EXISTS "users" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"email" varchar,
+  	"profile_picture_id" uuid,
+  	"otp_code" varchar,
+  	"otp_expiration" timestamp(3) with time zone,
   	"phone_number" varchar NOT NULL,
+  	"is_verified" boolean DEFAULT false,
   	"name" varchar,
   	"city" varchar,
   	"deleted_at" timestamp(3) with time zone,
@@ -55,9 +59,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   CREATE TABLE IF NOT EXISTS "registrations" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  	"deleted_at" timestamp(3) with time zone,
   	"game_id" uuid NOT NULL,
   	"user_id" uuid NOT NULL,
-  	"deleted_at" timestamp(3) with time zone,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
@@ -137,19 +141,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
   
-  CREATE TABLE IF NOT EXISTS "home_hero_cycling_words" (
-  	"_order" integer NOT NULL,
-  	"_parent_id" uuid NOT NULL,
-  	"id" varchar PRIMARY KEY NOT NULL,
-  	"word" varchar
-  );
-  
-  CREATE TABLE IF NOT EXISTS "home_hero_partner_logos" (
+  CREATE TABLE IF NOT EXISTS "home_hero_partners" (
   	"_order" integer NOT NULL,
   	"_parent_id" uuid NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
   	"logo_id" uuid NOT NULL,
-  	"alt" varchar NOT NULL
+  	"name" varchar NOT NULL
   );
   
   CREATE TABLE IF NOT EXISTS "home_next_games_sport_categories" (
@@ -187,6 +184,43 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"image_id" uuid NOT NULL
   );
   
+  CREATE TABLE IF NOT EXISTS "home_cta_sports" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" uuid NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"name" varchar NOT NULL,
+  	"image_id" uuid NOT NULL,
+  	"selected" boolean DEFAULT false NOT NULL
+  );
+  
+  CREATE TABLE IF NOT EXISTS "home_strangers_strangers" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" uuid NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"name" varchar NOT NULL,
+  	"age" numeric NOT NULL,
+  	"bio" varchar NOT NULL,
+  	"sport" varchar NOT NULL,
+  	"image_id" uuid NOT NULL
+  );
+  
+  CREATE TABLE IF NOT EXISTS "home_when_and_where_features" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" uuid NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"emoji" varchar NOT NULL,
+  	"title" varchar NOT NULL,
+  	"description" varchar NOT NULL
+  );
+  
+  CREATE TABLE IF NOT EXISTS "home_numbers_numbers" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" uuid NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"value" numeric NOT NULL,
+  	"label" varchar NOT NULL
+  );
+  
   CREATE TABLE IF NOT EXISTS "home_faq_questions" (
   	"_order" integer NOT NULL,
   	"_parent_id" uuid NOT NULL,
@@ -215,16 +249,29 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"hero_title" varchar NOT NULL,
   	"hero_description" varchar NOT NULL,
-  	"next_games_title" varchar,
-  	"how_it_works_title" varchar,
-  	"how_it_works_subtitle" varchar,
-  	"stats_title" varchar,
+  	"next_games_title" varchar NOT NULL,
+  	"how_it_works_title" varchar NOT NULL,
+  	"how_it_works_subtitle" varchar NOT NULL,
+  	"stats_title" varchar NOT NULL,
   	"stats_image_id" uuid NOT NULL,
-  	"testimonials_title" varchar,
-  	"faq_title" varchar,
+  	"testimonials_title" varchar NOT NULL,
+  	"cta_title" varchar NOT NULL,
+  	"cta_subtitle" varchar NOT NULL,
+  	"strangers_title" varchar NOT NULL,
+  	"when_and_where_title" varchar NOT NULL,
+  	"when_and_where_subtitle" varchar NOT NULL,
+  	"when_and_where_image_id" uuid NOT NULL,
+  	"numbers_title" varchar NOT NULL,
+  	"faq_title" varchar NOT NULL,
   	"updated_at" timestamp(3) with time zone,
   	"created_at" timestamp(3) with time zone
   );
+  
+  DO $$ BEGIN
+   ALTER TABLE "users" ADD CONSTRAINT "users_profile_picture_id_media_id_fk" FOREIGN KEY ("profile_picture_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
   
   DO $$ BEGIN
    ALTER TABLE "fields_amenities" ADD CONSTRAINT "fields_amenities_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."fields"("id") ON DELETE cascade ON UPDATE no action;
@@ -311,19 +358,13 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   END $$;
   
   DO $$ BEGIN
-   ALTER TABLE "home_hero_cycling_words" ADD CONSTRAINT "home_hero_cycling_words_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."home"("id") ON DELETE cascade ON UPDATE no action;
+   ALTER TABLE "home_hero_partners" ADD CONSTRAINT "home_hero_partners_logo_id_media_id_fk" FOREIGN KEY ("logo_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   EXCEPTION
    WHEN duplicate_object THEN null;
   END $$;
   
   DO $$ BEGIN
-   ALTER TABLE "home_hero_partner_logos" ADD CONSTRAINT "home_hero_partner_logos_logo_id_media_id_fk" FOREIGN KEY ("logo_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
-  EXCEPTION
-   WHEN duplicate_object THEN null;
-  END $$;
-  
-  DO $$ BEGIN
-   ALTER TABLE "home_hero_partner_logos" ADD CONSTRAINT "home_hero_partner_logos_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."home"("id") ON DELETE cascade ON UPDATE no action;
+   ALTER TABLE "home_hero_partners" ADD CONSTRAINT "home_hero_partners_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."home"("id") ON DELETE cascade ON UPDATE no action;
   EXCEPTION
    WHEN duplicate_object THEN null;
   END $$;
@@ -365,6 +406,42 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   END $$;
   
   DO $$ BEGIN
+   ALTER TABLE "home_cta_sports" ADD CONSTRAINT "home_cta_sports_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "home_cta_sports" ADD CONSTRAINT "home_cta_sports_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."home"("id") ON DELETE cascade ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "home_strangers_strangers" ADD CONSTRAINT "home_strangers_strangers_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "home_strangers_strangers" ADD CONSTRAINT "home_strangers_strangers_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."home"("id") ON DELETE cascade ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "home_when_and_where_features" ADD CONSTRAINT "home_when_and_where_features_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."home"("id") ON DELETE cascade ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "home_numbers_numbers" ADD CONSTRAINT "home_numbers_numbers_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."home"("id") ON DELETE cascade ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
    ALTER TABLE "home_faq_questions" ADD CONSTRAINT "home_faq_questions_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."home"("id") ON DELETE cascade ON UPDATE no action;
   EXCEPTION
    WHEN duplicate_object THEN null;
@@ -388,6 +465,15 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
    WHEN duplicate_object THEN null;
   END $$;
   
+  DO $$ BEGIN
+   ALTER TABLE "home" ADD CONSTRAINT "home_when_and_where_image_id_media_id_fk" FOREIGN KEY ("when_and_where_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  CREATE UNIQUE INDEX IF NOT EXISTS "users_email_idx" ON "users" USING btree ("email");
+  CREATE INDEX IF NOT EXISTS "users_profile_picture_idx" ON "users" USING btree ("profile_picture_id");
+  CREATE UNIQUE INDEX IF NOT EXISTS "users_phone_number_idx" ON "users" USING btree ("phone_number");
   CREATE INDEX IF NOT EXISTS "users_updated_at_idx" ON "users" USING btree ("updated_at");
   CREATE INDEX IF NOT EXISTS "users_created_at_idx" ON "users" USING btree ("created_at");
   CREATE INDEX IF NOT EXISTS "fields_amenities_order_idx" ON "fields_amenities" USING btree ("order");
@@ -429,11 +515,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX IF NOT EXISTS "payload_preferences_rels_admins_id_idx" ON "payload_preferences_rels" USING btree ("admins_id");
   CREATE INDEX IF NOT EXISTS "payload_migrations_updated_at_idx" ON "payload_migrations" USING btree ("updated_at");
   CREATE INDEX IF NOT EXISTS "payload_migrations_created_at_idx" ON "payload_migrations" USING btree ("created_at");
-  CREATE INDEX IF NOT EXISTS "home_hero_cycling_words_order_idx" ON "home_hero_cycling_words" USING btree ("_order");
-  CREATE INDEX IF NOT EXISTS "home_hero_cycling_words_parent_id_idx" ON "home_hero_cycling_words" USING btree ("_parent_id");
-  CREATE INDEX IF NOT EXISTS "home_hero_partner_logos_order_idx" ON "home_hero_partner_logos" USING btree ("_order");
-  CREATE INDEX IF NOT EXISTS "home_hero_partner_logos_parent_id_idx" ON "home_hero_partner_logos" USING btree ("_parent_id");
-  CREATE INDEX IF NOT EXISTS "home_hero_partner_logos_logo_idx" ON "home_hero_partner_logos" USING btree ("logo_id");
+  CREATE INDEX IF NOT EXISTS "home_hero_partners_order_idx" ON "home_hero_partners" USING btree ("_order");
+  CREATE INDEX IF NOT EXISTS "home_hero_partners_parent_id_idx" ON "home_hero_partners" USING btree ("_parent_id");
+  CREATE INDEX IF NOT EXISTS "home_hero_partners_logo_idx" ON "home_hero_partners" USING btree ("logo_id");
   CREATE INDEX IF NOT EXISTS "home_next_games_sport_categories_order_idx" ON "home_next_games_sport_categories" USING btree ("_order");
   CREATE INDEX IF NOT EXISTS "home_next_games_sport_categories_parent_id_idx" ON "home_next_games_sport_categories" USING btree ("_parent_id");
   CREATE INDEX IF NOT EXISTS "home_how_it_works_steps_order_idx" ON "home_how_it_works_steps" USING btree ("_order");
@@ -444,13 +528,24 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX IF NOT EXISTS "home_testimonials_reviews_order_idx" ON "home_testimonials_reviews" USING btree ("_order");
   CREATE INDEX IF NOT EXISTS "home_testimonials_reviews_parent_id_idx" ON "home_testimonials_reviews" USING btree ("_parent_id");
   CREATE INDEX IF NOT EXISTS "home_testimonials_reviews_image_idx" ON "home_testimonials_reviews" USING btree ("image_id");
+  CREATE INDEX IF NOT EXISTS "home_cta_sports_order_idx" ON "home_cta_sports" USING btree ("_order");
+  CREATE INDEX IF NOT EXISTS "home_cta_sports_parent_id_idx" ON "home_cta_sports" USING btree ("_parent_id");
+  CREATE INDEX IF NOT EXISTS "home_cta_sports_image_idx" ON "home_cta_sports" USING btree ("image_id");
+  CREATE INDEX IF NOT EXISTS "home_strangers_strangers_order_idx" ON "home_strangers_strangers" USING btree ("_order");
+  CREATE INDEX IF NOT EXISTS "home_strangers_strangers_parent_id_idx" ON "home_strangers_strangers" USING btree ("_parent_id");
+  CREATE INDEX IF NOT EXISTS "home_strangers_strangers_image_idx" ON "home_strangers_strangers" USING btree ("image_id");
+  CREATE INDEX IF NOT EXISTS "home_when_and_where_features_order_idx" ON "home_when_and_where_features" USING btree ("_order");
+  CREATE INDEX IF NOT EXISTS "home_when_and_where_features_parent_id_idx" ON "home_when_and_where_features" USING btree ("_parent_id");
+  CREATE INDEX IF NOT EXISTS "home_numbers_numbers_order_idx" ON "home_numbers_numbers" USING btree ("_order");
+  CREATE INDEX IF NOT EXISTS "home_numbers_numbers_parent_id_idx" ON "home_numbers_numbers" USING btree ("_parent_id");
   CREATE INDEX IF NOT EXISTS "home_faq_questions_order_idx" ON "home_faq_questions" USING btree ("_order");
   CREATE INDEX IF NOT EXISTS "home_faq_questions_parent_id_idx" ON "home_faq_questions" USING btree ("_parent_id");
   CREATE INDEX IF NOT EXISTS "home_footer_links_order_idx" ON "home_footer_links" USING btree ("_order");
   CREATE INDEX IF NOT EXISTS "home_footer_links_parent_id_idx" ON "home_footer_links" USING btree ("_parent_id");
   CREATE INDEX IF NOT EXISTS "home_footer_social_links_order_idx" ON "home_footer_social_links" USING btree ("_order");
   CREATE INDEX IF NOT EXISTS "home_footer_social_links_parent_id_idx" ON "home_footer_social_links" USING btree ("_parent_id");
-  CREATE INDEX IF NOT EXISTS "home_stats_stats_image_idx" ON "home" USING btree ("stats_image_id");`)
+  CREATE INDEX IF NOT EXISTS "home_stats_stats_image_idx" ON "home" USING btree ("stats_image_id");
+  CREATE INDEX IF NOT EXISTS "home_when_and_where_when_and_where_image_idx" ON "home" USING btree ("when_and_where_image_id");`)
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
@@ -467,12 +562,15 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "payload_preferences" CASCADE;
   DROP TABLE "payload_preferences_rels" CASCADE;
   DROP TABLE "payload_migrations" CASCADE;
-  DROP TABLE "home_hero_cycling_words" CASCADE;
-  DROP TABLE "home_hero_partner_logos" CASCADE;
+  DROP TABLE "home_hero_partners" CASCADE;
   DROP TABLE "home_next_games_sport_categories" CASCADE;
   DROP TABLE "home_how_it_works_steps" CASCADE;
   DROP TABLE "home_stats_statistics" CASCADE;
   DROP TABLE "home_testimonials_reviews" CASCADE;
+  DROP TABLE "home_cta_sports" CASCADE;
+  DROP TABLE "home_strangers_strangers" CASCADE;
+  DROP TABLE "home_when_and_where_features" CASCADE;
+  DROP TABLE "home_numbers_numbers" CASCADE;
   DROP TABLE "home_faq_questions" CASCADE;
   DROP TABLE "home_footer_links" CASCADE;
   DROP TABLE "home_footer_social_links" CASCADE;

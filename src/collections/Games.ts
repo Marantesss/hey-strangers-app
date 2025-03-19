@@ -8,6 +8,7 @@ export const Games: CollectionConfig = {
     useAsTitle: 'name',
   },
   fields: [
+    // --- FIELDS
     {
       name: 'name',
       type: 'text',
@@ -53,8 +54,8 @@ export const Games: CollectionConfig = {
       name: 'sport',
       type: 'select',
       required: true,
-      options: sportTypes.map(type => ({
-        label: type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      options: sportTypes.map((type) => ({
+        label: type.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
         value: type,
       })),
     },
@@ -71,6 +72,14 @@ export const Games: CollectionConfig = {
         position: 'sidebar',
       },
     },
+    // --- relations and joins
+    {
+      name: 'registrations',
+      type: 'join',
+      collection: 'registrations',
+      on: 'game',
+      hasMany: true,
+    },
   ],
   timestamps: true,
-} 
+}

@@ -9,6 +9,7 @@ export const Users: CollectionConfig = {
     useAsTitle: 'name',
   },
   fields: [
+    // --- FIELDS
     {
       name: 'email',
       type: 'email',
@@ -66,6 +67,14 @@ export const Users: CollectionConfig = {
       admin: {
         position: 'sidebar',
       },
+    },
+    // --- relations and joins
+    {
+      name: 'registrations',
+      type: 'join',
+      collection: 'registrations',
+      on: 'user',
+      hasMany: true,
     },
   ],
 }
