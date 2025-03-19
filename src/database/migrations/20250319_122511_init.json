@@ -1,5 +1,5 @@
 {
-  "id": "9be2c31f-d756-4a87-a68c-19327c7efa39",
+  "id": "92b699cd-182a-4a27-9f17-2ebbcccf85d2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -2914,8 +2914,20 @@
           "primaryKey": false,
           "notNull": true
         },
+        "hero_subtitle": {
+          "name": "hero_subtitle",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
         "hero_description": {
           "name": "hero_description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hero_button_label": {
+          "name": "hero_button_label",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -2934,6 +2946,12 @@
         },
         "how_it_works_subtitle": {
           "name": "how_it_works_subtitle",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "how_it_works_button_label": {
+          "name": "how_it_works_button_label",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -2968,6 +2986,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "cta_button_label": {
+          "name": "cta_button_label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
         "strangers_title": {
           "name": "strangers_title",
           "type": "varchar",
@@ -2986,6 +3010,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "when_and_where_button_label": {
+          "name": "when_and_where_button_label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
         "when_and_where_image_id": {
           "name": "when_and_where_image_id",
           "type": "uuid",
@@ -3000,6 +3030,18 @@
         },
         "faq_title": {
           "name": "faq_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cta2_title": {
+          "name": "cta2_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cta2_button_label": {
+          "name": "cta2_button_label",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
