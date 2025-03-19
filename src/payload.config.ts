@@ -9,6 +9,7 @@ import { migrations } from './database/migrations'
 
 import { Users, Fields, Games, Registrations, Admins, Media } from './collections'
 import { Home } from './globals'
+import { seedHome } from './database/seed/home'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -55,4 +56,10 @@ export default buildConfig({
       },
     }),
   ],
+  onInit: async (payload) => {
+    const home = await payload.findGlobal({ slug: 'home' })
+    if (!home.createdAt) {
+      await seedHome(payload)
+    }
+  },
 })

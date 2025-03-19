@@ -1,4 +1,4 @@
-import { getFileByPath, Payload } from 'payload'
+import { Payload } from 'payload'
 import { fileURLToPath } from 'url'
 import path from 'path'
 
