@@ -10,7 +10,7 @@ type ProfilePageProps = {
   }>
 }
 
-const ProfilePage: NextPage<ProfilePageProps> = async ({ searchParams }) => {
+const ProfilePage: NextPage<ProfilePageProps> = async () => {
   const user = await getCurrentUser()
 
   return (

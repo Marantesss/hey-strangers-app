@@ -1,5 +1,5 @@
 import { Payload } from 'payload'
-import { Field } from '../payload-types'
+import { Field } from '@payload-types'
 
 export const seedFields = async (payload: Payload) => {
   const fields = [
@@ -87,9 +87,19 @@ export const seedFields = async (payload: Payload) => {
       flooring: 'polyurethane',
       sport: 'multi_purpose',
       amenities: [
-        'parking', 'restrooms', 'changing_rooms', 'showers', 'equipment_rental',
-        'lockers', 'water_fountain', 'cafe', 'seating_area', 'first_aid_station',
-        'wifi', 'lighting', 'scoreboard'
+        'parking',
+        'restrooms',
+        'changing_rooms',
+        'showers',
+        'equipment_rental',
+        'lockers',
+        'water_fountain',
+        'cafe',
+        'seating_area',
+        'first_aid_station',
+        'wifi',
+        'lighting',
+        'scoreboard',
       ],
     },
     {
@@ -98,9 +108,20 @@ export const seedFields = async (payload: Payload) => {
       type: 'outdoor',
       flooring: 'artificial_turf',
       sport: 'multi_purpose',
-      amenities: ['parking', 'restrooms', 'changing_rooms', 'showers', 'equipment_rental',
-        'lockers', 'water_fountain', 'cafe', 'seating_area', 'first_aid_station',
-        'wifi', 'lighting', 'scoreboard'
+      amenities: [
+        'parking',
+        'restrooms',
+        'changing_rooms',
+        'showers',
+        'equipment_rental',
+        'lockers',
+        'water_fountain',
+        'cafe',
+        'seating_area',
+        'first_aid_station',
+        'wifi',
+        'lighting',
+        'scoreboard',
       ],
     },
 
@@ -111,9 +132,20 @@ export const seedFields = async (payload: Payload) => {
       type: 'outdoor',
       flooring: 'sand',
       sport: 'volleyball',
-      amenities: ['parking', 'restrooms', 'changing_rooms', 'showers', 'equipment_rental',
-        'lockers', 'water_fountain', 'cafe', 'seating_area', 'first_aid_station',
-        'wifi', 'lighting', 'scoreboard'
+      amenities: [
+        'parking',
+        'restrooms',
+        'changing_rooms',
+        'showers',
+        'equipment_rental',
+        'lockers',
+        'water_fountain',
+        'cafe',
+        'seating_area',
+        'first_aid_station',
+        'wifi',
+        'lighting',
+        'scoreboard',
       ],
     },
     {
@@ -122,9 +154,20 @@ export const seedFields = async (payload: Payload) => {
       type: 'indoor',
       flooring: 'wood',
       sport: 'volleyball',
-      amenities: ['parking', 'restrooms', 'changing_rooms', 'showers', 'equipment_rental',
-        'lockers', 'water_fountain', 'cafe', 'seating_area', 'first_aid_station',
-        'wifi', 'lighting', 'scoreboard'
+      amenities: [
+        'parking',
+        'restrooms',
+        'changing_rooms',
+        'showers',
+        'equipment_rental',
+        'lockers',
+        'water_fountain',
+        'cafe',
+        'seating_area',
+        'first_aid_station',
+        'wifi',
+        'lighting',
+        'scoreboard',
       ],
     },
   ] satisfies Omit<Field, 'createdAt' | 'id' | 'sizes' | 'updatedAt'>[]
@@ -140,4 +183,4 @@ export const seedFields = async (payload: Payload) => {
   } catch (error) {
     console.error('Error seeding fields:', error)
   }
-} 
+}

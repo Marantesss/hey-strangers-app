@@ -1,5 +1,5 @@
 import { Payload } from 'payload'
-import { Registration } from '../payload-types'
+import { Registration } from '@payload-types'
 
 export const seedRegistrations = async (payload: Payload) => {
   // First, get all users and games to reference them
@@ -14,15 +14,21 @@ export const seedRegistrations = async (payload: Payload) => {
   })
 
   // Create maps for easy lookup
-  const userMap = users.docs.reduce((acc, user) => {
-    acc[user.email as string] = user.id
-    return acc
-  }, {} as Record<string, string>)
+  const userMap = users.docs.reduce(
+    (acc, user) => {
+      acc[user.email as string] = user.id
+      return acc
+    },
+    {} as Record<string, string>,
+  )
 
-  const gameMap = games.docs.reduce((acc, game) => {
-    acc[game.name] = game.id
-    return acc
-  }, {} as Record<string, string>)
+  const gameMap = games.docs.reduce(
+    (acc, game) => {
+      acc[game.name] = game.id
+      return acc
+    },
+    {} as Record<string, string>,
+  )
 
   const registrations = [
     // Morning Soccer Match registrations
@@ -103,4 +109,4 @@ export const seedRegistrations = async (payload: Payload) => {
   } catch (error) {
     console.error('Error seeding registrations:', error)
   }
-} 
+}

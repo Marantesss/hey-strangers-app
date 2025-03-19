@@ -1,5 +1,5 @@
 import { Payload } from 'payload'
-import { Game } from '../payload-types'
+import { Game } from '@payload-types'
 
 export const seedGames = async (payload: Payload) => {
   // First, get all fields to reference them
@@ -8,10 +8,13 @@ export const seedGames = async (payload: Payload) => {
     limit: 100,
   })
 
-  const fieldMap = fields.docs.reduce((acc, field) => {
-    acc[field.name] = field.id
-    return acc
-  }, {} as Record<string, string>)
+  const fieldMap = fields.docs.reduce(
+    (acc, field) => {
+      acc[field.name] = field.id
+      return acc
+    },
+    {} as Record<string, string>,
+  )
 
   const games = [
     // Soccer Games
@@ -20,7 +23,7 @@ export const seedGames = async (payload: Payload) => {
       description: 'Casual soccer game for all skill levels',
       startsAt: new Date(Date.now() + 24 * 60 * 60 * 1000 + 9 * 60 * 60 * 1000).toISOString(), // tomorrow + 9h
       endsAt: new Date(Date.now() + 24 * 60 * 60 * 1000 + 11 * 60 * 60 * 1000).toISOString(), // tomorrow + 11h
-      price: 25.00,
+      price: 25.0,
       maxPlayers: 14,
       sport: 'soccer',
       field: fieldMap['Campo de Futebol Parque das Nações'],
@@ -30,7 +33,7 @@ export const seedGames = async (payload: Payload) => {
       description: 'Competitive soccer match',
       startsAt: new Date(Date.now() + 24 * 60 * 60 * 1000 + 18 * 60 * 60 * 1000).toISOString(),
       endsAt: new Date(Date.now() + 24 * 60 * 60 * 1000 + 20 * 60 * 60 * 1000).toISOString(),
-      price: 30.00,
+      price: 30.0,
       maxPlayers: 14,
       sport: 'soccer',
       field: fieldMap['Campo de Futebol Parque das Nações'],
@@ -40,7 +43,7 @@ export const seedGames = async (payload: Payload) => {
       description: 'Professional training session',
       startsAt: new Date(Date.now() + 48 * 60 * 60 * 1000 + 14 * 60 * 60 * 1000).toISOString(),
       endsAt: new Date(Date.now() + 48 * 60 * 60 * 1000 + 16 * 60 * 60 * 1000).toISOString(),
-      price: 35.00,
+      price: 35.0,
       maxPlayers: 12,
       sport: 'soccer',
       field: fieldMap['Arena Indoor Benfica'],
@@ -52,7 +55,7 @@ export const seedGames = async (payload: Payload) => {
       description: 'Friendly tennis match',
       startsAt: new Date(Date.now() + 24 * 60 * 60 * 1000 + 10 * 60 * 60 * 1000).toISOString(),
       endsAt: new Date(Date.now() + 24 * 60 * 60 * 1000 + 11 * 60 * 60 * 1000).toISOString(),
-      price: 20.00,
+      price: 20.0,
       maxPlayers: 2,
       sport: 'tennis',
       field: fieldMap['Clube de Ténis de Lisboa'],
@@ -62,7 +65,7 @@ export const seedGames = async (payload: Payload) => {
       description: 'Amateur doubles tournament',
       startsAt: new Date(Date.now() + 72 * 60 * 60 * 1000 + 9 * 60 * 60 * 1000).toISOString(),
       endsAt: new Date(Date.now() + 72 * 60 * 60 * 1000 + 13 * 60 * 60 * 1000).toISOString(),
-      price: 40.00,
+      price: 40.0,
       maxPlayers: 8,
       sport: 'tennis',
       field: fieldMap['Clube de Ténis de Lisboa'],
@@ -74,7 +77,7 @@ export const seedGames = async (payload: Payload) => {
       description: 'Beginner-friendly Padel session',
       startsAt: new Date(Date.now() + 48 * 60 * 60 * 1000 + 8 * 60 * 60 * 1000).toISOString(),
       endsAt: new Date(Date.now() + 48 * 60 * 60 * 1000 + 9 * 60 * 60 * 1000).toISOString(),
-      price: 15.00,
+      price: 15.0,
       maxPlayers: 4,
       sport: 'padel',
       field: fieldMap['Padel Belém'],
@@ -85,7 +88,7 @@ export const seedGames = async (payload: Payload) => {
       description: '3v3 basketball tournament',
       startsAt: new Date(Date.now() + 96 * 60 * 60 * 1000 + 16 * 60 * 60 * 1000).toISOString(),
       endsAt: new Date(Date.now() + 96 * 60 * 60 * 1000 + 20 * 60 * 60 * 1000).toISOString(),
-      price: 10.00,
+      price: 10.0,
       maxPlayers: 24,
       sport: 'basketball',
       field: fieldMap['Pavilhão do Sporting'],
@@ -107,4 +110,4 @@ export const seedGames = async (payload: Payload) => {
     console.error('Error seeding games:', error)
     return []
   }
-} 
+}
