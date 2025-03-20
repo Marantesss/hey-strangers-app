@@ -1,5 +1,6 @@
-import { Game as PayloadGame } from '@payload-types'
+import { Game as PayloadGame, Registration } from '@payload-types'
 import { FieldModel } from './Field.model'
+import { RegistrationModel } from '@/domains/registrations/shared/models/Registration.model'
 
 type GameSport = PayloadGame['sport']
 
@@ -20,7 +21,7 @@ export class GameModel {
   private readonly _field?: FieldModel
   private readonly _fieldId: string
 
-  // private readonly _registrations?: Registration[];
+  private readonly _registrations?: RegistrationModel[]
 
   private constructor(data: PayloadGame) {
     this.id = data.id
@@ -38,7 +39,16 @@ export class GameModel {
     // Relations
     this._field = data.field instanceof Object ? FieldModel.from(data.field) : undefined
     this._fieldId = data.field instanceof Object ? data.field.id : data.field
-    // this._registrations = data?.map(registration => Registration.from(registration));
+
+    const isRegistrationsExpanded =
+      data.registrations?.docs &&
+      data.registrations.docs.length > 0 &&
+      data.registrations.docs[0] instanceof Object
+    this._registrations = isRegistrationsExpanded
+      ? data.registrations!.docs!.map((registration) =>
+          RegistrationModel.from(registration as Registration),
+        )
+      : undefined
   }
 
   // Getters for relations
@@ -49,12 +59,12 @@ export class GameModel {
     return this._field
   }
 
-  // get registrations(): Registration[] {
-  //   if (!this._registrations) {
-  //     throw new Error('Registrations not found');
-  //   }
-  //   return this._registrations;
-  // }
+  get registrations(): RegistrationModel[] {
+    if (!this._registrations) {
+      throw new Error('Registrations not found')
+    }
+    return this._registrations
+  }
 
   get sportEmoji(): string {
     const gameSportEmoji: Record<GameSport, string> = {

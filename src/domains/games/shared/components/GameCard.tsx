@@ -85,11 +85,11 @@ const GameCard: React.FC<GameCardProps> = ({
                 <div>
                   <h4 className="font-bold">Registered Players</h4>
                   <ul className="text-subtle-foreground list-disc list-inside text-sm">
-                    {/* {game.registrations.map((registration) => (
+                    {game.registrations.map((registration) => (
                       <li className="ml-2" key={registration.id}>
                         {registration.user.privateName}
                       </li>
-                    ))} */}
+                    ))}
                   </ul>
                 </div>
               </CollapsibleContent>
