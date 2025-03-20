@@ -164,6 +164,7 @@ export interface AdminAuthOperations {
 export interface User {
   id: string;
   email?: string | null;
+  stripeCustomerId?: string | null;
   profilePicture?: (string | null) | Media;
   otp?: {
     code?: string | null;
@@ -393,6 +394,7 @@ export interface PayloadMigration {
  */
 export interface UsersSelect<T extends boolean = true> {
   email?: T;
+  stripeCustomerId?: T;
   profilePicture?: T;
   otp?:
     | T

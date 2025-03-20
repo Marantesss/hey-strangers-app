@@ -6,7 +6,7 @@ const AppPage: NextPage = async () => {
   const user = await getCurrentUser()
 
   if (user) {
-    return <div>logged in</div>
+    return redirect('/app/agenda')
   }
 
   return redirect('/sign-in')

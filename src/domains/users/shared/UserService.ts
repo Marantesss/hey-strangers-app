@@ -3,12 +3,21 @@ import { getCookieExpiration, getFieldsToSign, getPayload, Payload } from 'paylo
 import { User } from '@payload-types'
 import { jwtSign } from '@/lib/jwt'
 import config from '@payload-config'
+import Stripe from 'stripe'
 
 export type UserWithCollection = User & { collection: 'users' }
 
 interface LoginWithPhoneNumberArgs {
   phoneNumber: string
   otp: string
+}
+
+export async function getUserById(id: string): Promise<User> {
+  const payload = await getPayload({ config })
+  return await payload.findByID({
+    collection: 'users',
+    id,
+  })
 }
 
 export async function getUserWithPhoneNumber({
@@ -207,4 +216,71 @@ export async function updateUser({ id, data }: { id: string; data: UpdateUserDat
   }
 
   return payload.update({ collection: 'users', id, data: updateData as Partial<User> })
+}
+
+// Payment methods
+export async function getPaymentMethods(userId: string) {
+  const user = await getUserById(userId)
+
+  try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2025-02-24.acacia',
+    })
+
+    const paymentMethods = await stripe.paymentMethods.list({
+      customer: user.stripeCustomerId!,
+      type: 'card',
+    })
+    return paymentMethods.data
+  } catch (error) {
+    console.error('Error fetching payment methods:', error)
+    throw new Error('Failed to fetch payment methods')
+  }
+}
+
+export async function deletePaymentMethod(paymentMethodId: string) {
+  try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2025-02-24.acacia',
+    })
+
+    await stripe.paymentMethods.detach(paymentMethodId)
+    return { success: true }
+  } catch (error) {
+    console.error('Error deleting payment method:', error)
+    throw new Error('Failed to delete payment method')
+  }
+}
+
+export async function updatePaymentMethod(
+  paymentMethodId: string,
+  card: {
+    exp_month: number
+    exp_year: number
+    billing_details: {
+      name: string
+      email?: string
+      phone?: string
+      address?: {
+        line1?: string
+        city?: string
+        state?: string
+        postal_code?: string
+        country?: string
+      }
+    }
+  },
+) {
+  try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2025-02-24.acacia',
+    })
+    const updatedPaymentMethod = await stripe.paymentMethods.update(paymentMethodId, {
+      card,
+    })
+    return updatedPaymentMethod
+  } catch (error) {
+    console.error('Error updating payment method:', error)
+    throw new Error('Failed to update payment method')
+  }
 }

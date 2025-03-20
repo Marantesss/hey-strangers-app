@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import PaymentInformationForm from '@/domains/users/add-payment-information/components/PaymentInformationForm'
 import ProfileForm from '@/domains/users/edit-profile/components/ProfileForm'
-import { getCurrentUser } from '@/domains/users/shared/UserService'
+import { getCurrentUser, getPaymentMethods } from '@/domains/users/shared/UserService'
 import { NextPage } from 'next'
 
 type ProfilePageProps = {
@@ -12,6 +13,7 @@ type ProfilePageProps = {
 
 const ProfilePage: NextPage<ProfilePageProps> = async () => {
   const user = await getCurrentUser()
+  const paymentMethods = await getPaymentMethods(user!.id)
 
   return (
     <main className="my-8 space-y-8 max-w-lg mx-auto">
@@ -29,7 +31,7 @@ const ProfilePage: NextPage<ProfilePageProps> = async () => {
           <CardTitle>Payment Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>You are currently on the free plan.</p>
+          <PaymentInformationForm user={user!} paymentMethods={paymentMethods} />
         </CardContent>
       </Card>
     </main>

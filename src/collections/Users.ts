@@ -1,3 +1,7 @@
+import {
+  createStripeCustomer,
+  updateStripeCustomer,
+} from '@/domains/users/upsert-stripe-customer/upsert-stripe-customer.hooks'
 import { CollectionConfig } from 'payload'
 
 export const Users: CollectionConfig = {
@@ -15,6 +19,15 @@ export const Users: CollectionConfig = {
       type: 'email',
       required: false,
       unique: true,
+    },
+    {
+      name: 'stripeCustomerId',
+      type: 'text',
+      required: false,
+      unique: true,
+      admin: {
+        readOnly: true,
+      },
     },
     {
       name: 'profilePicture',
@@ -77,4 +90,7 @@ export const Users: CollectionConfig = {
       hasMany: true,
     },
   ],
+  hooks: {
+    afterChange: [createStripeCustomer, updateStripeCustomer],
+  },
 }
