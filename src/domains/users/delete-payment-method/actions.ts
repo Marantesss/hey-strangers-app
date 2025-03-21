@@ -4,6 +4,7 @@ import Stripe from 'stripe'
 import { getCurrentUser } from '../shared/UserService'
 import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
+import stripe from '@/lib/stripe'
 
 const DeletePaymentMethodSchema = z.object({
   paymentMethodId: z.string(),
@@ -13,10 +14,6 @@ export type DeletePaymentMethodActionState = {
   success?: boolean
   error?: string
 }
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
-})
 
 export async function deletePaymentMethodAction(
   previousState: DeletePaymentMethodActionState,

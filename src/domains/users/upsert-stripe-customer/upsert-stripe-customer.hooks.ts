@@ -1,10 +1,6 @@
+import stripe from '@/lib/stripe'
 import { User } from '@payload-types'
 import { CollectionAfterChangeHook } from 'payload'
-import Stripe from 'stripe'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
-})
 
 export const createStripeCustomer: CollectionAfterChangeHook<User> = async ({
   doc,

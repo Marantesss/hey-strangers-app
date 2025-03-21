@@ -9,10 +9,8 @@ import {
 import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { GameModel } from '../models/Game.model'
-import { useState } from 'react'
-import RegisterForGameForm from '@/domains/registrations/register-for-game/components/RegisterForGame'
-import { getRegistrationsByGameId } from '@/domains/registrations/shared/RegistrationService'
-import RegisterForGame from '@/domains/registrations/register-for-game/components/RegisterForGame'
+import RegisterForGameButton from '@/domains/registrations/register-for-game/components/RegisterForGameButton'
+import { getRegistrationsByGameId } from '@/domains/registrations/get-registration/get-registration.service'
 
 export interface GameCardProps {
   game: GameModel
@@ -119,7 +117,7 @@ const GameCard: React.FC<GameCardProps> = async ({
         </CardContent>
         {!simple && (
           <CardFooter className="flex-col gap-2">
-            <RegisterForGame game={game.toSerializable()} />
+            <RegisterForGameButton gameId={game.id} />
             <Button variant="ghost" className="w-full">
               Invite friends
             </Button>

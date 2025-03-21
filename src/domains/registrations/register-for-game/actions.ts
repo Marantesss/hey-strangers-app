@@ -1,11 +1,7 @@
 'use server'
 
-import Stripe from 'stripe'
+import stripe from '@/lib/stripe'
 import { z } from 'zod'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
-})
 
 const PaymentIntentSchema = z.object({
   amount: z.number().positive(),

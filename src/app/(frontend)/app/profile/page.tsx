@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import PaymentInformationForm from '@/domains/users/add-payment-information/components/PaymentInformationForm'
 import ProfileForm from '@/domains/users/edit-profile/components/ProfileForm'
-import { getCurrentUser, getPaymentMethods } from '@/domains/users/shared/UserService'
+import { getPaymentMethods } from '@/domains/users/get-payment-methods/get-payment-methods.service'
+import { getCurrentUser } from '@/domains/users/shared/UserService'
 import { NextPage } from 'next'
 
 type ProfilePageProps = {

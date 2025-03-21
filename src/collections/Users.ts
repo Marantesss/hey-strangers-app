@@ -1,4 +1,5 @@
 import { hasRole, isAuthenticated } from '@/access'
+import getPaymentMethodsEndpoint from '@/domains/users/get-payment-methods/get-payment-methods.endpoint'
 import {
   createStripeCustomer,
   updateStripeCustomer,
@@ -100,4 +101,5 @@ export const Users: CollectionConfig = {
   hooks: {
     afterChange: [createStripeCustomer, updateStripeCustomer],
   },
+  endpoints: [getPaymentMethodsEndpoint],
 }

@@ -1,6 +1,8 @@
+'use server'
+
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { RegistrationModel } from './models/Registration.model'
+import { RegistrationModel } from '../shared/models/Registration.model'
 
 export async function getRegistrationsByGameId(gameId: string): Promise<RegistrationModel[]> {
   const payload = await getPayload({ config })

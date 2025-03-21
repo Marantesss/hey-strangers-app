@@ -11,26 +11,6 @@ interface ExpandOptions {
   registrations?: boolean
 }
 
-export async function getGameById(
-  id: string,
-  { expand }: { expand?: ExpandOptions } = {},
-): Promise<GameModel | null> {
-  const payload = await getPayload({ config })
-
-  const query = {
-    collection: 'games' as const,
-    id,
-    depth: expand?.field || expand?.registrations ? 1 : 0,
-  }
-
-  try {
-    const game = await payload.findByID(query)
-    return GameModel.from(game)
-  } catch (error) {
-    return null
-  }
-}
-
 export async function getGamesWhereUserIsRegistered(
   userId: string,
   options: GetGamesOptions = {},

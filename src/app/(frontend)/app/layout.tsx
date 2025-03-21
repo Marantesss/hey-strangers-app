@@ -5,6 +5,7 @@ import AppNavigationMenu from '@/components/common/AppNavigationMenu'
 import { signOutAction } from '@/domains/users/sign-out/actions'
 import { getCurrentUser } from '@/domains/users/shared/UserService'
 import { redirect } from 'next/navigation'
+import SessionProvider from '@/domains/users/session/SessionProvider'
 
 const AppLayout: React.FC<PropsWithChildren> = async ({ children }) => {
   const user = await getCurrentUser()
@@ -14,23 +15,25 @@ const AppLayout: React.FC<PropsWithChildren> = async ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen container space-y-2">
-      <nav className="flex items-center justify-between py-8">
-        <Logo />
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={signOutAction}>
-            Sign Out
-          </Button>
-          <Button>O meu espaço</Button>
+    <SessionProvider>
+      <div className="min-h-screen container space-y-2">
+        <nav className="flex items-center justify-between py-8">
+          <Logo />
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" onClick={signOutAction}>
+              Sign Out
+            </Button>
+            <Button>O meu espaço</Button>
+          </div>
+        </nav>
+
+        <div className="flex justify-center">
+          <AppNavigationMenu />
         </div>
-      </nav>
 
-      <div className="flex justify-center">
-        <AppNavigationMenu />
+        <div>{children}</div>
       </div>
-
-      <div>{children}</div>
-    </div>
+    </SessionProvider>
   )
 }
 

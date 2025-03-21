@@ -4,10 +4,7 @@ import { z } from 'zod'
 import Stripe from 'stripe'
 import { getCurrentUser } from '../shared/UserService'
 import { revalidatePath } from 'next/cache'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
-})
+import stripe from '@/lib/stripe'
 
 const CreatePaymentMethodSchema = z.object({
   userId: z.string(),
