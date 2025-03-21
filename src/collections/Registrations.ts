@@ -1,3 +1,4 @@
+import { hasRole, isAuthenticated } from '@/access'
 import { CollectionConfig } from 'payload'
 
 export const Registrations: CollectionConfig = {
@@ -5,6 +6,12 @@ export const Registrations: CollectionConfig = {
   admin: {
     useAsTitle: 'id',
     defaultColumns: ['game', 'user'],
+  },
+  access: {
+    read: isAuthenticated(),
+    create: isAuthenticated(),
+    update: hasRole('admins'),
+    delete: hasRole('admins'),
   },
   fields: [
     // --- FIELDS

@@ -1,3 +1,4 @@
+import { hasRole, isAuthenticated } from '@/access'
 import { CollectionConfig } from 'payload'
 
 const fieldTypes = ['indoor', 'outdoor', 'hybrid', 'other'] as const
@@ -48,6 +49,12 @@ export const Fields: CollectionConfig = {
   slug: 'fields',
   admin: {
     useAsTitle: 'name',
+  },
+  access: {
+    read: isAuthenticated(),
+    create: hasRole('admins'),
+    update: hasRole('admins'),
+    delete: hasRole('admins'),
   },
   fields: [
     // --- FIELDS

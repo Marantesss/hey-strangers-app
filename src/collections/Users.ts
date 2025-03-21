@@ -1,3 +1,4 @@
+import { hasRole, isAuthenticated } from '@/access'
 import {
   createStripeCustomer,
   updateStripeCustomer,
@@ -8,6 +9,12 @@ export const Users: CollectionConfig = {
   slug: 'users',
   auth: {
     disableLocalStrategy: true,
+  },
+  access: {
+    read: isAuthenticated(),
+    create: isAuthenticated(),
+    update: hasRole('admins'),
+    delete: hasRole('admins'),
   },
   admin: {
     useAsTitle: 'name',

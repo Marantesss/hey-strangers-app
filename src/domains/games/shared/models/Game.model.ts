@@ -22,6 +22,7 @@ export class GameModel {
   private readonly _fieldId: string
 
   private readonly _registrations?: RegistrationModel[]
+  private readonly _registrationsIds?: string[]
 
   private constructor(data: PayloadGame) {
     this.id = data.id
@@ -40,15 +41,25 @@ export class GameModel {
     this._field = data.field instanceof Object ? FieldModel.from(data.field) : undefined
     this._fieldId = data.field instanceof Object ? data.field.id : data.field
 
+    const isRegistrationsPresent = !!data.registrations?.docs
     const isRegistrationsExpanded =
-      data.registrations?.docs &&
-      data.registrations.docs.length > 0 &&
-      data.registrations.docs[0] instanceof Object
+      isRegistrationsPresent &&
+      data.registrations!.docs!.length > 0 &&
+      data.registrations!.docs![0] instanceof Object
+
     this._registrations = isRegistrationsExpanded
       ? data.registrations!.docs!.map((registration) =>
           RegistrationModel.from(registration as Registration),
         )
-      : undefined
+      : isRegistrationsPresent
+        ? []
+        : undefined
+
+    this._registrationsIds = isRegistrationsExpanded
+      ? this._registrations!.map((registration) => registration.id)
+      : isRegistrationsPresent
+        ? data.registrations!.docs!.map((registration) => registration as string)
+        : undefined
   }
 
   // Getters for relations
@@ -61,7 +72,7 @@ export class GameModel {
 
   get registrations(): RegistrationModel[] {
     if (!this._registrations) {
-      throw new Error('Registrations not found')
+      throw new Error('Registrations not expanded')
     }
     return this._registrations
   }
@@ -101,6 +112,13 @@ export class GameModel {
       updatedAt: this.updatedAt.toISOString(),
       deletedAt: this.deletedAt?.toISOString() ?? null,
       field: this._field ? this._field.toSerializable() : this._fieldId,
+      registrations: this._registrations
+        ? {
+            docs: this._registrations.map((registration) => registration.toSerializable()),
+            totalDocs: this._registrations.length,
+            hasNextPage: false,
+          }
+        : undefined,
     }
   }
 

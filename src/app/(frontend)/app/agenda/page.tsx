@@ -16,7 +16,7 @@ const AgendaPage: NextPage<AgendaPageProps> = async ({ searchParams }) => {
   const { city, sport } = await searchParams
   const games = await getGames(
     { city, sport: sport as Game['sport'], timeFrame: 'future' },
-    { expand: { field: true, registrations: true } },
+    { expand: { field: true } },
   )
 
   return (

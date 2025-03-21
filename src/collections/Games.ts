@@ -1,3 +1,4 @@
+import { hasRole, isAuthenticated } from '@/access'
 import { CollectionConfig } from 'payload'
 
 const sportTypes = ['soccer', 'padel', 'tennis', 'basketball', 'volleyball'] as const
@@ -6,6 +7,12 @@ export const Games: CollectionConfig = {
   slug: 'games',
   admin: {
     useAsTitle: 'name',
+  },
+  access: {
+    read: isAuthenticated(),
+    create: hasRole('admins'),
+    update: hasRole('admins'),
+    delete: hasRole('admins'),
   },
   fields: [
     // --- FIELDS
