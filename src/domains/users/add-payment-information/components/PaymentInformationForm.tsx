@@ -9,15 +9,12 @@ import { Label } from '@/components/ui/label'
 import { User } from '@/payload-types'
 import { toast } from 'sonner'
 import { createPaymentMethodAction, CreatePaymentMethodActionState } from '../actions'
-import Stripe from 'stripe'
-import PaymentCard from '../../delete-payment-method/components/PaymentCard'
 import SelectCountry from '@/components/common/SelectCountry'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
 interface PaymentInformationFormProps {
   user: User
-  paymentMethods: Stripe.PaymentMethod[]
 }
 
 interface PaymentMethodFormProps {
@@ -137,41 +134,29 @@ function PaymentMethodForm({ user, onSuccess, onError }: PaymentMethodFormProps)
   )
 }
 
-const PaymentInformationForm: React.FC<PaymentInformationFormProps> = ({
-  user,
-  paymentMethods,
-}) => {
+const PaymentInformationForm: React.FC<PaymentInformationFormProps> = ({ user }) => {
   const [showAddCard, setShowAddCard] = useState(false)
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        {paymentMethods.map((method) => (
-          <PaymentCard key={method.id} paymentMethod={method} />
-        ))}
-      </div>
-
-      <hr className="border-t border-gray-200" />
-
-      <div className="space-y-2">
-        <Button variant="outline" className="w-full" onClick={() => setShowAddCard((_) => !_)}>
-          {showAddCard ? 'Cancel' : 'Add new card'}
+    <div>
+      {!showAddCard ? (
+        <Button variant="outline" className="w-full mt-4" onClick={() => setShowAddCard(true)}>
+          Add new card
         </Button>
-        {showAddCard && (
-          <Elements stripe={stripePromise}>
-            <PaymentMethodForm
-              user={user}
-              onSuccess={() => {
-                setShowAddCard(false)
-                toast.success('Card added successfully')
-              }}
-              onError={(error) => {
-                toast.error(error)
-              }}
-            />
-          </Elements>
-        )}
-      </div>
+      ) : (
+        <Elements stripe={stripePromise}>
+          <PaymentMethodForm
+            user={user}
+            onSuccess={() => {
+              setShowAddCard(false)
+              toast.success('Card added successfully')
+            }}
+            onError={(error) => {
+              toast.error(error)
+            }}
+          />
+        </Elements>
+      )}
     </div>
   )
 }

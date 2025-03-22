@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button'
 import Stripe from 'stripe'
-import DeletePaymentMethodButton from './DeletePaymentMethodButton'
 import { toast } from 'sonner'
 import CardIssuerLogo from '@/components/common/CardIssuerLogo'
+import DeletePaymentMethodButton from '../../delete-payment-method/components/DeletePaymentMethodButton'
 
 interface PaymentCardProps {
   paymentMethod: Stripe.PaymentMethod

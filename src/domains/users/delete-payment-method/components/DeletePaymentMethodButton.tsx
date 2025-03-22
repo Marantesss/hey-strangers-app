@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import Stripe from 'stripe'
-import { deletePaymentMethodAction, DeletePaymentMethodActionState } from '../actions'
+import { deletePaymentMethodAction } from '../actions'
 import { startTransition, useActionState, useEffect } from 'react'
 
 interface PaymentCardProps {
@@ -15,10 +15,10 @@ const DeletePaymentMethodButton: React.FC<PaymentCardProps> = ({
   onSuccess,
   onError,
 }) => {
-  const [deletePaymentMethodState, dispatchDeletePaymentMethod, isDeletePending] = useActionState<
-    DeletePaymentMethodActionState,
-    FormData
-  >(deletePaymentMethodAction, {})
+  const [deletePaymentMethodState, dispatchDeletePaymentMethod, isDeletePending] = useActionState(
+    deletePaymentMethodAction,
+    {},
+  )
 
   const handleDelete = () => {
     const formData = new FormData()
