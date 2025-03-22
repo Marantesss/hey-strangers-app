@@ -1,9 +1,9 @@
-import { getCurrentUser } from '@/domains/users/shared/UserService'
+import { getMe } from '@/domains/users/me/me.service'
 import { NextPage } from 'next'
 import { redirect } from 'next/navigation'
 
 const AppPage: NextPage = async () => {
-  const user = await getCurrentUser()
+  const user = await getMe()
 
   if (user) {
     return redirect('/app/agenda')

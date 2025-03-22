@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { useQuiz } from '@/domains/users/sign-up-quiz/quiz.hook'
+import { useQuiz } from '@/domains/users/sign-up-quiz/hooks/quiz.hook'
 import { Game } from '@payload-types'
 
 import './styles.css'

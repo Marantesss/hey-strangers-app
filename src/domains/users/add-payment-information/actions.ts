@@ -1,8 +1,7 @@
 'use server'
 
 import { z } from 'zod'
-import Stripe from 'stripe'
-import { getCurrentUser } from '../shared/UserService'
+import { getMe } from '../me/me.service'
 import { revalidatePath } from 'next/cache'
 import stripe from '@/lib/stripe'
 
@@ -39,7 +38,7 @@ export async function createPaymentMethodAction(
       }
     }
 
-    const user = await getCurrentUser()
+    const user = await getMe()
     if (!user?.stripeCustomerId) {
       return {
         success: false,

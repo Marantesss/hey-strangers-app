@@ -1,13 +1,10 @@
-// import WordCycle from "@/features/user/components/WordCycle";
-// import QuizProvider from "@/features/user/providers/quiz.provider";
-
 import WordCycle from '@/components/common/WordCycle'
-import { getCurrentUser } from '@/domains/users/shared/UserService'
-import QuizProvider from '@/domains/users/sign-up-quiz/quiz.provider'
+import { getMe } from '@/domains/users/me/me.service'
+import QuizProvider from '@/domains/users/sign-up-quiz/providers/quiz.provider'
 import { redirect } from 'next/navigation'
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-  const user = await getCurrentUser()
+  const user = await getMe()
 
   if (user) {
     return redirect('/app')

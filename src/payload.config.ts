@@ -14,6 +14,8 @@ import { seedHome } from './database/seed/home'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+const isDev = process.env.NODE_ENV === 'development'
+
 export default buildConfig({
   admin: {
     user: Admins.slug,
@@ -36,6 +38,7 @@ export default buildConfig({
     prodMigrations: migrations,
     migrationDir: path.resolve(dirname, 'database/migrations'),
   }),
+  debug: isDev,
   sharp,
   plugins: [
     s3Storage({

@@ -1,8 +1,9 @@
 'use server'
 
 import { z } from 'zod'
-import { createOTP as _createOTP, loginWithPhoneNumber } from '@/domains/users/shared/UserService'
 import { redirect } from 'next/navigation'
+import { createOTPForPhoneNumber } from '../sign-up-quiz/sign-up.service'
+import { signInWithOTP } from './sign-in-with-otp.service'
 
 /**
  * ===============================
@@ -45,7 +46,7 @@ export const createOTPAction = async (
   }
 
   try {
-    const otp = await _createOTP({ phoneNumber: data.phoneNumber })
+    const otp = await createOTPForPhoneNumber(data.phoneNumber)
 
     console.log(otp)
 
@@ -103,7 +104,7 @@ export const signInWithOTPAction = async (
   }
 
   try {
-    await loginWithPhoneNumber(data)
+    await signInWithOTP(data)
   } catch (error) {
     return {
       data: { phoneNumber, otp },

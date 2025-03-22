@@ -1,4 +1,4 @@
-import { Game } from '@/payload-types'
+import { Game } from '@payload-types'
 import { createContext } from 'react'
 
 export interface Answers {

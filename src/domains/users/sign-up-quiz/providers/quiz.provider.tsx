@@ -1,7 +1,7 @@
 'use client'
 
 import { PropsWithChildren, useState } from 'react'
-import { Answers, QUESTIONS, QuizContext } from './quiz.context'
+import { Answers, QUESTIONS, QuizContext } from '../contexts/quiz.context'
 
 const QuizProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0)

@@ -1,10 +1,10 @@
 'use server'
 
-import Stripe from 'stripe'
-import { getCurrentUser } from '../shared/UserService'
 import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
 import stripe from '@/lib/stripe'
+import { getMe } from '../me/me.service'
+import { deletePaymentMethod } from './delete-payment-method.service'
 
 const DeletePaymentMethodSchema = z.object({
   paymentMethodId: z.string(),
@@ -31,7 +31,7 @@ export async function deletePaymentMethodAction(
       }
     }
 
-    const user = await getCurrentUser()
+    const user = await getMe()
     if (!user) {
       return {
         success: false,
@@ -48,10 +48,7 @@ export async function deletePaymentMethodAction(
       }
     }
 
-    await stripe.paymentMethods.detach(validatedFields.data.paymentMethodId)
-    revalidatePath('/')
-
-    return { success: true }
+    await deletePaymentMethod(validatedFields.data.paymentMethodId)
   } catch (error: any) {
     console.error('Error deleting payment method:', error)
     return {
@@ -59,4 +56,8 @@ export async function deletePaymentMethodAction(
       error: error.message || 'Failed to delete payment method',
     }
   }
+
+  revalidatePath('/')
+
+  return { success: true }
 }

@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils'
 import { NextPage } from 'next'
 import Link from 'next/link'
 
-import { getCurrentUser } from '@/domains/users/shared/UserService'
+import { getMe } from '@/domains/users/me/me.service'
 import { getGamesWhereUserIsRegistered } from '@/domains/games/shared/GameService'
 import GameCard from '@/domains/games/shared/components/GameCard'
 
@@ -15,7 +15,7 @@ interface PageProps {
 const GamesPage: NextPage<PageProps> = async ({ searchParams }) => {
   const { timeFrame = 'past' } = await searchParams
 
-  const user = await getCurrentUser()
+  const user = await getMe()
   const games = await getGamesWhereUserIsRegistered(
     user!.id,
     { timeFrame },

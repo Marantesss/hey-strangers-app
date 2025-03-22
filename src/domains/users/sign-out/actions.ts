@@ -1,7 +1,7 @@
 'use server'
 
-import { signOut } from '@/domains/users/shared/UserService'
 import { redirect } from 'next/navigation'
+import { signOut } from './sign-out.service'
 
 export async function signOutAction() {
   await signOut()

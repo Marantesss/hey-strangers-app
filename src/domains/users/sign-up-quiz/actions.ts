@@ -1,13 +1,13 @@
 'use server'
 
-import {
-  createOTP,
-  createUser,
-  loginWithPhoneNumber,
-  verifyUser,
-} from '@/domains/users/shared/UserService'
 import { OTPVerificationSchema, SignupSchema } from './schema'
 import { redirect } from 'next/navigation'
+import {
+  createOTPForPhoneNumber,
+  createUserWithPhoneNumber,
+  verifyUserByPhoneNumber,
+} from './sign-up.service'
+import { signInWithOTP } from '../sign-in-with-otp/sign-in-with-otp.service'
 
 /**
  * ===============================
@@ -44,7 +44,7 @@ export const createOTPAction = async (
 
   if (!previousState.success) {
     try {
-      const user = await createUser({ phoneNumber: data.phone })
+      const user = await createUserWithPhoneNumber(data.phone)
       console.log(user)
     } catch (error) {
       return {
@@ -55,7 +55,7 @@ export const createOTPAction = async (
   }
 
   try {
-    const otp = await createOTP({ phoneNumber: data.phone })
+    const otp = await createOTPForPhoneNumber(data.phone)
 
     console.log(otp) // In production, you would send this via SMS
   } catch (error) {
@@ -109,8 +109,8 @@ export const signUpWithOTPAction = async (
   }
 
   try {
-    await verifyUser({ phoneNumber: data.phone })
-    await loginWithPhoneNumber({ phoneNumber: data.phone, otp: data.otp })
+    await verifyUserByPhoneNumber(data.phone)
+    await signInWithOTP({ phoneNumber: data.phone, otp: data.otp })
   } catch (error) {
     return {
       success: false,

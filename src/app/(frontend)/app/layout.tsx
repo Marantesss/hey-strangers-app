@@ -3,12 +3,12 @@ import { Button } from '@/components/ui/button'
 import { PropsWithChildren } from 'react'
 import AppNavigationMenu from '@/components/common/AppNavigationMenu'
 import { signOutAction } from '@/domains/users/sign-out/actions'
-import { getCurrentUser } from '@/domains/users/shared/UserService'
+import { getMe } from '@/domains/users/me/me.service'
 import { redirect } from 'next/navigation'
 import SessionProvider from '@/domains/users/session/SessionProvider'
 
 const AppLayout: React.FC<PropsWithChildren> = async ({ children }) => {
-  const user = await getCurrentUser()
+  const user = await getMe()
 
   if (!user) {
     return redirect('/sign-in')

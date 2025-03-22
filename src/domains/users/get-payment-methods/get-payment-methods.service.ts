@@ -1,5 +1,5 @@
 import stripe from '@/lib/stripe'
-import { getUserById } from '../shared/UserService'
+import { getUserById } from '../get-user/get-user.service'
 
 export async function getPaymentMethods(userId: string) {
   const user = await getUserById(userId)

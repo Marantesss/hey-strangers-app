@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import PaymentInformationForm from '@/domains/users/add-payment-information/components/PaymentInformationForm'
 import ProfileForm from '@/domains/users/edit-profile/components/ProfileForm'
 import { getPaymentMethods } from '@/domains/users/get-payment-methods/get-payment-methods.service'
-import { getCurrentUser } from '@/domains/users/shared/UserService'
+import { getMe } from '@/domains/users/me/me.service'
 import { NextPage } from 'next'
 
 type ProfilePageProps = {
@@ -13,7 +13,7 @@ type ProfilePageProps = {
 }
 
 const ProfilePage: NextPage<ProfilePageProps> = async () => {
-  const user = await getCurrentUser()
+  const user = await getMe()
   const paymentMethods = await getPaymentMethods(user!.id)
 
   return (

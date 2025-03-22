@@ -42,6 +42,14 @@ export class UserModel {
       : undefined
   }
 
+  get registrations(): RegistrationModel[] {
+    if (!this._registrations) {
+      throw new Error('Registrations not expanded')
+    }
+
+    return this._registrations
+  }
+
   /**
    * Returns the first name and last initial of the user
    */

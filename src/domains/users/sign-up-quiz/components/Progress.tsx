@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils'
 import { Fragment } from 'react'
-import { useQuiz } from '../quiz.hook'
+import { useQuiz } from '../hooks/quiz.hook'
 
 const Progress: React.FC = () => {
   const quiz = useQuiz()

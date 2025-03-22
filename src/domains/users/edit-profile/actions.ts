@@ -1,7 +1,8 @@
 'use server'
 
 import { z } from 'zod'
-import { getCurrentUser, updateUser } from '../shared/UserService'
+import { getMe } from '../me/me.service'
+import { updateUser } from '../update-user/update-user.service'
 
 const UpdateProfileSchema = z.object({
   name: z.string().min(1),
@@ -55,7 +56,7 @@ export const updateProfileAction = async (
   }
 
   try {
-    const user = await getCurrentUser()
+    const user = await getMe()
     await updateUser({ id: user!.id, data })
   } catch (error) {
     return {
