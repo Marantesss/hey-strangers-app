@@ -12,7 +12,6 @@ export class UserModel {
 
   readonly createdAt: Date
   readonly updatedAt: Date
-  readonly deletedAt: Date | null
 
   // Relations
   private readonly _registrations?: RegistrationModel[]
@@ -28,7 +27,6 @@ export class UserModel {
 
     this.createdAt = new Date(data.createdAt)
     this.updatedAt = new Date(data.updatedAt)
-    this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : null
 
     // Relations
     const isRegistrationsExpanded =
@@ -79,7 +77,6 @@ export class UserModel {
       stripeCustomerId: this.stripeCustomerId,
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
-      deletedAt: this.deletedAt?.toISOString() ?? null,
     }
   }
 }

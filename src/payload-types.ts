@@ -209,6 +209,7 @@ export interface Media {
  */
 export interface Registration {
   id: string;
+  stripePaymentIntentId: string;
   deletedAt?: string | null;
   game: string | Game;
   user: string | User;
@@ -229,6 +230,7 @@ export interface Game {
   maxPlayers: number;
   sport: 'soccer' | 'padel' | 'tennis' | 'basketball' | 'volleyball';
   field: string | Field;
+  stripeProductId?: string | null;
   deletedAt?: string | null;
   registrations?: {
     docs?: (string | Registration)[];
@@ -440,6 +442,7 @@ export interface GamesSelect<T extends boolean = true> {
   maxPlayers?: T;
   sport?: T;
   field?: T;
+  stripeProductId?: T;
   deletedAt?: T;
   registrations?: T;
   updatedAt?: T;
@@ -450,6 +453,7 @@ export interface GamesSelect<T extends boolean = true> {
  * via the `definition` "registrations_select".
  */
 export interface RegistrationsSelect<T extends boolean = true> {
+  stripePaymentIntentId?: T;
   deletedAt?: T;
   game?: T;
   user?: T;

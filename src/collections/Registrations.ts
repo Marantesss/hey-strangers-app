@@ -16,11 +16,10 @@ export const Registrations: CollectionConfig = {
   fields: [
     // --- FIELDS
     {
-      name: 'deletedAt',
-      type: 'date',
-      admin: {
-        position: 'sidebar',
-      },
+      name: 'stripePaymentIntentId',
+      type: 'text',
+      required: true,
+      unique: true,
     },
     // --- relations and joins
     {

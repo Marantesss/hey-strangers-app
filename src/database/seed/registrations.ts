@@ -35,66 +35,80 @@ export const seedRegistrations = async (payload: Payload) => {
     {
       game: gameMap['Morning Soccer Match'],
       user: userMap['user1@example.com'],
+      stripePaymentIntentId: 'pi_1',
     },
     {
       game: gameMap['Morning Soccer Match'],
       user: userMap['user2@example.com'],
+      stripePaymentIntentId: 'pi_2',
     },
     {
       game: gameMap['Morning Soccer Match'],
       user: userMap['user3@example.com'],
+      stripePaymentIntentId: 'pi_3',
     },
 
     // Evening Soccer League registrations
     {
       game: gameMap['Evening Soccer League'],
       user: userMap['user1@example.com'],
+      stripePaymentIntentId: 'pi_4',
     },
     {
       game: gameMap['Evening Soccer League'],
       user: userMap['user4@example.com'],
+      stripePaymentIntentId: 'pi_5',
     },
 
     // Tennis Singles Match
     {
       game: gameMap['Tennis Singles Match'],
       user: userMap['user2@example.com'],
+      stripePaymentIntentId: 'pi_6',
     },
     {
       game: gameMap['Tennis Singles Match'],
       user: userMap['user3@example.com'],
+      stripePaymentIntentId: 'pi_7',
     },
 
     // Morning Padel Session
     {
       game: gameMap['Morning Padel Session'],
       user: userMap['user1@example.com'],
+      stripePaymentIntentId: 'pi_8',
     },
     {
       game: gameMap['Morning Padel Session'],
       user: userMap['user2@example.com'],
+      stripePaymentIntentId: 'pi_9',
     },
     {
       game: gameMap['Morning Padel Session'],
       user: userMap['user3@example.com'],
+      stripePaymentIntentId: 'pi_10',
     },
 
     // Street Basketball Tournament
     {
       game: gameMap['Street Basketball Tournament'],
       user: userMap['user1@example.com'],
+      stripePaymentIntentId: 'pi_11',
     },
     {
       game: gameMap['Street Basketball Tournament'],
       user: userMap['user2@example.com'],
+      stripePaymentIntentId: 'pi_12',
     },
     {
       game: gameMap['Street Basketball Tournament'],
       user: userMap['user3@example.com'],
+      stripePaymentIntentId: 'pi_13',
     },
     {
       game: gameMap['Street Basketball Tournament'],
       user: userMap['user4@example.com'],
+      stripePaymentIntentId: 'pi_14',
     },
   ] satisfies Omit<Registration, 'createdAt' | 'id' | 'sizes' | 'updatedAt'>[]
 

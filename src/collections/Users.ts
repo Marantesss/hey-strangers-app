@@ -82,13 +82,6 @@ export const Users: CollectionConfig = {
       name: 'city',
       type: 'text',
     },
-    {
-      name: 'deletedAt',
-      type: 'date',
-      admin: {
-        position: 'sidebar',
-      },
-    },
     // --- relations and joins
     {
       name: 'registrations',

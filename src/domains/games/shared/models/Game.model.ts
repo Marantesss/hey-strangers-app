@@ -13,9 +13,10 @@ export class GameModel {
   readonly price: number
   readonly maxPlayers: number
   readonly sport: GameSport
+  readonly stripeProductId: string | null
+
   readonly createdAt: Date
   readonly updatedAt: Date
-  readonly deletedAt: Date | null
 
   // Relations
   private readonly _field?: FieldModel
@@ -33,9 +34,10 @@ export class GameModel {
     this.price = data.price
     this.maxPlayers = data.maxPlayers
     this.sport = data.sport
+    this.stripeProductId = data.stripeProductId ?? null
+
     this.createdAt = new Date(data.createdAt)
     this.updatedAt = new Date(data.updatedAt)
-    this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : null
 
     // Relations
     this._field = data.field instanceof Object ? FieldModel.from(data.field) : undefined
@@ -110,7 +112,6 @@ export class GameModel {
       sport: this.sport,
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
-      deletedAt: this.deletedAt?.toISOString() ?? null,
       field: this._field ? this._field.toSerializable() : this._fieldId,
       registrations: this._registrations
         ? {
@@ -134,7 +135,6 @@ export class GameModel {
         maxPlayers: 10,
         sport: 'soccer',
         createdAt: '2025-03-01T08:00:00Z',
-        deletedAt: null,
         updatedAt: '2025-03-01T08:00:00Z',
         field: {
           id: '1',
@@ -142,7 +142,6 @@ export class GameModel {
           address: '123 Main St',
           type: 'indoor',
           flooring: 'artificial_turf',
-          deletedAt: null,
           createdAt: '2025-03-01T08:00:00Z',
           updatedAt: '2025-03-01T08:00:00Z',
           sport: 'soccer',
@@ -195,7 +194,6 @@ export class GameModel {
         maxPlayers: 10,
         sport: 'soccer',
         createdAt: '2025-03-01T08:00:00Z',
-        deletedAt: null,
         updatedAt: '2025-03-01T08:00:00Z',
         field: {
           id: '1',
@@ -205,7 +203,6 @@ export class GameModel {
           flooring: 'artificial_turf',
           sport: 'soccer',
           createdAt: '2025-03-01T08:00:00Z',
-          deletedAt: null,
           updatedAt: '2025-03-01T08:00:00Z',
           amenities: [
             'cafe',

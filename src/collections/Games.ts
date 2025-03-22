@@ -1,4 +1,9 @@
 import { hasRole, isAuthenticated } from '@/access'
+import {
+  createStripeProduct,
+  deleteStripeProduct,
+  updateStripeProduct,
+} from '@/domains/games/sync-stripe-product/sync-stripe-product.hooks'
 import { CollectionConfig } from 'payload'
 
 const sportTypes = ['soccer', 'padel', 'tennis', 'basketball', 'volleyball'] as const
@@ -73,10 +78,12 @@ export const Games: CollectionConfig = {
       required: true,
     },
     {
-      name: 'deletedAt',
-      type: 'date',
+      name: 'stripeProductId',
+      type: 'text',
+      required: false,
+      unique: true,
       admin: {
-        position: 'sidebar',
+        readOnly: true,
       },
     },
     // --- relations and joins
@@ -88,5 +95,9 @@ export const Games: CollectionConfig = {
       hasMany: true,
     },
   ],
+  hooks: {
+    beforeChange: [createStripeProduct, updateStripeProduct],
+    afterDelete: [deleteStripeProduct],
+  },
   timestamps: true,
 }

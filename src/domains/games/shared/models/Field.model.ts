@@ -28,7 +28,6 @@ export class FieldModel {
   readonly flooring: PayloadField['flooring']
   readonly createdAt: Date
   readonly updatedAt: Date
-  readonly deletedAt: Date | null
   readonly sport: PayloadField['sport']
   readonly amenities: NonNullable<PayloadField['amenities']>
 
@@ -41,7 +40,6 @@ export class FieldModel {
     this.sport = data.sport
     this.createdAt = new Date(data.createdAt)
     this.updatedAt = new Date(data.updatedAt)
-    this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : null
 
     this.amenities = data.amenities ?? []
   }
@@ -112,7 +110,6 @@ export class FieldModel {
       sport: this.sport,
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
-      deletedAt: this.deletedAt?.toISOString() ?? null,
       amenities: this.amenities,
     }
   }

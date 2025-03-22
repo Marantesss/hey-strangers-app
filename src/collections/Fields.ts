@@ -104,13 +104,6 @@ export const Fields: CollectionConfig = {
         value: type,
       })),
     },
-    {
-      name: 'deletedAt',
-      type: 'date',
-      admin: {
-        position: 'sidebar',
-      },
-    },
     // --- relations and joins
     {
       name: 'games',
