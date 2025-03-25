@@ -19,7 +19,6 @@ const BOOKING_FEE = 1
 
 const RegisterForGameSheet: React.FC = () => {
   const { gameId, isOpen, toggleOpen } = useRegisterFormGame()
-
   const { data: game, isLoading: isGameLoading } = useGameQuery(gameId ?? undefined)
   const { data: paymentMethods, isLoading: isPaymentMethodsLoading } = usePaymentMethodsQuery()
 
