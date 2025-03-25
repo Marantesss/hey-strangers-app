@@ -9,11 +9,12 @@ import GameCard from '@/domains/games/shared/components/GameCard'
 interface PageProps {
   searchParams: Promise<{
     timeFrame?: 'past' | 'future'
+    registeredGame?: string
   }>
 }
 
 const GamesPage: NextPage<PageProps> = async ({ searchParams }) => {
-  const { timeFrame = 'past' } = await searchParams
+  const { timeFrame = 'past', registeredGame } = await searchParams
 
   const user = await getMe()
   const games = await getGamesWhereUserIsRegistered(
@@ -50,7 +51,7 @@ const GamesPage: NextPage<PageProps> = async ({ searchParams }) => {
 
       <div className="max-w-lg mx-auto space-y-4">
         {games.map((game) => (
-          <GameCard simple key={game.id} game={game} />
+          <GameCard highlight={game.id === registeredGame} simple key={game.id} game={game} />
         ))}
       </div>
     </main>

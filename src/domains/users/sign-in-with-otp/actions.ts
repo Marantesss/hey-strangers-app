@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { redirect } from 'next/navigation'
 import { createOTPForPhoneNumber } from '../sign-up-quiz/sign-up.service'
 import { signInWithOTP } from './sign-in-with-otp.service'
+import { sendWhatsappOtpMessage } from '@/lib/whatsapp'
 
 /**
  * ===============================
@@ -47,18 +48,19 @@ export const createOTPAction = async (
 
   try {
     const otp = await createOTPForPhoneNumber(data.phoneNumber)
-
+    await sendWhatsappOtpMessage(data.phoneNumber, otp.code)
     console.log(otp)
-
-    return {
-      data: { phoneNumber: data.phoneNumber },
-      success: true,
-    }
   } catch (error) {
+    console.error(error)
     return {
       success: false,
       error: { phoneNumber: 'Failed to create OTP' },
     }
+  }
+
+  return {
+    data: { phoneNumber: data.phoneNumber },
+    success: true,
   }
 }
 

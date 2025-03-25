@@ -8,6 +8,7 @@ import {
   verifyUserByPhoneNumber,
 } from './sign-up.service'
 import { signInWithOTP } from '../sign-in-with-otp/sign-in-with-otp.service'
+import { sendWhatsappOtpMessage } from '@/lib/whatsapp'
 
 /**
  * ===============================
@@ -56,9 +57,10 @@ export const createOTPAction = async (
 
   try {
     const otp = await createOTPForPhoneNumber(data.phone)
-
-    console.log(otp) // In production, you would send this via SMS
+    await sendWhatsappOtpMessage(data.phone, otp.code)
+    console.log(otp)
   } catch (error) {
+    console.error(error)
     return {
       success: false,
       error: { phone: 'Failed to create OTP' },

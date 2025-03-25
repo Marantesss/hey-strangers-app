@@ -95,6 +95,18 @@ export class GameModel {
     return (this.endsAt.getTime() - this.startsAt.getTime()) / (1000 * 60)
   }
 
+  get availableSpots(): number {
+    return this.maxPlayers - (this._registrationsIds?.length ?? 0)
+  }
+
+  get isFull(): boolean {
+    return this.availableSpots <= 0
+  }
+
+  public isUserRegistered(userId: string): boolean {
+    return this._registrationsIds?.some((id) => id === userId) ?? false
+  }
+
   // Factory method
   static from(data: PayloadGame): GameModel {
     return new GameModel(data)

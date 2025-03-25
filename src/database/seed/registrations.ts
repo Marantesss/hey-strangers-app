@@ -36,16 +36,19 @@ export const seedRegistrations = async (payload: Payload) => {
       game: gameMap['Morning Soccer Match'],
       user: userMap['user1@example.com'],
       stripePaymentIntentId: 'pi_1',
+      isMainRegistration: true,
     },
     {
       game: gameMap['Morning Soccer Match'],
       user: userMap['user2@example.com'],
       stripePaymentIntentId: 'pi_2',
+      isMainRegistration: true,
     },
     {
       game: gameMap['Morning Soccer Match'],
       user: userMap['user3@example.com'],
       stripePaymentIntentId: 'pi_3',
+      isMainRegistration: true,
     },
 
     // Evening Soccer League registrations
@@ -53,11 +56,13 @@ export const seedRegistrations = async (payload: Payload) => {
       game: gameMap['Evening Soccer League'],
       user: userMap['user1@example.com'],
       stripePaymentIntentId: 'pi_4',
+      isMainRegistration: true,
     },
     {
       game: gameMap['Evening Soccer League'],
       user: userMap['user4@example.com'],
       stripePaymentIntentId: 'pi_5',
+      isMainRegistration: true,
     },
 
     // Tennis Singles Match
@@ -65,11 +70,13 @@ export const seedRegistrations = async (payload: Payload) => {
       game: gameMap['Tennis Singles Match'],
       user: userMap['user2@example.com'],
       stripePaymentIntentId: 'pi_6',
+      isMainRegistration: true,
     },
     {
       game: gameMap['Tennis Singles Match'],
       user: userMap['user3@example.com'],
       stripePaymentIntentId: 'pi_7',
+      isMainRegistration: true,
     },
 
     // Morning Padel Session
@@ -77,16 +84,19 @@ export const seedRegistrations = async (payload: Payload) => {
       game: gameMap['Morning Padel Session'],
       user: userMap['user1@example.com'],
       stripePaymentIntentId: 'pi_8',
+      isMainRegistration: true,
     },
     {
       game: gameMap['Morning Padel Session'],
       user: userMap['user2@example.com'],
       stripePaymentIntentId: 'pi_9',
+      isMainRegistration: true,
     },
     {
       game: gameMap['Morning Padel Session'],
       user: userMap['user3@example.com'],
       stripePaymentIntentId: 'pi_10',
+      isMainRegistration: true,
     },
 
     // Street Basketball Tournament
@@ -94,21 +104,25 @@ export const seedRegistrations = async (payload: Payload) => {
       game: gameMap['Street Basketball Tournament'],
       user: userMap['user1@example.com'],
       stripePaymentIntentId: 'pi_11',
+      isMainRegistration: true,
     },
     {
       game: gameMap['Street Basketball Tournament'],
       user: userMap['user2@example.com'],
       stripePaymentIntentId: 'pi_12',
+      isMainRegistration: false,
     },
     {
       game: gameMap['Street Basketball Tournament'],
       user: userMap['user3@example.com'],
       stripePaymentIntentId: 'pi_13',
+      isMainRegistration: true,
     },
     {
       game: gameMap['Street Basketball Tournament'],
-      user: userMap['user4@example.com'],
+      user: userMap['user3@example.com'],
       stripePaymentIntentId: 'pi_14',
+      isMainRegistration: false,
     },
   ] satisfies Omit<Registration, 'createdAt' | 'id' | 'sizes' | 'updatedAt'>[]
 

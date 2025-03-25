@@ -21,13 +21,14 @@ export async function registerForGame({
   const registrations = await Promise.all(
     Array(playerCount)
       .fill(null)
-      .map(() =>
+      .map((_, index) =>
         payload.create({
           collection: 'registrations',
           data: {
             game: gameId,
             user: userId,
             stripePaymentIntentId: paymentIntentId,
+            isMainRegistration: index === 0,
           },
         }),
       ),

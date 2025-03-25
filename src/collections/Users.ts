@@ -2,8 +2,9 @@ import { hasRole, isAuthenticated } from '@/access'
 import getPaymentMethodsEndpoint from '@/domains/users/get-payment-methods/get-payment-methods.endpoint'
 import {
   createStripeCustomer,
+  deleteStripeCustomer,
   updateStripeCustomer,
-} from '@/domains/users/upsert-stripe-customer/upsert-stripe-customer.hooks'
+} from '@/domains/users/sync-stripe-customer/sync-stripe-customer.hooks'
 import { CollectionConfig } from 'payload'
 
 export const Users: CollectionConfig = {
@@ -93,6 +94,7 @@ export const Users: CollectionConfig = {
   ],
   hooks: {
     afterChange: [createStripeCustomer, updateStripeCustomer],
+    afterDelete: [deleteStripeCustomer],
   },
   endpoints: [getPaymentMethodsEndpoint],
 }

@@ -1,6 +1,6 @@
 import stripe from '@/lib/stripe'
 import { User } from '@payload-types'
-import { CollectionAfterChangeHook } from 'payload'
+import { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
 
 export const createStripeCustomer: CollectionAfterChangeHook<User> = async ({
   doc,
@@ -72,4 +72,9 @@ export const updateStripeCustomer: CollectionAfterChangeHook<User> = async ({
     ...(doc.name && { name: doc.name }),
     ...(doc.phoneNumber && { phone: doc.phoneNumber }),
   })
+}
+
+export const deleteStripeCustomer: CollectionAfterDeleteHook<User> = async ({ doc }) => {
+  if (!doc.stripeCustomerId) return
+  await stripe.customers.del(doc.stripeCustomerId)
 }

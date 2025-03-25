@@ -6,6 +6,8 @@ export class RegistrationModel {
   readonly id: string
   readonly createdAt: Date
   readonly updatedAt: Date
+  readonly stripePaymentIntentId: string
+  readonly isMainRegistration: boolean
 
   // Relations
   private readonly _userId: string
@@ -15,6 +17,9 @@ export class RegistrationModel {
 
   private constructor(data: Registration) {
     this.id = data.id
+    this.stripePaymentIntentId = data.stripePaymentIntentId
+    this.isMainRegistration = !!data.isMainRegistration
+
     this.createdAt = new Date(data.createdAt)
     this.updatedAt = new Date(data.updatedAt)
 
@@ -51,6 +56,7 @@ export class RegistrationModel {
       updatedAt: this.updatedAt.toISOString(),
       user: this._user?.toSerializable() ?? this._userId,
       game: this._game?.toSerializable() ?? this._gameId,
+      stripePaymentIntentId: this.stripePaymentIntentId,
     }
   }
 }

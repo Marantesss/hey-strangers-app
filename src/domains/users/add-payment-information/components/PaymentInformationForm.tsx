@@ -6,19 +6,16 @@ import { loadStripe } from '@stripe/stripe-js'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { User } from '@/payload-types'
 import { toast } from 'sonner'
 import { createPaymentMethodAction, CreatePaymentMethodActionState } from '../actions'
 import SelectCountry from '@/components/common/SelectCountry'
+import { UserModel } from '../../shared/models/User.model'
+import useSession from '../../session/use-session'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
-interface PaymentInformationFormProps {
-  user: User
-}
-
 interface PaymentMethodFormProps {
-  user: User
+  user: UserModel
   onSuccess?: () => void
   onError?: (error: string) => void
 }
@@ -134,8 +131,11 @@ function PaymentMethodForm({ user, onSuccess, onError }: PaymentMethodFormProps)
   )
 }
 
-const PaymentInformationForm: React.FC<PaymentInformationFormProps> = ({ user }) => {
+const PaymentInformationForm: React.FC = () => {
   const [showAddCard, setShowAddCard] = useState(false)
+  const { user } = useSession()
+
+  if (!user) return null
 
   return (
     <div>

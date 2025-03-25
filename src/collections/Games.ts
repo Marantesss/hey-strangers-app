@@ -1,4 +1,5 @@
 import { hasRole, isAuthenticated } from '@/access'
+import createPaymentIntentEndpoint from '@/domains/games/create-payment-intent/create-payment-intent.endpoint'
 import {
   createStripeProduct,
   deleteStripeProduct,
@@ -99,5 +100,5 @@ export const Games: CollectionConfig = {
     beforeChange: [createStripeProduct, updateStripeProduct],
     afterDelete: [deleteStripeProduct],
   },
-  timestamps: true,
+  endpoints: [createPaymentIntentEndpoint],
 }

@@ -21,6 +21,15 @@ export const Registrations: CollectionConfig = {
       required: true,
       unique: true,
     },
+    {
+      name: 'isMainRegistration',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        description:
+          'If true, the user was the one who registered for the game and made the reservation',
+      },
+    },
     // --- relations and joins
     {
       name: 'game',

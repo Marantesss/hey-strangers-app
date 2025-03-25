@@ -174,7 +174,6 @@ export interface User {
   isVerified?: boolean | null;
   name?: string | null;
   city?: string | null;
-  deletedAt?: string | null;
   registrations?: {
     docs?: (string | Registration)[];
     hasNextPage?: boolean;
@@ -210,7 +209,10 @@ export interface Media {
 export interface Registration {
   id: string;
   stripePaymentIntentId: string;
-  deletedAt?: string | null;
+  /**
+   * If true, the user was the one who registered for the game and made the reservation
+   */
+  isMainRegistration?: boolean | null;
   game: string | Game;
   user: string | User;
   updatedAt: string;
@@ -231,7 +233,6 @@ export interface Game {
   sport: 'soccer' | 'padel' | 'tennis' | 'basketball' | 'volleyball';
   field: string | Field;
   stripeProductId?: string | null;
-  deletedAt?: string | null;
   registrations?: {
     docs?: (string | Registration)[];
     hasNextPage?: boolean;
@@ -281,7 +282,6 @@ export interface Field {
         | 'scoreboard'
       )[]
     | null;
-  deletedAt?: string | null;
   games?: {
     docs?: (string | Game)[];
     hasNextPage?: boolean;
@@ -408,7 +408,6 @@ export interface UsersSelect<T extends boolean = true> {
   isVerified?: T;
   name?: T;
   city?: T;
-  deletedAt?: T;
   registrations?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -424,7 +423,6 @@ export interface FieldsSelect<T extends boolean = true> {
   flooring?: T;
   sport?: T;
   amenities?: T;
-  deletedAt?: T;
   games?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -443,7 +441,6 @@ export interface GamesSelect<T extends boolean = true> {
   sport?: T;
   field?: T;
   stripeProductId?: T;
-  deletedAt?: T;
   registrations?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -454,7 +451,7 @@ export interface GamesSelect<T extends boolean = true> {
  */
 export interface RegistrationsSelect<T extends boolean = true> {
   stripePaymentIntentId?: T;
-  deletedAt?: T;
+  isMainRegistration?: T;
   game?: T;
   user?: T;
   updatedAt?: T;

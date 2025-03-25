@@ -47,7 +47,7 @@ const ProfilePage: NextPage<ProfilePageProps> = async () => {
             )}
             <hr className="border-t border-gray-200" />
 
-            <PaymentInformationForm user={user!} />
+            <PaymentInformationForm />
           </div>
         </CardContent>
       </Card>
