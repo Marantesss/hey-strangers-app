@@ -1,7 +1,39 @@
 {
-  "common": {
-    "home": "Home",
-    "about": "About",
-    "contact": "Contact"
+  "sign-up": {
+    "quiz": {
+      "next": "Next",
+      "previous": "Previous",
+      "results": "We found {count} games that match your skills"
+    },
+    "layout": {
+      "play": "Play",
+      "with": "with friendly strangers"
+    },
+    "sports": {
+      "soccer": "Soccer",
+      "padel": "Padel",
+      "tennis": "Tennis",
+      "basketball": "Basketball",
+      "volleyball": "Volleyball"
+    },
+    "phone-number-form": {
+      "title": "Sign up",
+      "phone": {
+        "label": "Phone",
+        "placeholder": "Phone Number",
+        "helper": "We'll send you a text with a confirmation code"
+      },
+      "submit": "Send Code"
+    },
+    "otp-form": {
+      "title": "Enter verification code",
+      "phone": {
+        "label": "Phone",
+        "placeholder": "Phone Number",
+        "helper": "Enter the code we sent to {phone}"
+      },
+      "submit": "Verify Code",
+      "resend": "Resend code"
+    }
   }
 }

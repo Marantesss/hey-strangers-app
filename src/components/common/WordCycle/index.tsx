@@ -2,38 +2,33 @@
 
 import { cn } from '@/lib/utils'
 import { useQuiz } from '@/domains/users/sign-up-quiz/hooks/quiz.hook'
-import { Game } from '@payload-types'
 
 import './styles.css'
-
-const sportMap: Record<string, string> = {
-  soccer: 'Soccer',
-  padel: 'Padel',
-  tennis: 'Tennis',
-  basketball: 'Basketball',
-  volleyball: 'Volleyball',
-} as const
-
-const sports = Object.values(sportMap)
-
-const LONGEST_WORD = sports.reduce((longest, current) => {
-  return current.length > longest.length ? current : longest
-}, sports[0])
+import { useTranslations } from 'next-intl'
 
 interface WordCycleProps extends React.HTMLAttributes<HTMLSpanElement> {}
 
 const WordCycle: React.FC<WordCycleProps> = ({ className, ...rest }) => {
-  const quiz = useQuiz()
+  const t = useTranslations('sign-up.sports')
 
-  const sport = quiz.answers.sport
+  const sports = [t('soccer'), t('padel'), t('tennis'), t('basketball'), t('volleyball')]
+  const LONGEST_WORD = sports.reduce((longest, current) => {
+    return current.length > longest.length ? current : longest
+  }, sports[0])
+
+  const { answers, quiz } = useQuiz()
+
+  const selectedSport = quiz.questions
+    .find(({ key }) => key === 'sport')
+    ?.options.find(({ value }) => value === answers['sport'])
 
   return (
     <span
       {...rest}
       className={cn('bg-white rounded-2xl inline-block px-4 py-1 ml-2 text-primary', className)}
     >
-      {!!sport ? (
-        <span>{sportMap[sport]}</span>
+      {!!selectedSport ? (
+        <span>{selectedSport.label}</span>
       ) : (
         <>
           <span className="slidingVertical">

@@ -18,10 +18,12 @@ import { sendWhatsappOtpMessage } from '@/lib/whatsapp'
 type CreateOTPActionState = {
   data?: {
     phone?: string
+    quizAnswers?: string | Record<string, string>
   }
   success?: boolean
   error?: {
     phone?: string
+    quizAnswers?: string
   }
 }
 
@@ -30,12 +32,13 @@ export const createOTPAction = async (
   formData: FormData,
 ): Promise<CreateOTPActionState> => {
   const phone = formData.get('phone') as string
+  const quizAnswers = formData.get('quizAnswers') as string
 
-  const { success, data } = SignupSchema.safeParse({ phone })
+  const { success, data } = SignupSchema.safeParse({ phone, quizAnswers })
 
   if (!success) {
     return {
-      data: { phone },
+      data: { phone, quizAnswers },
       success: false,
       error: {
         phone: 'Invalid phone number',
@@ -45,7 +48,7 @@ export const createOTPAction = async (
 
   if (!previousState.success) {
     try {
-      const user = await createUserWithPhoneNumber(data.phone)
+      const user = await createUserWithPhoneNumber(data.phone, data.quizAnswers)
       console.log(user)
     } catch (error) {
       return {

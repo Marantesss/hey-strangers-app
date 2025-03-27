@@ -113,10 +113,12 @@ export interface Config {
   globals: {
     home: Home;
     footer: Footer;
+    quiz: Quiz;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    quiz: QuizSelect<false> | QuizSelect<true>;
   };
   locale: 'en' | 'pt';
   user:
@@ -221,6 +223,15 @@ export interface User {
   isVerified?: boolean | null;
   name?: string | null;
   city?: string | null;
+  quizAnswers:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   registrations?: {
     docs?: (string | Registration)[];
     hasNextPage?: boolean;
@@ -480,6 +491,7 @@ export interface UsersSelect<T extends boolean = true> {
   isVerified?: T;
   name?: T;
   city?: T;
+  quizAnswers?: T;
   registrations?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -735,6 +747,30 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz".
+ */
+export interface Quiz {
+  id: string;
+  sports: {
+    name: string;
+    id?: string | null;
+  }[];
+  questions: {
+    key: string;
+    title: string;
+    options: {
+      label: string;
+      enabled?: boolean | null;
+      value: string;
+      id?: string | null;
+    }[];
+    id?: string | null;
+  }[];
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
@@ -908,6 +944,36 @@ export interface FooterSelect<T extends boolean = true> {
     | {
         platform?: T;
         url?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz_select".
+ */
+export interface QuizSelect<T extends boolean = true> {
+  sports?:
+    | T
+    | {
+        name?: T;
+        id?: T;
+      };
+  questions?:
+    | T
+    | {
+        key?: T;
+        title?: T;
+        options?:
+          | T
+          | {
+              label?: T;
+              enabled?: T;
+              value?: T;
+              id?: T;
+            };
         id?: T;
       };
   updatedAt?: T;

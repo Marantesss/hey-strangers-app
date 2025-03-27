@@ -5,7 +5,7 @@ import { Fragment } from 'react'
 import { useQuiz } from '../hooks/quiz.hook'
 
 const Progress: React.FC = () => {
-  const quiz = useQuiz()
+  const { quiz, currentQuestion } = useQuiz()
 
   const numberOfQuestions = quiz.questions.length
 
@@ -15,8 +15,8 @@ const Progress: React.FC = () => {
         <Fragment key={index}>
           <div
             className={cn('text-sm w-6 h-6 rounded-full inline-flex items-center justify-center', {
-              'bg-primary text-primary-foreground': index === quiz.currentQuestion,
-              'bg-neutral-200 text-[#454745]': index !== quiz.currentQuestion,
+              'bg-primary text-primary-foreground': index === currentQuestion,
+              'bg-neutral-200 text-[#454745]': index !== currentQuestion,
             })}
           >
             {index + 1}

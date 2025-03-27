@@ -83,6 +83,18 @@ export const Users: CollectionConfig = {
       name: 'city',
       type: 'text',
     },
+    {
+      name: 'quizAnswers',
+      type: 'json',
+      required: true,
+      access: {
+        read: hasRole('admins'),
+        update: hasRole('admins'),
+      },
+      admin: {
+        readOnly: true,
+      },
+    },
     // --- relations and joins
     {
       name: 'registrations',

@@ -4,39 +4,35 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Check } from 'lucide-react'
 import { useState } from 'react'
-import { Answers } from '../contexts/quiz.context'
 import { useQuiz } from '../hooks/quiz.hook'
-import GameCard from '@/domains/games/shared/components/GameCard'
-import { GameModel } from '@/domains/games/shared/models/Game.model'
 import SignupForm from './SignupForm'
+import { useTranslations } from 'next-intl'
 
 const Quiz: React.FC = () => {
-  const quiz = useQuiz()
+  const { quiz, currentQuestion, setCurrentQuestion, answers, setAnswer } = useQuiz()
   const [showResults, setShowResults] = useState(false)
+  const t = useTranslations('sign-up.quiz')
 
-  const isFirstQuestion = quiz.currentQuestion === 0
-  const isLastQuestion = quiz.currentQuestion === quiz.questions.length - 1
+  const isFirstQuestion = currentQuestion === 0
+  const isLastQuestion = currentQuestion === quiz.questions.length - 1
 
-  const isCurrentAnswered = quiz.answers[quiz.questions[quiz.currentQuestion].id] !== null
+  const isCurrentAnswered = !!answers[quiz.questions[currentQuestion].key]
 
-  const sport = quiz.answers.sport
-  const currentQuestion = quiz.questions[quiz.currentQuestion]
+  const currentQuestionObject = quiz.questions[currentQuestion]
 
-  const handleOptionSelect = (optionId: string) => {
-    quiz.setAnswer(quiz.questions[quiz.currentQuestion].id, optionId as Answers[keyof Answers])
-  }
+  const handleOptionSelect = (value: string) => setAnswer(currentQuestionObject.key, value)
 
   const handlePreviousQuestion = () => {
     if (showResults) {
       setShowResults(false)
-    } else if (quiz.currentQuestion > 0) {
-      quiz.setCurrentQuestion(quiz.currentQuestion - 1)
+    } else if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1)
     }
   }
 
   const handleNextQuestion = () => {
     if (isCurrentAnswered && !isLastQuestion) {
-      quiz.setCurrentQuestion(quiz.currentQuestion + 1)
+      setCurrentQuestion(currentQuestion + 1)
     } else {
       setShowResults(true)
     }
@@ -46,23 +42,24 @@ const Quiz: React.FC = () => {
     <div className="flex flex-col gap-12 w-full max-w-lg">
       {!showResults ? (
         <>
-          <h2 className="text-3xl font-bold">{currentQuestion.title(sport ?? '')}</h2>
+          <h2 className="text-3xl font-bold">{currentQuestionObject.title}</h2>
 
           <div className="flex flex-col gap-2">
-            {currentQuestion.options.map((option) => (
+            {currentQuestionObject.options.map((option) => (
               <div
                 key={option.value}
                 className={cn(
                   'cursor-pointer inline-flex items-center gap-2 p-4 rounded text-[#454745]',
                   {
-                    'bg-[#F9F9FB] font-semibold': quiz.answers[currentQuestion.id] === option.value,
+                    'bg-[#F9F9FB] font-semibold':
+                      answers[currentQuestionObject.key] === option.value,
                     'text-gray-400 cursor-not-allowed': option.enabled === false,
                   },
                 )}
                 onClick={() => option.enabled !== false && handleOptionSelect(option.value)}
               >
                 <div className="w-6 h-6">
-                  {quiz.answers[currentQuestion.id] === option.value && (
+                  {answers[currentQuestionObject.key] === option.value && (
                     <Check className="text-primary" />
                   )}
                 </div>
@@ -72,18 +69,16 @@ const Quiz: React.FC = () => {
           </div>
           <div className="flex justify-center gap-4">
             <Button variant="link" disabled={isFirstQuestion} onClick={handlePreviousQuestion}>
-              Previous
+              {t('previous')}
             </Button>
             <Button variant="default" disabled={!isCurrentAnswered} onClick={handleNextQuestion}>
-              Next
+              {t('next')}
             </Button>
           </div>
         </>
       ) : (
         <>
-          <h2 className="text-3xl font-bold text-center">
-            We found 10+ games that match your skills
-          </h2>
+          <h2 className="text-3xl font-bold text-center">{t('results', { count: '+10' })}</h2>
 
           <div className="space-y-4">
             {/* {GameModel.dummy.map((game) => (

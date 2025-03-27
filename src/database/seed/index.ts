@@ -11,6 +11,7 @@ import { seedFieldAmenities } from './field-amenities'
 import { seedFieldTypes } from './field-types'
 import { seedFieldFlooring } from './field-flooring'
 import { seedSports } from './sports'
+import { seedQuiz } from './quiz'
 
 const deleteAll = async (payload: Payload) => {
   await payload.delete({
@@ -69,9 +70,10 @@ const seed = async () => {
   // globals
   await seedHome(payload)
   await seedFooter(payload)
+  await seedQuiz(payload)
 
   // users
-  await seedAdmins(payload)
+  // await seedAdmins(payload)
   await seedUsers(payload)
 
   // "helper" data

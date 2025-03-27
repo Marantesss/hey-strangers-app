@@ -1,34 +1,24 @@
 'use client'
 
 import { PropsWithChildren, useState } from 'react'
-import { Answers, QUESTIONS, QuizContext } from '../contexts/quiz.context'
+import { QuizContext } from '../contexts/quiz.context'
+import { Quiz } from '@payload-types'
 
-const QuizProvider: React.FC<PropsWithChildren> = ({ children }) => {
+type QuizProviderProps = PropsWithChildren<{ quiz: Quiz }>
+
+const QuizProvider: React.FC<QuizProviderProps> = ({ children, quiz }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [answers, setAnswers] = useState<Answers>({
-    sport: null,
-    location: null,
-    skill: null,
-    frequency: null,
-    competitiveness: null,
-    experience: null,
-    opponents: null,
-    tournaments: null,
-  })
+  const [answers, setAnswers] = useState<Record<string, string>>({})
 
-  const setAnswer = (questionId: keyof Answers, answer: Answers[keyof Answers]) => {
+  const setAnswer = (key: string, value: string) => {
     setAnswers((prev) => ({
       ...prev,
-      [questionId]: answer,
+      [key]: value,
     }))
   }
 
-  // TODO we could fetch the questions from the database or current status from local storage
-
   return (
-    <QuizContext.Provider
-      value={{ questions: QUESTIONS, currentQuestion, setCurrentQuestion, answers, setAnswer }}
-    >
+    <QuizContext.Provider value={{ quiz, currentQuestion, setCurrentQuestion, answers, setAnswer }}>
       {children}
     </QuizContext.Provider>
   )

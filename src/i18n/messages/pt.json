@@ -1,7 +1,39 @@
 {
-  "common": {
-    "home": "Início",
-    "about": "Sobre",
-    "contact": "Contato"
+  "sign-up": {
+    "quiz": {
+      "next": "Próximo",
+      "previous": "Anterior",
+      "results": "Encontramos {count} jogos que combinam com o seu nível"
+    },
+    "layout": {
+      "play": "Joga",
+      "with": "com estranhos amigáveis"
+    },
+    "sports": {
+      "soccer": "Futebol",
+      "padel": "Padel",
+      "tennis": "Ténis",
+      "basketball": "Basquetebol",
+      "volleyball": "Vóleibol"
+    },
+    "phone-number-form": {
+      "title": "Registar",
+      "phone": {
+        "label": "Telemóvel",
+        "placeholder": "Telemóvel",
+        "helper": "Vamos enviar-te um texto com um código de confirmação"
+      },
+      "submit": "Enviar Código"
+    },
+    "otp-form": {
+      "title": "Introduzir código de verificação",
+      "phone": {
+        "label": "Telemóvel",
+        "placeholder": "Telemóvel",
+        "helper": "Introduz o código que recebeste no teu telemóvel"
+      },
+      "submit": "Verificar Código",
+      "resend": "Reenviar código"
+    }
   }
 }

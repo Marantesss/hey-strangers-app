@@ -20,7 +20,7 @@ import {
   Media,
   Sports,
 } from './collections'
-import { Home, Footer } from './globals'
+import { Home, Footer, Quiz } from './globals'
 import { seedHome } from './database/seed/home'
 
 const filename = fileURLToPath(import.meta.url)
@@ -47,7 +47,7 @@ export default buildConfig({
     Games,
     Registrations,
   ],
-  globals: [Home, Footer],
+  globals: [Home, Footer, Quiz],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

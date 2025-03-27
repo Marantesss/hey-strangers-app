@@ -9,6 +9,7 @@ export const seedUsers = async (payload: Payload) => {
       name: 'John Smith',
       city: 'Porto',
       phoneNumber: '+351 912 345 678',
+      quizAnswers: {},
     },
     {
       email: 'user2@example.com',
@@ -16,6 +17,7 @@ export const seedUsers = async (payload: Payload) => {
       name: 'Sarah Jones',
       city: 'Lisboa',
       phoneNumber: '+351 912 345 679',
+      quizAnswers: {},
     },
     {
       email: 'user3@example.com',
@@ -23,6 +25,7 @@ export const seedUsers = async (payload: Payload) => {
       name: 'Mike Wilson',
       city: 'Porto',
       phoneNumber: '+351 912 345 680',
+      quizAnswers: {},
     },
     {
       email: 'user4@example.com',
@@ -30,6 +33,7 @@ export const seedUsers = async (payload: Payload) => {
       name: 'Emma Brown',
       city: 'Lisboa',
       phoneNumber: '+351 912 345 681',
+      quizAnswers: {},
     },
   ]
 
