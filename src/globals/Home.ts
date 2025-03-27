@@ -59,18 +59,45 @@ export const Home: GlobalConfig = {
           required: true,
         },
         {
-          name: 'sportCategories',
+          name: 'games',
           type: 'array',
+          required: true,
           fields: [
-            {
-              name: 'name',
-              type: 'text',
-              required: true,
-            },
             {
               name: 'emoji',
               type: 'text',
               required: true,
+            },
+            {
+              name: 'sport',
+              type: 'text',
+              required: true,
+            },
+            {
+              name: 'location',
+              type: 'text',
+              required: true,
+            },
+            {
+              name: 'description',
+              type: 'text',
+              required: true,
+            },
+            {
+              name: 'image',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+            },
+            {
+              name: 'time',
+              type: 'date',
+              required: true,
+              admin: {
+                date: {
+                  displayFormat: 'HH:mm',
+                },
+              },
             },
           ],
         },

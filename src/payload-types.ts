@@ -542,13 +542,15 @@ export interface Home {
   };
   nextGames: {
     title: string;
-    sportCategories?:
-      | {
-          name: string;
-          emoji: string;
-          id?: string | null;
-        }[]
-      | null;
+    games: {
+      emoji: string;
+      sport: string;
+      location: string;
+      description: string;
+      image: string | Media;
+      time: string;
+      id?: string | null;
+    }[];
   };
   howItWorks: {
     title: string;
@@ -673,11 +675,15 @@ export interface HomeSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
-        sportCategories?:
+        games?:
           | T
           | {
-              name?: T;
               emoji?: T;
+              sport?: T;
+              location?: T;
+              description?: T;
+              image?: T;
+              time?: T;
               id?: T;
             };
       };

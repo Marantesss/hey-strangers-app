@@ -52,7 +52,56 @@ export const seedHome = async (payload: Payload) => {
         },
         nextGames: {
           title: 'Next Games',
-          sportCategories: [],
+          games: [
+            {
+              emoji: '⚽',
+              sport: 'Soccer',
+              location: 'Porto',
+              description: '2 Teams of 6 + 2 Subs',
+              image: await payload.create({
+                collection: 'media',
+                data: { alt: 'Soccer image' },
+                filePath: path.resolve(dirname, 'images/games/soccer.jpg'),
+              }),
+              time: new Date('2025-03-27T10:00:00Z').toISOString(),
+            },
+            {
+              emoji: '🎾',
+              sport: 'Padel',
+              location: 'Porto',
+              description: '2 Teams of 2',
+              image: await payload.create({
+                collection: 'media',
+                data: { alt: 'Padel image' },
+                filePath: path.resolve(dirname, 'images/games/padel.jpg'),
+              }),
+              time: new Date('2025-03-27T10:00:00Z').toISOString(),
+            },
+            {
+              emoji: '🏸',
+              sport: 'Tennis',
+              location: 'Porto',
+              description: '2 Teams of 2',
+              image: await payload.create({
+                collection: 'media',
+                data: { alt: 'Tennis image' },
+                filePath: path.resolve(dirname, 'images/games/tennis.jpg'),
+              }),
+              time: new Date('2025-03-27T10:00:00Z').toISOString(),
+            },
+            {
+              emoji: '⛳',
+              sport: 'Golf',
+              location: 'Porto',
+              description: '2 Teams of 2',
+              image: await payload.create({
+                collection: 'media',
+                data: { alt: 'Golf image' },
+                filePath: path.resolve(dirname, 'images/games/golf.jpg'),
+              }),
+              time: new Date('2025-03-27T10:00:00Z').toISOString(),
+            },
+          ],
         },
         howItWorks: {
           title: 'How the magic happens',
