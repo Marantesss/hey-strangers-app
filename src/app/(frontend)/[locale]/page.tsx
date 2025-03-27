@@ -1,4 +1,4 @@
-import { getPayload } from 'payload'
+import { getPayload, TypedLocale } from 'payload'
 import config from '@payload-config'
 
 import NextGamesSection from '@/components/home/NextGamesSection'
@@ -20,9 +20,17 @@ import Footer from '@/components/home/Footer'
 // Option 2: Revalidate the page every X seconds (e.g., 60 seconds)
 export const revalidate = 60
 
-export default async function HomePage() {
+type Args = {
+  params: Promise<{
+    locale: TypedLocale
+  }>
+}
+
+export default async function HomePage({ params }: Args) {
+  const { locale = 'en' } = await params
+
   const payload = await getPayload({ config })
-  const home = await payload.findGlobal({ slug: 'home' })
+  const home = await payload.findGlobal({ slug: 'home', locale })
 
   return (
     <main>
@@ -37,7 +45,7 @@ export default async function HomePage() {
       <NumbersSection numbers={home.numbers} />
       <FAQSection faq={home.faq} />
       <CTA2Section cta2={home.cta2} />
-      <Footer footer={home.footer} />
+      <Footer locale={locale} />
     </main>
   )
 }

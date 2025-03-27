@@ -1,6 +1,6 @@
 import { Home } from '@/payload-types'
 import { Button } from '../ui/button'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 
 interface CTA2SectionProps {
   cta2: Home['cta2']

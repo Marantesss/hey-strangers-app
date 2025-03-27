@@ -1,10 +1,10 @@
 import { cn } from '@/lib/utils'
 import { NextPage } from 'next'
-import Link from 'next/link'
 
 import { getMe } from '@/domains/users/me/me.service'
 import { getGamesWhereUserIsRegistered } from '@/domains/games/shared/GameService'
 import GameCard from '@/domains/games/shared/components/GameCard'
+import { Link } from '@/i18n/navigation'
 
 interface PageProps {
   searchParams: Promise<{

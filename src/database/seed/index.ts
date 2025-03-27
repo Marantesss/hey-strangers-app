@@ -6,6 +6,11 @@ import { seedGames } from './games'
 import { seedRegistrations } from './registrations'
 import { seedAdmins } from './admins'
 import { seedHome } from './home'
+import { seedFooter } from './footer'
+import { seedFieldAmenities } from './field-amenities'
+import { seedFieldTypes } from './field-types'
+import { seedFieldFlooring } from './field-flooring'
+import { seedSports } from './sports'
 
 const deleteAll = async (payload: Payload) => {
   await payload.delete({
@@ -33,6 +38,21 @@ const deleteAll = async (payload: Payload) => {
     where: { id: { exists: true } },
   })
 
+  await payload.delete({
+    collection: 'field_flooring',
+    where: { id: { exists: true } },
+  })
+
+  await payload.delete({
+    collection: 'field_types',
+    where: { id: { exists: true } },
+  })
+
+  await payload.delete({
+    collection: 'field_amenities',
+    where: { id: { exists: true } },
+  })
+
   // await payload.delete({
   //   collection: 'media',
   //   where: { id: { exists: true } },
@@ -40,19 +60,30 @@ const deleteAll = async (payload: Payload) => {
 }
 
 const seed = async () => {
+  console.log('Seeding database...')
+
   const payload = await getPayload({ config })
 
   await deleteAll(payload)
 
+  // globals
   await seedHome(payload)
+  await seedFooter(payload)
 
+  // users
   await seedAdmins(payload)
   await seedUsers(payload)
+
+  // "helper" data
+  await seedSports(payload)
+  await seedFieldTypes(payload)
+  await seedFieldFlooring(payload)
+  await seedFieldAmenities(payload)
+
+  // "main" data
   await seedFields(payload)
   await seedGames(payload)
   await seedRegistrations(payload)
-
-  console.log('Seeding database...')
 }
 
 seed()

@@ -7,8 +7,6 @@ import {
 } from '@/domains/games/sync-stripe-product/sync-stripe-product.hooks'
 import { CollectionConfig } from 'payload'
 
-const sportTypes = ['soccer', 'padel', 'tennis', 'basketball', 'volleyball'] as const
-
 export const Games: CollectionConfig = {
   slug: 'games',
   admin: {
@@ -65,12 +63,9 @@ export const Games: CollectionConfig = {
     },
     {
       name: 'sport',
-      type: 'select',
+      type: 'relationship',
+      relationTo: 'sports',
       required: true,
-      options: sportTypes.map((type) => ({
-        label: type.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
-        value: type,
-      })),
     },
     {
       name: 'field',

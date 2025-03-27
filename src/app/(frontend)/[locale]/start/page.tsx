@@ -1,7 +1,7 @@
 import WordCycle from '@/components/common/WordCycle'
 import { Button } from '@/components/ui/button'
+import { Link } from '@/i18n/navigation'
 import { NextPage } from 'next'
-import Link from 'next/link'
 
 export const revalidate = 60
 

@@ -1,8 +1,7 @@
 import { Game as PayloadGame, Registration } from '@payload-types'
 import { FieldModel } from './Field.model'
 import { RegistrationModel } from '@/domains/registrations/shared/models/Registration.model'
-
-type GameSport = PayloadGame['sport']
+import { SportModel } from './Sport.model'
 
 export class GameModel {
   readonly id: string
@@ -12,13 +11,15 @@ export class GameModel {
   readonly endsAt: Date
   readonly price: number
   readonly maxPlayers: number
-  readonly sport: GameSport
   readonly stripeProductId: string | null
 
   readonly createdAt: Date
   readonly updatedAt: Date
 
   // Relations
+  private readonly _sportId: string
+  private readonly _sport?: SportModel
+
   private readonly _field?: FieldModel
   private readonly _fieldId: string
 
@@ -33,13 +34,15 @@ export class GameModel {
     this.endsAt = new Date(data.endsAt)
     this.price = data.price
     this.maxPlayers = data.maxPlayers
-    this.sport = data.sport
     this.stripeProductId = data.stripeProductId ?? null
 
     this.createdAt = new Date(data.createdAt)
     this.updatedAt = new Date(data.updatedAt)
 
     // Relations
+    this._sport = data.sport instanceof Object ? SportModel.from(data.sport) : undefined
+    this._sportId = data.sport instanceof Object ? data.sport.id : data.sport
+
     this._field = data.field instanceof Object ? FieldModel.from(data.field) : undefined
     this._fieldId = data.field instanceof Object ? data.field.id : data.field
 
@@ -72,23 +75,18 @@ export class GameModel {
     return this._field
   }
 
+  get sport(): SportModel {
+    if (!this._sport) {
+      throw new Error('Sport not found')
+    }
+    return this._sport
+  }
+
   get registrations(): RegistrationModel[] {
     if (!this._registrations) {
       throw new Error('Registrations not expanded')
     }
     return this._registrations
-  }
-
-  get sportEmoji(): string {
-    const gameSportEmoji: Record<GameSport, string> = {
-      soccer: '⚽️',
-      basketball: '🏀',
-      tennis: '🎾',
-      padel: '🎱',
-      volleyball: '🏐',
-    }
-
-    return gameSportEmoji[this.sport]
   }
 
   get durationInMinutes(): number {
@@ -121,7 +119,7 @@ export class GameModel {
       endsAt: this.endsAt.toISOString(),
       price: this.price,
       maxPlayers: this.maxPlayers,
-      sport: this.sport,
+      sport: this._sport ? this._sport.toSerializable() : this._sportId,
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
       field: this._field ? this._field.toSerializable() : this._fieldId,

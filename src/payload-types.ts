@@ -62,17 +62,21 @@ export type SupportedTimezones =
 
 export interface Config {
   auth: {
-    users: UserAuthOperations;
     admins: AdminAuthOperations;
+    users: UserAuthOperations;
   };
   blocks: {};
   collections: {
+    media: Media;
+    admins: Admin;
     users: User;
+    sports: Sport;
+    field_types: FieldType;
+    field_flooring: FieldFlooring;
+    field_amenities: FieldAmenity;
     fields: Field;
     games: Game;
     registrations: Registration;
-    admins: Admin;
-    media: Media;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -89,12 +93,16 @@ export interface Config {
     };
   };
   collectionsSelect: {
+    media: MediaSelect<false> | MediaSelect<true>;
+    admins: AdminsSelect<false> | AdminsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    sports: SportsSelect<false> | SportsSelect<true>;
+    field_types: FieldTypesSelect<false> | FieldTypesSelect<true>;
+    field_flooring: FieldFlooringSelect<false> | FieldFlooringSelect<true>;
+    field_amenities: FieldAmenitiesSelect<false> | FieldAmenitiesSelect<true>;
     fields: FieldsSelect<false> | FieldsSelect<true>;
     games: GamesSelect<false> | GamesSelect<true>;
     registrations: RegistrationsSelect<false> | RegistrationsSelect<true>;
-    admins: AdminsSelect<false> | AdminsSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -104,21 +112,41 @@ export interface Config {
   };
   globals: {
     home: Home;
+    footer: Footer;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
+    footer: FooterSelect<false> | FooterSelect<true>;
   };
-  locale: null;
+  locale: 'en' | 'pt';
   user:
-    | (User & {
-        collection: 'users';
-      })
     | (Admin & {
         collection: 'admins';
+      })
+    | (User & {
+        collection: 'users';
       });
   jobs: {
     tasks: unknown;
     workflows: unknown;
+  };
+}
+export interface AdminAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
   };
 }
 export interface UserAuthOperations {
@@ -139,23 +167,42 @@ export interface UserAuthOperations {
     password: string;
   };
 }
-export interface AdminAuthOperations {
-  forgotPassword: {
-    email: string;
-    password: string;
-  };
-  login: {
-    email: string;
-    password: string;
-  };
-  registerFirstUser: {
-    email: string;
-    password: string;
-  };
-  unlock: {
-    email: string;
-    password: string;
-  };
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: string;
+  alt?: string | null;
+  prefix?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "admins".
+ */
+export interface Admin {
+  id: string;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -181,26 +228,6 @@ export interface User {
   };
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: string;
-  alt?: string | null;
-  prefix?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -230,7 +257,7 @@ export interface Game {
   endsAt: string;
   price: number;
   maxPlayers: number;
-  sport: 'soccer' | 'padel' | 'tennis' | 'basketball' | 'volleyball';
+  sport: string | Sport;
   field: string | Field;
   stripeProductId?: string | null;
   registrations?: {
@@ -243,45 +270,27 @@ export interface Game {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sports".
+ */
+export interface Sport {
+  id: string;
+  name: string;
+  emoji: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "fields".
  */
 export interface Field {
   id: string;
   name: string;
   address: string;
-  type: 'indoor' | 'outdoor' | 'hybrid' | 'other';
-  flooring:
-    | 'natural_grass'
-    | 'artificial_turf'
-    | 'hybrid_turf'
-    | 'clay'
-    | 'hard_court'
-    | 'rubber'
-    | 'polyurethane'
-    | 'wood'
-    | 'sand'
-    | 'concrete'
-    | 'other';
-  sport: 'soccer' | 'padel' | 'tennis' | 'basketball' | 'volleyball' | 'multi_purpose' | 'other';
-  amenities?:
-    | (
-        | 'parking'
-        | 'restrooms'
-        | 'changing_rooms'
-        | 'showers'
-        | 'equipment_rental'
-        | 'lockers'
-        | 'storage_space'
-        | 'water_fountain'
-        | 'vending_machines'
-        | 'cafe'
-        | 'seating_area'
-        | 'first_aid_station'
-        | 'wifi'
-        | 'lighting'
-        | 'scoreboard'
-      )[]
-    | null;
+  type: string | FieldType;
+  flooring: string | FieldFlooring;
+  sport: string | Sport;
+  amenities?: (string | FieldAmenity)[] | null;
   games?: {
     docs?: (string | Game)[];
     hasNextPage?: boolean;
@@ -292,20 +301,33 @@ export interface Field {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "admins".
+ * via the `definition` "field_types".
  */
-export interface Admin {
+export interface FieldType {
   id: string;
+  name: string;
   updatedAt: string;
   createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "field_flooring".
+ */
+export interface FieldFlooring {
+  id: string;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "field_amenities".
+ */
+export interface FieldAmenity {
+  id: string;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -315,8 +337,32 @@ export interface PayloadLockedDocument {
   id: string;
   document?:
     | ({
+        relationTo: 'media';
+        value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'admins';
+        value: string | Admin;
+      } | null)
+    | ({
         relationTo: 'users';
         value: string | User;
+      } | null)
+    | ({
+        relationTo: 'sports';
+        value: string | Sport;
+      } | null)
+    | ({
+        relationTo: 'field_types';
+        value: string | FieldType;
+      } | null)
+    | ({
+        relationTo: 'field_flooring';
+        value: string | FieldFlooring;
+      } | null)
+    | ({
+        relationTo: 'field_amenities';
+        value: string | FieldAmenity;
       } | null)
     | ({
         relationTo: 'fields';
@@ -329,24 +375,16 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'registrations';
         value: string | Registration;
-      } | null)
-    | ({
-        relationTo: 'admins';
-        value: string | Admin;
-      } | null)
-    | ({
-        relationTo: 'media';
-        value: string | Media;
       } | null);
   globalSlug?: string | null;
   user:
     | {
-        relationTo: 'users';
-        value: string | User;
-      }
-    | {
         relationTo: 'admins';
         value: string | Admin;
+      }
+    | {
+        relationTo: 'users';
+        value: string | User;
       };
   updatedAt: string;
   createdAt: string;
@@ -359,12 +397,12 @@ export interface PayloadPreference {
   id: string;
   user:
     | {
-        relationTo: 'users';
-        value: string | User;
-      }
-    | {
         relationTo: 'admins';
         value: string | Admin;
+      }
+    | {
+        relationTo: 'users';
+        value: string | User;
       };
   key?: string | null;
   value?:
@@ -392,6 +430,40 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  prefix?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "admins_select".
+ */
+export interface AdminsSelect<T extends boolean = true> {
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -409,6 +481,43 @@ export interface UsersSelect<T extends boolean = true> {
   name?: T;
   city?: T;
   registrations?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sports_select".
+ */
+export interface SportsSelect<T extends boolean = true> {
+  name?: T;
+  emoji?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "field_types_select".
+ */
+export interface FieldTypesSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "field_flooring_select".
+ */
+export interface FieldFlooringSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "field_amenities_select".
+ */
+export interface FieldAmenitiesSelect<T extends boolean = true> {
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -456,40 +565,6 @@ export interface RegistrationsSelect<T extends boolean = true> {
   user?: T;
   updatedAt?: T;
   createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "admins_select".
- */
-export interface AdminsSelect<T extends boolean = true> {
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  prefix?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -636,18 +711,25 @@ export interface Home {
     title: string;
     buttonLabel: string;
   };
-  footer: {
-    links: {
-      label: string;
-      url: string;
-      id?: string | null;
-    }[];
-    socialLinks: {
-      platform: 'Facebook' | 'YouTube' | 'LinkedIn' | 'Instagram';
-      url: string;
-      id?: string | null;
-    }[];
-  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: string;
+  links: {
+    label: string;
+    url: string;
+    id?: string | null;
+  }[];
+  socialLinks: {
+    platform: 'facebook' | 'youtube' | 'linkedin' | 'instagram';
+    url: string;
+    id?: string | null;
+  }[];
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -805,23 +887,28 @@ export interface HomeSelect<T extends boolean = true> {
         title?: T;
         buttonLabel?: T;
       };
-  footer?:
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  links?:
     | T
     | {
-        links?:
-          | T
-          | {
-              label?: T;
-              url?: T;
-              id?: T;
-            };
-        socialLinks?:
-          | T
-          | {
-              platform?: T;
-              url?: T;
-              id?: T;
-            };
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
       };
   updatedAt?: T;
   createdAt?: T;

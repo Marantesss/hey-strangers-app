@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { Home, Media } from '@/payload-types'
 import { Button } from '../ui/button'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 
 interface WhenAndWhereSectionProps {
   whenAndWhere: Home['whenAndWhere']

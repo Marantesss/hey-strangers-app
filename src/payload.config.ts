@@ -6,9 +6,21 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { migrations } from './database/migrations'
+import localization from './i18n/localizations'
 
-import { Users, Fields, Games, Registrations, Admins, Media } from './collections'
-import { Home } from './globals'
+import {
+  Users,
+  Fields,
+  FieldTypes,
+  FieldFlooring,
+  FieldAmenities,
+  Games,
+  Registrations,
+  Admins,
+  Media,
+  Sports,
+} from './collections'
+import { Home, Footer } from './globals'
 import { seedHome } from './database/seed/home'
 
 const filename = fileURLToPath(import.meta.url)
@@ -23,8 +35,19 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Fields, Games, Registrations, Admins, Media],
-  globals: [Home],
+  collections: [
+    Media,
+    Admins,
+    Users,
+    Sports,
+    FieldTypes,
+    FieldFlooring,
+    FieldAmenities,
+    Fields,
+    Games,
+    Registrations,
+  ],
+  globals: [Home, Footer],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -38,6 +61,7 @@ export default buildConfig({
     prodMigrations: migrations,
     migrationDir: path.resolve(dirname, 'database/migrations'),
   }),
+  localization,
   debug: isDev,
   sharp,
   plugins: [

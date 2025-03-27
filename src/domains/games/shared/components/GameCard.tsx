@@ -56,7 +56,7 @@ const GameCard: React.FC<GameCardProps> = async ({
         <div className="flex items-start">
           <div className="grow space-y-1">
             <CardTitle className="text-lg">
-              {game.sportEmoji} {gameDay}
+              {game.sport.emoji} {gameDay}
             </CardTitle>
             <CardDescription>{game.field.name}</CardDescription>
           </div>

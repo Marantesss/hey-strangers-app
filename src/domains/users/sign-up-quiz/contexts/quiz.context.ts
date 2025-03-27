@@ -1,8 +1,7 @@
-import { Game } from '@payload-types'
 import { createContext } from 'react'
 
 export interface Answers {
-  sport: Game['sport'] | null
+  sport: string | null
   location: 'lisbon' | 'porto' | null
   skill: 'beginner' | 'intermediate' | 'advanced' | null
   frequency: 'rarely' | 'a_few_times_a_month' | 'weekly_or_more' | null

@@ -1,50 +1,6 @@
 import { hasRole, isAuthenticated } from '@/access'
 import { CollectionConfig } from 'payload'
 
-const fieldTypes = ['indoor', 'outdoor', 'hybrid', 'other'] as const
-
-const flooringTypes = [
-  'natural_grass',
-  'artificial_turf',
-  'hybrid_turf',
-  'clay',
-  'hard_court',
-  'rubber',
-  'polyurethane',
-  'wood',
-  'sand',
-  'concrete',
-  'other',
-] as const
-
-const sportTypes = [
-  'soccer',
-  'padel',
-  'tennis',
-  'basketball',
-  'volleyball',
-  'multi_purpose',
-  'other',
-] as const
-
-const amenityTypes = [
-  'parking',
-  'restrooms',
-  'changing_rooms',
-  'showers',
-  'equipment_rental',
-  'lockers',
-  'storage_space',
-  'water_fountain',
-  'vending_machines',
-  'cafe',
-  'seating_area',
-  'first_aid_station',
-  'wifi',
-  'lighting',
-  'scoreboard',
-] as const
-
 export const Fields: CollectionConfig = {
   slug: 'fields',
   admin: {
@@ -70,39 +26,27 @@ export const Fields: CollectionConfig = {
     },
     {
       name: 'type',
-      type: 'select',
+      type: 'relationship',
+      relationTo: 'field_types',
       required: true,
-      options: fieldTypes.map((type) => ({
-        label: type.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
-        value: type,
-      })),
     },
     {
       name: 'flooring',
-      type: 'select',
+      type: 'relationship',
+      relationTo: 'field_flooring',
       required: true,
-      options: flooringTypes.map((type) => ({
-        label: type.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
-        value: type,
-      })),
     },
     {
       name: 'sport',
-      type: 'select',
+      type: 'relationship',
+      relationTo: 'sports',
       required: true,
-      options: sportTypes.map((type) => ({
-        label: type.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
-        value: type,
-      })),
     },
     {
       name: 'amenities',
-      type: 'select',
+      type: 'relationship',
+      relationTo: 'field_amenities',
       hasMany: true,
-      options: amenityTypes.map((type) => ({
-        label: type.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
-        value: type,
-      })),
     },
     // --- relations and joins
     {

@@ -126,7 +126,7 @@ const RegisterForGameSheetForm: React.FC = () => {
             <div className="flex items-start">
               <div className="grow space-y-1">
                 <div className="text-lg font-semibold">
-                  {game?.sportEmoji} {gameDay}
+                  {game?.sport.emoji} {gameDay}
                 </div>
                 <div className="text-muted-foreground">{game?.field.name}</div>
               </div>

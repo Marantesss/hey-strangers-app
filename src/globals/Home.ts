@@ -12,21 +12,25 @@ export const Home: GlobalConfig = {
           name: 'title',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'subtitle',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'description',
           type: 'textarea',
           required: true,
+          localized: true,
         },
         {
           name: 'buttonLabel',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'partners',
@@ -43,6 +47,7 @@ export const Home: GlobalConfig = {
               name: 'name',
               type: 'text',
               required: true,
+              localized: true,
             },
           ],
         },
@@ -57,6 +62,7 @@ export const Home: GlobalConfig = {
           name: 'title',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'games',
@@ -72,6 +78,7 @@ export const Home: GlobalConfig = {
               name: 'sport',
               type: 'text',
               required: true,
+              localized: true,
             },
             {
               name: 'location',
@@ -82,6 +89,7 @@ export const Home: GlobalConfig = {
               name: 'description',
               type: 'text',
               required: true,
+              localized: true,
             },
             {
               name: 'image',
@@ -112,16 +120,19 @@ export const Home: GlobalConfig = {
           name: 'title',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'subtitle',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'buttonLabel',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'steps',
@@ -138,11 +149,13 @@ export const Home: GlobalConfig = {
               name: 'title',
               type: 'text',
               required: true,
+              localized: true,
             },
             {
               name: 'description',
               type: 'textarea',
               required: true,
+              localized: true,
             },
           ],
         },
@@ -157,6 +170,7 @@ export const Home: GlobalConfig = {
           name: 'title',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'statistics',
@@ -172,11 +186,13 @@ export const Home: GlobalConfig = {
               name: 'label',
               type: 'text',
               required: true,
+              localized: true,
             },
             {
               name: 'description',
               type: 'text',
               required: true,
+              localized: true,
             },
           ],
         },
@@ -197,6 +213,7 @@ export const Home: GlobalConfig = {
           name: 'title',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'reviews',
@@ -207,11 +224,13 @@ export const Home: GlobalConfig = {
               name: 'quote',
               type: 'textarea',
               required: true,
+              localized: true,
             },
             {
               name: 'author',
               type: 'text',
               required: true,
+              localized: true,
             },
             {
               name: 'image',
@@ -232,16 +251,19 @@ export const Home: GlobalConfig = {
           name: 'title',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'subtitle',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'buttonLabel',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'sports',
@@ -252,6 +274,7 @@ export const Home: GlobalConfig = {
               name: 'name',
               type: 'text',
               required: true,
+              localized: true,
             },
             {
               name: 'image',
@@ -277,6 +300,7 @@ export const Home: GlobalConfig = {
           name: 'title',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'strangers',
@@ -297,11 +321,13 @@ export const Home: GlobalConfig = {
               name: 'bio',
               type: 'textarea',
               required: true,
+              localized: true,
             },
             {
               name: 'sport',
               type: 'text',
               required: true,
+              localized: true,
             },
             {
               name: 'image',
@@ -322,16 +348,19 @@ export const Home: GlobalConfig = {
           name: 'title',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'subtitle',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'buttonLabel',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'image',
@@ -353,11 +382,13 @@ export const Home: GlobalConfig = {
               name: 'title',
               type: 'text',
               required: true,
+              localized: true,
             },
             {
               name: 'description',
               type: 'textarea',
               required: true,
+              localized: true,
             },
           ],
         },
@@ -372,6 +403,7 @@ export const Home: GlobalConfig = {
           name: 'title',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'numbers',
@@ -387,6 +419,7 @@ export const Home: GlobalConfig = {
               name: 'label',
               type: 'text',
               required: true,
+              localized: true,
             },
           ],
         },
@@ -401,6 +434,7 @@ export const Home: GlobalConfig = {
           name: 'title',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'questions',
@@ -411,11 +445,13 @@ export const Home: GlobalConfig = {
               name: 'question',
               type: 'text',
               required: true,
+              localized: true,
             },
             {
               name: 'answer',
               type: 'textarea',
               required: true,
+              localized: true,
             },
           ],
         },
@@ -430,53 +466,13 @@ export const Home: GlobalConfig = {
           name: 'title',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'buttonLabel',
           type: 'text',
           required: true,
-        },
-      ],
-    },
-    // --- Footer Section
-    {
-      name: 'footer',
-      type: 'group',
-      fields: [
-        {
-          name: 'links',
-          type: 'array',
-          required: true,
-          fields: [
-            {
-              name: 'label',
-              type: 'text',
-              required: true,
-            },
-            {
-              name: 'url',
-              type: 'text',
-              required: true,
-            },
-          ],
-        },
-        {
-          name: 'socialLinks',
-          type: 'array',
-          required: true,
-          fields: [
-            {
-              name: 'platform',
-              type: 'select',
-              options: ['Facebook', 'YouTube', 'LinkedIn', 'Instagram'],
-              required: true,
-            },
-            {
-              name: 'url',
-              type: 'text',
-              required: true,
-            },
-          ],
+          localized: true,
         },
       ],
     },

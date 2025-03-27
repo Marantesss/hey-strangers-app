@@ -6,7 +6,7 @@ import { Game } from '@payload-types'
 
 import './styles.css'
 
-const sportMap: Record<Game['sport'], string> = {
+const sportMap: Record<string, string> = {
   soccer: 'Soccer',
   padel: 'Padel',
   tennis: 'Tennis',

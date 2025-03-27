@@ -1,182 +1,482 @@
 import { Payload } from 'payload'
-import { Field } from '@payload-types'
+import { Field, FieldAmenity, FieldFlooring, FieldType, Sport } from '@payload-types'
+import { SeedEntry } from './types'
+
+type FieldSeed = Omit<Field, 'createdAt' | 'id' | 'sizes' | 'updatedAt'>
 
 export const seedFields = async (payload: Payload) => {
+  // Get all sports to reference them
+  const sports = await payload.find({
+    collection: 'sports',
+    limit: 100,
+    locale: 'en',
+  })
+  const sportMap = sports.docs.reduce(
+    (acc, sport) => {
+      acc[sport.name] = sport.id
+      return acc
+    },
+    {} as Record<Sport['name'], Sport['id']>,
+  )
+
+  // get field types
+  const fieldTypes = await payload.find({
+    collection: 'field_types',
+    limit: 100,
+    locale: 'en',
+  })
+  const fieldTypeMap = fieldTypes.docs.reduce(
+    (acc, fieldType) => {
+      acc[fieldType.name] = fieldType.id
+      return acc
+    },
+    {} as Record<FieldType['name'], FieldType['id']>,
+  )
+
+  // get field flooring
+  const fieldFlooring = await payload.find({
+    collection: 'field_flooring',
+    limit: 100,
+    locale: 'en',
+  })
+  const fieldFlooringMap = fieldFlooring.docs.reduce(
+    (acc, fieldFlooring) => {
+      acc[fieldFlooring.name] = fieldFlooring.id
+      return acc
+    },
+    {} as Record<FieldFlooring['name'], FieldFlooring['id']>,
+  )
+
+  // get field amenities
+  const fieldAmenities = await payload.find({
+    collection: 'field_amenities',
+    limit: 100,
+    locale: 'en',
+  })
+  const fieldAmenityMap = fieldAmenities.docs.reduce(
+    (acc, fieldAmenity) => {
+      acc[fieldAmenity.name] = fieldAmenity.id
+      return acc
+    },
+    {} as Record<FieldAmenity['name'], FieldAmenity['id']>,
+  )
   const fields = [
     // Soccer fields
     {
-      name: 'Campo de Futebol Parque das Nações',
-      address: 'Rua do Parque das Nações 123, Lisboa',
-      type: 'outdoor',
-      flooring: 'natural_grass',
-      sport: 'soccer',
-      amenities: ['parking', 'restrooms', 'changing_rooms', 'lighting'],
+      pt: {
+        name: 'Campo de Futebol Parque das Nações',
+        address: 'Rua do Parque das Nações 123, Lisboa',
+        type: fieldTypeMap['Outdoor'],
+        flooring: fieldFlooringMap['Natural grass'],
+        sport: sportMap['Soccer'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Lighting'],
+        ],
+      },
+      en: {
+        name: 'Parque das Nações Football Field',
+        address: 'Rua do Parque das Nações 123, Lisboa',
+        type: fieldTypeMap['Outdoor'],
+        flooring: fieldFlooringMap['Natural grass'],
+        sport: sportMap['Soccer'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Lighting'],
+        ],
+      },
     },
     {
-      name: 'Arena Indoor Benfica',
-      address: 'Avenida Lusíada 456, Lisboa',
-      type: 'indoor',
-      flooring: 'artificial_turf',
-      sport: 'soccer',
-      amenities: ['parking', 'restrooms', 'changing_rooms', 'showers', 'lockers', 'cafe'],
+      pt: {
+        name: 'Arena Indoor Benfica',
+        address: 'Avenida Lusíada 456, Lisboa',
+        type: fieldTypeMap['Indoor'],
+        flooring: fieldFlooringMap['Artificial turf'],
+        sport: sportMap['Soccer'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Showers'],
+          fieldAmenityMap['Lockers'],
+          fieldAmenityMap['Cafe'],
+        ],
+      },
+      en: {
+        name: 'Benfica Indoor Arena',
+        address: 'Avenida Lusíada 456, Lisboa',
+        type: fieldTypeMap['Indoor'],
+        flooring: fieldFlooringMap['Artificial turf'],
+        sport: sportMap['Soccer'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Showers'],
+          fieldAmenityMap['Lockers'],
+          fieldAmenityMap['Cafe'],
+        ],
+      },
     },
     {
-      name: 'Complexo Desportivo do Porto',
-      address: 'Rua do Dragão 789, Porto',
-      type: 'hybrid',
-      flooring: 'hybrid_turf',
-      sport: 'soccer',
+      pt: {
+        name: 'Complexo Desportivo do Porto',
+        address: 'Rua do Dragão 789, Porto',
+        type: fieldTypeMap['Hybrid'],
+        flooring: fieldFlooringMap['Hybrid turf'],
+        sport: sportMap['Soccer'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Lighting'],
+        ],
+      },
+      en: {
+        name: 'Porto Sports Complex',
+        address: 'Rua do Dragão 789, Porto',
+        type: fieldTypeMap['Hybrid'],
+        flooring: fieldFlooringMap['Hybrid turf'],
+        sport: sportMap['Soccer'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Lighting'],
+        ],
+      },
     },
 
     // Tennis courts
     {
-      name: 'Clube de Ténis de Lisboa',
-      address: 'Avenida da Liberdade 321, Lisboa',
-      type: 'outdoor',
-      flooring: 'hard_court',
-      sport: 'tennis',
-      amenities: ['parking', 'restrooms', 'equipment_rental', 'water_fountain'],
-    },
-    {
-      name: 'Centro de Ténis do Porto',
-      address: 'Rua da Boavista 654, Porto',
-      type: 'indoor',
-      flooring: 'hard_court',
-      sport: 'tennis',
+      pt: {
+        name: 'Clube de Ténis de Lisboa',
+        address: 'Avenida da Liberdade 321, Lisboa',
+        type: fieldTypeMap['Outdoor'],
+        flooring: fieldFlooringMap['Hard court'],
+        sport: sportMap['Tennis'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Equipment rental'],
+          fieldAmenityMap['Water fountain'],
+        ],
+      },
+      en: {
+        name: 'Lisbon Tennis Club',
+        address: 'Avenida da Liberdade 321, Lisboa',
+        type: fieldTypeMap['Indoor'],
+        flooring: fieldFlooringMap['Hard court'],
+        sport: sportMap['Tennis'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Equipment rental'],
+          fieldAmenityMap['Water fountain'],
+        ],
+      },
     },
 
-    // Paddle courts
+    // Padel courts
     {
-      name: 'Padel Belém',
-      address: 'Rua de Belém 987, Lisboa',
-      type: 'outdoor',
-      flooring: 'artificial_turf',
-      sport: 'padel',
-      amenities: ['parking', 'restrooms', 'changing_rooms', 'lighting', 'seating_area'],
+      pt: {
+        name: 'Padel Belém',
+        address: 'Rua de Belém 987, Lisboa',
+        type: fieldTypeMap['Outdoor'],
+        flooring: fieldFlooringMap['Artificial turf'],
+        sport: sportMap['Padel'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Lighting'],
+          fieldAmenityMap['Seating area'],
+        ],
+      },
+      en: {
+        name: 'Padel Belém',
+        address: 'Rua de Belém 987, Lisboa',
+        type: fieldTypeMap['Outdoor'],
+        flooring: fieldFlooringMap['Artificial turf'],
+        sport: sportMap['Padel'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Lighting'],
+          fieldAmenityMap['Seating area'],
+        ],
+      },
     },
     {
-      name: 'Clube Padel Porto',
-      address: 'Rua Santa Catarina 147, Porto',
-      type: 'indoor',
-      flooring: 'artificial_turf',
-      sport: 'padel',
+      pt: {
+        name: 'Clube Padel Porto',
+        address: 'Rua Santa Catarina 147, Porto',
+        type: fieldTypeMap['Indoor'],
+        flooring: fieldFlooringMap['Artificial turf'],
+        sport: sportMap['Padel'],
+      },
+      en: {
+        name: 'Porto Padel Club',
+        address: 'Rua Santa Catarina 147, Porto',
+        type: fieldTypeMap['Indoor'],
+        flooring: fieldFlooringMap['Artificial turf'],
+        sport: sportMap['Padel'],
+      },
     },
 
     // Basketball courts
     {
-      name: 'Pavilhão do Sporting',
-      address: 'Rua do Sporting 258, Lisboa',
-      type: 'indoor',
-      flooring: 'wood',
-      sport: 'basketball',
-      amenities: ['restrooms', 'water_fountain', 'scoreboard', 'lighting'],
+      pt: {
+        name: 'Pavilhão do Sporting',
+        address: 'Rua do Sporting 258, Lisboa',
+        type: fieldTypeMap['Indoor'],
+        flooring: fieldFlooringMap['Wood'],
+        sport: sportMap['Basketball'],
+        amenities: [
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Water fountain'],
+          fieldAmenityMap['Scoreboard'],
+          fieldAmenityMap['Lighting'],
+        ],
+      },
+      en: {
+        name: 'Sporting Pavilion',
+        address: 'Rua do Sporting 258, Lisboa',
+        type: fieldTypeMap['Indoor'],
+        flooring: fieldFlooringMap['Wood'],
+        sport: sportMap['Basketball'],
+        amenities: [
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Water fountain'],
+          fieldAmenityMap['Scoreboard'],
+          fieldAmenityMap['Lighting'],
+        ],
+      },
     },
     {
-      name: 'Campo de Basquete Ribeira',
-      address: 'Rua da Ribeira 369, Porto',
-      type: 'outdoor',
-      flooring: 'concrete',
-      sport: 'basketball',
+      pt: {
+        name: 'Campo de Basquete Ribeira',
+        address: 'Rua da Ribeira 369, Porto',
+        type: fieldTypeMap['Outdoor'],
+        flooring: fieldFlooringMap['Concrete'],
+        sport: sportMap['Basketball'],
+      },
+      en: {
+        name: 'Ribeira Basketball Court',
+        address: 'Rua da Ribeira 369, Porto',
+        type: fieldTypeMap['Outdoor'],
+        flooring: fieldFlooringMap['Concrete'],
+        sport: sportMap['Basketball'],
+      },
     },
 
     // Multi-purpose facilities
     {
-      name: 'Centro Desportivo Municipal',
-      address: 'Avenida de Lisboa 741, Lisboa',
-      type: 'indoor',
-      flooring: 'polyurethane',
-      sport: 'multi_purpose',
-      amenities: [
-        'parking',
-        'restrooms',
-        'changing_rooms',
-        'showers',
-        'equipment_rental',
-        'lockers',
-        'water_fountain',
-        'cafe',
-        'seating_area',
-        'first_aid_station',
-        'wifi',
-        'lighting',
-        'scoreboard',
-      ],
+      pt: {
+        name: 'Centro Desportivo Municipal',
+        address: 'Avenida de Lisboa 741, Lisboa',
+        type: fieldTypeMap['Indoor'],
+        flooring: fieldFlooringMap['Polyurethane'],
+        sport: sportMap['Multi-purpose'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Showers'],
+          fieldAmenityMap['Equipment rental'],
+          fieldAmenityMap['Lockers'],
+          fieldAmenityMap['Water fountain'],
+          fieldAmenityMap['Cafe'],
+          fieldAmenityMap['Seating area'],
+          fieldAmenityMap['First aid station'],
+          fieldAmenityMap['WiFi'],
+          fieldAmenityMap['Lighting'],
+          fieldAmenityMap['Scoreboard'],
+        ],
+      },
+      en: {
+        name: 'Municipal Sports Center',
+        address: 'Avenida de Lisboa 741, Lisboa',
+        type: fieldTypeMap['Indoor'],
+        flooring: fieldFlooringMap['Polyurethane'],
+        sport: sportMap['Multi-purpose'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Showers'],
+          fieldAmenityMap['Equipment rental'],
+          fieldAmenityMap['Lockers'],
+          fieldAmenityMap['Water fountain'],
+          fieldAmenityMap['Cafe'],
+          fieldAmenityMap['Seating area'],
+          fieldAmenityMap['First aid station'],
+          fieldAmenityMap['WiFi'],
+          fieldAmenityMap['Lighting'],
+          fieldAmenityMap['Scoreboard'],
+        ],
+      },
     },
     {
-      name: 'Parque Desportivo do Porto',
-      address: 'Rua do Porto 852, Porto',
-      type: 'outdoor',
-      flooring: 'artificial_turf',
-      sport: 'multi_purpose',
-      amenities: [
-        'parking',
-        'restrooms',
-        'changing_rooms',
-        'showers',
-        'equipment_rental',
-        'lockers',
-        'water_fountain',
-        'cafe',
-        'seating_area',
-        'first_aid_station',
-        'wifi',
-        'lighting',
-        'scoreboard',
-      ],
+      pt: {
+        name: 'Parque Desportivo do Porto',
+        address: 'Rua do Porto 852, Porto',
+        type: fieldTypeMap['Outdoor'],
+        flooring: fieldFlooringMap['Artificial turf'],
+        sport: sportMap['Multi-purpose'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Showers'],
+          fieldAmenityMap['Equipment rental'],
+          fieldAmenityMap['Lockers'],
+          fieldAmenityMap['Water fountain'],
+          fieldAmenityMap['Cafe'],
+          fieldAmenityMap['Seating area'],
+          fieldAmenityMap['First aid station'],
+          fieldAmenityMap['WiFi'],
+          fieldAmenityMap['Lighting'],
+          fieldAmenityMap['Scoreboard'],
+        ],
+      },
+      en: {
+        name: 'Porto Sports Park',
+        address: 'Rua do Porto 852, Porto',
+        type: fieldTypeMap['Outdoor'],
+        flooring: fieldFlooringMap['Artificial turf'],
+        sport: sportMap['Multi-purpose'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Showers'],
+          fieldAmenityMap['Equipment rental'],
+          fieldAmenityMap['Lockers'],
+          fieldAmenityMap['Water fountain'],
+          fieldAmenityMap['Cafe'],
+          fieldAmenityMap['Seating area'],
+          fieldAmenityMap['First aid station'],
+          fieldAmenityMap['WiFi'],
+          fieldAmenityMap['Lighting'],
+          fieldAmenityMap['Scoreboard'],
+        ],
+      },
     },
 
     // Volleyball courts
     {
-      name: 'Arena Voleibol Cascais',
-      address: 'Avenida Marginal 963, Lisboa',
-      type: 'outdoor',
-      flooring: 'sand',
-      sport: 'volleyball',
-      amenities: [
-        'parking',
-        'restrooms',
-        'changing_rooms',
-        'showers',
-        'equipment_rental',
-        'lockers',
-        'water_fountain',
-        'cafe',
-        'seating_area',
-        'first_aid_station',
-        'wifi',
-        'lighting',
-        'scoreboard',
-      ],
+      pt: {
+        name: 'Arena Voleibol Cascais',
+        address: 'Avenida Marginal 963, Lisboa',
+        type: fieldTypeMap['Outdoor'],
+        flooring: fieldFlooringMap['Sand'],
+        sport: sportMap['Volleyball'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Showers'],
+          fieldAmenityMap['Equipment rental'],
+          fieldAmenityMap['Lockers'],
+          fieldAmenityMap['Water fountain'],
+          fieldAmenityMap['Cafe'],
+          fieldAmenityMap['Seating area'],
+          fieldAmenityMap['First aid station'],
+          fieldAmenityMap['WiFi'],
+          fieldAmenityMap['Lighting'],
+          fieldAmenityMap['Scoreboard'],
+        ],
+      },
+      en: {
+        name: 'Cascais Volleyball Arena',
+        address: 'Avenida Marginal 963, Lisboa',
+        type: fieldTypeMap['Outdoor'],
+        flooring: fieldFlooringMap['Sand'],
+        sport: sportMap['Volleyball'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Showers'],
+          fieldAmenityMap['Equipment rental'],
+          fieldAmenityMap['Lockers'],
+          fieldAmenityMap['Water fountain'],
+          fieldAmenityMap['Cafe'],
+          fieldAmenityMap['Seating area'],
+          fieldAmenityMap['First aid station'],
+          fieldAmenityMap['WiFi'],
+          fieldAmenityMap['Lighting'],
+          fieldAmenityMap['Scoreboard'],
+        ],
+      },
     },
     {
-      name: 'Centro de Voleibol do Porto',
-      address: 'Rua dos Clérigos 159, Porto',
-      type: 'indoor',
-      flooring: 'wood',
-      sport: 'volleyball',
-      amenities: [
-        'parking',
-        'restrooms',
-        'changing_rooms',
-        'showers',
-        'equipment_rental',
-        'lockers',
-        'water_fountain',
-        'cafe',
-        'seating_area',
-        'first_aid_station',
-        'wifi',
-        'lighting',
-        'scoreboard',
-      ],
+      pt: {
+        name: 'Centro de Voleibol do Porto',
+        address: 'Rua dos Clérigos 159, Porto',
+        type: fieldTypeMap['Indoor'],
+        flooring: fieldFlooringMap['Wood'],
+        sport: sportMap['Volleyball'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Showers'],
+          fieldAmenityMap['Equipment rental'],
+          fieldAmenityMap['Lockers'],
+          fieldAmenityMap['Water fountain'],
+          fieldAmenityMap['Cafe'],
+          fieldAmenityMap['Seating area'],
+          fieldAmenityMap['First aid station'],
+          fieldAmenityMap['WiFi'],
+          fieldAmenityMap['Lighting'],
+          fieldAmenityMap['Scoreboard'],
+        ],
+      },
+      en: {
+        name: 'Porto Volleyball Center',
+        address: 'Rua dos Clérigos 159, Porto',
+        type: fieldTypeMap['Indoor'],
+        flooring: fieldFlooringMap['Wood'],
+        sport: sportMap['Volleyball'],
+        amenities: [
+          fieldAmenityMap['Parking'],
+          fieldAmenityMap['Restrooms'],
+          fieldAmenityMap['Changing rooms'],
+          fieldAmenityMap['Showers'],
+          fieldAmenityMap['Equipment rental'],
+          fieldAmenityMap['Lockers'],
+          fieldAmenityMap['Water fountain'],
+          fieldAmenityMap['Cafe'],
+          fieldAmenityMap['Seating area'],
+          fieldAmenityMap['First aid station'],
+          fieldAmenityMap['WiFi'],
+          fieldAmenityMap['Lighting'],
+          fieldAmenityMap['Scoreboard'],
+        ],
+      },
     },
-  ] satisfies Omit<Field, 'createdAt' | 'id' | 'sizes' | 'updatedAt'>[]
+  ] satisfies SeedEntry<FieldSeed>[]
 
   try {
     for (const field of fields) {
-      await payload.create({
+      const createdField = await payload.create({
         collection: 'fields',
-        data: field,
+        data: field.pt,
+        locale: 'pt',
+      })
+
+      await payload.update({
+        collection: 'fields',
+        id: createdField.id,
+        data: field.en,
+        locale: 'en',
       })
     }
     console.log('✅ Fields seeded successfully')
