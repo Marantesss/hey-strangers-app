@@ -25,7 +25,8 @@
         "error": {
           "invalid": "Invalid phone number",
           "already-registered": "Phone number already in use",
-          "failed-to-create-otp": "Failed to send message",
+          "failed-to-send-otp": "Failed to send message",
+          "failed-to-create-otp": "Failed to create OTP",
           "failed-to-create-user": "Failed to create user",
           "unknown": "Something went wrong"
         }
@@ -57,8 +58,9 @@
         "helper": "We'll send you a text with a confirmation code",
         "error": {
           "invalid": "Invalid phone number",
-          "already-registered": "Phone number already in use",
-          "failed-to-create-otp": "Failed to send message",
+          "failed-to-send-otp": "Failed to send message",
+          "failed-to-create-otp": "Failed to create OTP",
+          "phone-number-not-registered": "Phone number not registered",
           "unknown": "Something went wrong"
         }
       },

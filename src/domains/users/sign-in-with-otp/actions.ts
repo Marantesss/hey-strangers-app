@@ -6,6 +6,7 @@ import { signInWithOTP } from './sign-in-with-otp.service'
 import { sendWhatsappOtpMessage } from '@/lib/whatsapp'
 import { redirect } from '@/i18n/navigation'
 import { getLocale } from 'next-intl/server'
+import { getUserByPhoneNumber } from '../get-user/get-user.service'
 
 /**
  * ===============================
@@ -25,7 +26,12 @@ type CreateOTPActionState = {
   }
   success?: boolean
   error?: {
-    phoneNumber?: 'invalid-format' | 'already-in-use' | 'unknown' | 'failed-to-create-otp'
+    phoneNumber?:
+      | 'invalid-format'
+      | 'unknown'
+      | 'failed-to-create-otp'
+      | 'failed-to-send-otp'
+      | 'phone-number-not-registered'
   }
 }
 
@@ -47,15 +53,34 @@ export const createOTPAction = async (
     }
   }
 
+  const userWithPhoneNumber = await getUserByPhoneNumber(data.phoneNumber)
+  if (!userWithPhoneNumber) {
+    return {
+      data: { phoneNumber: data.phoneNumber },
+      success: false,
+      error: { phoneNumber: 'phone-number-not-registered' },
+    }
+  }
+  let otp = { code: '' }
   try {
-    const otp = await createOTPForPhoneNumber(data.phoneNumber)
-    await sendWhatsappOtpMessage(data.phoneNumber, otp.code)
-    console.log(otp)
+    otp = await createOTPForPhoneNumber(data.phoneNumber)
   } catch (error) {
     console.error(error)
     return {
+      data: { phoneNumber: data.phoneNumber },
       success: false,
       error: { phoneNumber: 'failed-to-create-otp' },
+    }
+  }
+
+  try {
+    await sendWhatsappOtpMessage(data.phoneNumber, otp.code)
+  } catch (error) {
+    console.error(error)
+    return {
+      data: { phoneNumber: data.phoneNumber },
+      success: false,
+      error: { phoneNumber: 'failed-to-send-otp' },
     }
   }
 

@@ -7,6 +7,7 @@ import { startTransition, useActionState } from 'react'
 import { createOTPAction, signUpWithOTPAction } from '../actions'
 import { useTranslations } from 'next-intl'
 import { useQuiz } from '../hooks/quiz.hook'
+import PhoneNumberInput from '@/components/common/Form/PhoneNumberInput'
 
 const SignupForm: React.FC = () => {
   const { answers } = useQuiz()
@@ -82,7 +83,7 @@ const SignupForm: React.FC = () => {
 
       <div className="space-y-2">
         <Label htmlFor="phone">{t('phone-number-form.phone.label')}</Label>
-        <Input name="phone" type="tel" placeholder="Phone Number" disabled={createOTPPending} />
+        <PhoneNumberInput name="phone" placeholder="Phone Number" disabled={createOTPPending} />
         <p className="text-sm text-muted-foreground">{t('phone-number-form.phone.helper')}</p>
         {createOTPResponse.error?.phone && (
           <p className="text-sm text-destructive">

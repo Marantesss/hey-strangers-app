@@ -15,6 +15,7 @@ import {
 import { User } from '@/payload-types'
 import { updateProfileAction, UpdateProfileActionState } from '../actions'
 import { toast } from 'sonner'
+import PhoneNumberInput from '@/components/common/Form/PhoneNumberInput'
 
 const SELECTABLE_CITIES = [
   {
@@ -127,10 +128,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
 
       <div className="space-y-2">
         <Label htmlFor="phone">Phone number</Label>
-        <Input
+        <PhoneNumberInput
           id="phone"
           name="phone"
-          type="tel"
           placeholder="Phone number"
           defaultValue={updateProfileResponse.data?.phone ?? ''}
           disabled={updateProfilePending}

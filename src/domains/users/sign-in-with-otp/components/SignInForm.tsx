@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createOTPAction, signInWithOTPAction } from '../actions'
+import PhoneNumberInput from '@/components/common/Form/PhoneNumberInput'
 
 const SignInForm: React.FC = () => {
   const t = useTranslations('sign-in')
@@ -81,7 +82,7 @@ const SignInForm: React.FC = () => {
 
       <div className="space-y-2">
         <Label htmlFor="phoneNumber">{t('phone-number-form.phone.label')}</Label>
-        <Input
+        <PhoneNumberInput
           name="phoneNumber"
           placeholder={t('phone-number-form.phone.placeholder')}
           disabled={createOTPPending}
@@ -89,8 +90,10 @@ const SignInForm: React.FC = () => {
         <p className="text-sm text-muted-foreground">{t('phone-number-form.phone.helper')}</p>
         {createOTPResponse.error?.phoneNumber && (
           <p className="text-sm text-destructive">
-            {createOTPResponse.error.phoneNumber === 'already-in-use' &&
-              t('phone-number-form.phone.error.already-registered')}
+            {createOTPResponse.error.phoneNumber === 'failed-to-send-otp' &&
+              t('phone-number-form.phone.error.failed-to-send-otp')}
+            {createOTPResponse.error.phoneNumber === 'phone-number-not-registered' &&
+              t('phone-number-form.phone.error.phone-number-not-registered')}
             {createOTPResponse.error.phoneNumber === 'invalid-format' &&
               t('phone-number-form.phone.error.invalid')}
             {createOTPResponse.error.phoneNumber === 'unknown' &&
