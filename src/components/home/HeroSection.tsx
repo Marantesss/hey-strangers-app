@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/select'
 import { getNextGame } from '@/domains/games/shared/GameService'
 import Countdown from '../common/Countdown'
+import LocaleSwitcher from '../common/LocaleSwitcher'
 
 interface NextGamesSectionProps {
   hero: Home['hero']
@@ -26,6 +27,7 @@ export default async function NextGamesSection({ hero }: NextGamesSectionProps) 
         <nav className="flex items-center justify-between w-full">
           <Logo />
           <div className="flex items-center gap-4">
+            <LocaleSwitcher />
             <Button asChild variant="ghost">
               <Link href="/sign-up">Registo</Link>
             </Button>
