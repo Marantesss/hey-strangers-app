@@ -1,6 +1,7 @@
 'use client'
 
 import { startTransition, useActionState } from 'react'
+import { useTranslations } from 'next-intl'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,6 +9,8 @@ import { Label } from '@/components/ui/label'
 import { createOTPAction, signInWithOTPAction } from '../actions'
 
 const SignInForm: React.FC = () => {
+  const t = useTranslations('sign-in')
+
   const [createOTPResponse, dispatchCreateOTPAction, createOTPPending] = useActionState(
     createOTPAction,
     {},
@@ -28,18 +31,27 @@ const SignInForm: React.FC = () => {
   if (createOTPResponse.success) {
     return (
       <form action={dispatchSignInWithOTPAction} className="space-y-4 w-full max-w-md">
-        <h1 className="text-2xl font-medium">Enter verification code</h1>
+        <h1 className="text-2xl font-medium">{t('otp-form.title')}</h1>
 
         <input type="hidden" name="phoneNumber" value={createOTPResponse.data!.phoneNumber} />
 
         <div className="space-y-2">
-          <Label htmlFor="otp">OTP</Label>
-          <Input name="otp" placeholder="123456" disabled={signInWithOTPPending} />
+          <Label htmlFor="otp">{t('otp-form.otp.label')}</Label>
+          <Input
+            name="otp"
+            placeholder={t('otp-form.otp.placeholder')}
+            disabled={signInWithOTPPending}
+          />
           <p className="text-sm text-muted-foreground">
-            We have sent a code for {createOTPResponse.data?.phoneNumber}
+            {t('otp-form.otp.helper', { phone: createOTPResponse.data!.phoneNumber! })}
           </p>
           {signInWithOTPResponse.error?.otp && (
-            <p className="text-sm text-destructive">{signInWithOTPResponse.error.otp}</p>
+            <p className="text-sm text-destructive">
+              {signInWithOTPResponse.error.otp === 'failed-to-verify' &&
+                t('otp-form.otp.error.failed-to-verify')}
+              {signInWithOTPResponse.error.otp === 'invalid' && t('otp-form.otp.error.invalid')}
+              {signInWithOTPResponse.error.otp === 'unknown' && t('otp-form.otp.error.unknown')}
+            </p>
           )}
           {signInWithOTPResponse.error?.phoneNumber && (
             <p className="text-sm text-destructive">{signInWithOTPResponse.error.phoneNumber}</p>
@@ -47,7 +59,7 @@ const SignInForm: React.FC = () => {
         </div>
 
         <Button disabled={signInWithOTPPending} type="submit" className="w-full">
-          {signInWithOTPPending ? 'Loading...' : 'Verify code'}
+          {t('otp-form.submit')}
         </Button>
 
         <Button
@@ -57,7 +69,7 @@ const SignInForm: React.FC = () => {
           onClick={resendOTP}
           className="w-full mt-2"
         >
-          {createOTPPending ? 'Loading...' : 'Resend code'}
+          {t('otp-form.resend')}
         </Button>
       </form>
     )
@@ -65,21 +77,32 @@ const SignInForm: React.FC = () => {
 
   return (
     <form action={dispatchCreateOTPAction} className="space-y-4 w-full max-w-md">
-      <h1 className="text-2xl font-medium">Sign in</h1>
+      <h1 className="text-2xl font-medium">{t('phone-number-form.title')}</h1>
 
       <div className="space-y-2">
-        <Label htmlFor="phoneNumber">Phone number</Label>
-        <Input name="phoneNumber" placeholder="+351 912 345 678" disabled={createOTPPending} />
-        <p className="text-sm text-muted-foreground">
-          We will send you a code to verify your phone number.
-        </p>
+        <Label htmlFor="phoneNumber">{t('phone-number-form.phone.label')}</Label>
+        <Input
+          name="phoneNumber"
+          placeholder={t('phone-number-form.phone.placeholder')}
+          disabled={createOTPPending}
+        />
+        <p className="text-sm text-muted-foreground">{t('phone-number-form.phone.helper')}</p>
         {createOTPResponse.error?.phoneNumber && (
-          <p className="text-sm text-destructive">{createOTPResponse.error.phoneNumber}</p>
+          <p className="text-sm text-destructive">
+            {createOTPResponse.error.phoneNumber === 'already-in-use' &&
+              t('phone-number-form.phone.error.already-registered')}
+            {createOTPResponse.error.phoneNumber === 'invalid-format' &&
+              t('phone-number-form.phone.error.invalid')}
+            {createOTPResponse.error.phoneNumber === 'unknown' &&
+              t('phone-number-form.phone.error.unknown')}
+            {createOTPResponse.error.phoneNumber === 'failed-to-create-otp' &&
+              t('phone-number-form.phone.error.failed-to-create-otp')}
+          </p>
         )}
       </div>
 
       <Button disabled={createOTPPending} type="submit" className="w-full">
-        {createOTPPending ? 'Loading...' : 'Send verification code'}
+        {t('phone-number-form.submit')}
       </Button>
     </form>
   )

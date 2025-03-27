@@ -47,5 +47,37 @@
       "submit": "Verificar Código",
       "resend": "Reenviar código"
     }
+  },
+  "sign-in": {
+    "phone-number-form": {
+      "title": "Entrar",
+      "phone": {
+        "label": "Telemóvel",
+        "placeholder": "Telemóvel",
+        "helper": "Vamos enviar-te um texto com um código de confirmação",
+        "error": {
+          "invalid": "Número de telemóvel inválido",
+          "already-registered": "Número de telemóvel já registado",
+          "failed-to-create-otp": "Falha ao enviar mensagem",
+          "unknown": "Algo correu mal"
+        }
+      },
+      "submit": "Enviar Código"
+    },
+    "otp-form": {
+      "title": "Introduzir código de verificação",
+      "otp": {
+        "label": "Telemóvel",
+        "placeholder": "Telemóvel",
+        "helper": "Introduz o código que recebeste no teu telemóvel",
+        "error": {
+          "invalid": "Código inválido",
+          "failed-to-verify": "Falha ao verificar código",
+          "unknown": "Algo correu mal"
+        }
+      },
+      "submit": "Verificar Código",
+      "resend": "Reenviar código"
+    }
   }
 }

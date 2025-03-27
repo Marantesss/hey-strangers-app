@@ -47,5 +47,37 @@
       "submit": "Verify Code",
       "resend": "Resend code"
     }
+  },
+  "sign-in": {
+    "phone-number-form": {
+      "title": "Sign in",
+      "phone": {
+        "label": "Phone",
+        "placeholder": "Phone Number",
+        "helper": "We'll send you a text with a confirmation code",
+        "error": {
+          "invalid": "Invalid phone number",
+          "already-registered": "Phone number already in use",
+          "failed-to-create-otp": "Failed to send message",
+          "unknown": "Something went wrong"
+        }
+      },
+      "submit": "Send Code"
+    },
+    "otp-form": {
+      "title": "Enter verification code",
+      "otp": {
+        "label": "Phone",
+        "placeholder": "Phone Number",
+        "helper": "Enter the code we sent to {phone}",
+        "error": {
+          "invalid": "Invalid code",
+          "failed-to-verify": "Failed to verify code",
+          "unknown": "Something went wrong"
+        }
+      },
+      "submit": "Verify Code",
+      "resend": "Resend code"
+    }
   }
 }

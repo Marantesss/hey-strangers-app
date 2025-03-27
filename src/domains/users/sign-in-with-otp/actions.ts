@@ -25,7 +25,7 @@ type CreateOTPActionState = {
   }
   success?: boolean
   error?: {
-    phoneNumber?: string
+    phoneNumber?: 'invalid-format' | 'already-in-use' | 'unknown' | 'failed-to-create-otp'
   }
 }
 
@@ -42,7 +42,7 @@ export const createOTPAction = async (
       data: { phoneNumber },
       success: false,
       error: {
-        phoneNumber: 'Invalid phone number',
+        phoneNumber: 'invalid-format',
       },
     }
   }
@@ -55,7 +55,7 @@ export const createOTPAction = async (
     console.error(error)
     return {
       success: false,
-      error: { phoneNumber: 'Failed to create OTP' },
+      error: { phoneNumber: 'failed-to-create-otp' },
     }
   }
 
@@ -83,9 +83,10 @@ type SignInWithOTPActionState = {
   success?: boolean
   error?: {
     phoneNumber?: string
-    otp?: string
+    otp?: 'invalid' | 'failed-to-verify' | 'unknown'
   }
 }
+
 export const signInWithOTPAction = async (
   previousState: SignInWithOTPActionState,
   formData: FormData,
@@ -93,15 +94,14 @@ export const signInWithOTPAction = async (
   const phoneNumber = formData.get('phoneNumber') as string
   const otp = formData.get('otp') as string
 
-  const { success, data, error } = SignInWithOTPSchema.safeParse({ phoneNumber, otp })
+  const { success, data } = SignInWithOTPSchema.safeParse({ phoneNumber, otp })
 
   if (!success) {
     return {
       data: { phoneNumber, otp },
       success: false,
       error: {
-        phoneNumber: error?.flatten().fieldErrors?.phoneNumber?.[0],
-        otp: error?.flatten().fieldErrors?.otp?.[0],
+        otp: 'invalid',
       },
     }
   }
@@ -112,7 +112,7 @@ export const signInWithOTPAction = async (
     return {
       data: { phoneNumber, otp },
       success: false,
-      error: { phoneNumber: 'Failed to sign in with OTP' },
+      error: { otp: 'failed-to-verify' },
     }
   }
 
