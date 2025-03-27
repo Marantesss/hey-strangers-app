@@ -29,10 +29,10 @@ const deleteAll = async (payload: Payload) => {
     where: { id: { exists: true } },
   })
 
-  await payload.delete({
-    collection: 'admins',
-    where: { id: { exists: true } },
-  })
+  // await payload.delete({
+  //   collection: 'admins',
+  //   where: { id: { exists: true } },
+  // })
 
   await payload.delete({
     collection: 'users',
@@ -51,6 +51,11 @@ const deleteAll = async (payload: Payload) => {
 
   await payload.delete({
     collection: 'field_amenities',
+    where: { id: { exists: true } },
+  })
+
+  await payload.delete({
+    collection: 'sports',
     where: { id: { exists: true } },
   })
 

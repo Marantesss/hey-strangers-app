@@ -6,6 +6,7 @@ import RegisterForGameSheet from '@/domains/registrations/register-for-game/comp
 import RegisterForGameProvider from '@/domains/registrations/register-for-game/providers/RegisterForGameProvider'
 import { Game } from '@/payload-types'
 import { NextPage } from 'next'
+import { TypedLocale } from 'payload'
 
 type AgendaPageProps = {
   searchParams: Promise<{
@@ -17,7 +18,7 @@ type AgendaPageProps = {
 const AgendaPage: NextPage<AgendaPageProps> = async ({ searchParams }) => {
   const { city, sport } = await searchParams
   const games = await getGames(
-    { city, sport: sport as Game['sport'], timeFrame: 'future' },
+    { city, sportId: sport, timeFrame: 'future' },
     { expand: { field: true } },
   )
 

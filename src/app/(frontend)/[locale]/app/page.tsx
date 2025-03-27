@@ -1,15 +1,21 @@
 import { getMe } from '@/domains/users/me/me.service'
+import { redirect } from '@/i18n/navigation'
 import { NextPage } from 'next'
-import { redirect } from 'next/navigation'
+import { TypedLocale } from 'payload'
 
-const AppPage: NextPage = async () => {
+type AppPageProps = {
+  params: Promise<{ locale: TypedLocale }>
+}
+
+const AppPage: NextPage<AppPageProps> = async ({ params }) => {
+  const { locale } = await params
   const user = await getMe()
 
   if (user) {
-    return redirect('/app/agenda')
+    return redirect({ href: '/app/agenda', locale })
   }
 
-  return redirect('/sign-in')
+  return redirect({ href: '/sign-in', locale })
 }
 
 export default AppPage

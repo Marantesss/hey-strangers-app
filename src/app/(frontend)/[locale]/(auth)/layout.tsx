@@ -1,11 +1,11 @@
 import WordCycle from '@/components/common/WordCycle'
 import { getMe } from '@/domains/users/me/me.service'
 import QuizProvider from '@/domains/users/sign-up-quiz/providers/quiz.provider'
-import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 import { TypedLocale } from 'payload'
 import config from '@payload-config'
 import { getTranslations } from 'next-intl/server'
+import { redirect } from '@/i18n/navigation'
 
 type AuthLayoutProps = {
   children: React.ReactNode
@@ -20,7 +20,7 @@ export default async function Layout({ children, params }: AuthLayoutProps) {
   const user = await getMe()
 
   if (user) {
-    return redirect('/app')
+    return redirect({ href: '/app', locale })
   }
 
   const t = await getTranslations('sign-up.layout')

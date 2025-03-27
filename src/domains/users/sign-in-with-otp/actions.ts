@@ -1,10 +1,11 @@
 'use server'
 
 import { z } from 'zod'
-import { redirect } from 'next/navigation'
 import { createOTPForPhoneNumber } from '../sign-up-quiz/sign-up.service'
 import { signInWithOTP } from './sign-in-with-otp.service'
 import { sendWhatsappOtpMessage } from '@/lib/whatsapp'
+import { redirect } from '@/i18n/navigation'
+import { getLocale } from 'next-intl/server'
 
 /**
  * ===============================
@@ -115,5 +116,6 @@ export const signInWithOTPAction = async (
     }
   }
 
-  redirect('/app')
+  const locale = await getLocale()
+  return redirect({ href: '/app', locale })
 }

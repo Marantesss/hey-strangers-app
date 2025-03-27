@@ -37,18 +37,21 @@ const SignupForm: React.FC = () => {
         <input type="hidden" name="phone" value={createOTPResponse.data!.phone} />
 
         <div className="space-y-2">
-          <Label htmlFor="otp">{t('otp-form.phone.label')}</Label>
+          <Label htmlFor="otp">{t('otp-form.otp.label')}</Label>
           <Input
             name="otp"
-            placeholder={t('otp-form.phone.placeholder')}
+            placeholder={t('otp-form.otp.placeholder')}
             disabled={signUpWithOTPPending}
           />
           <p className="text-sm text-muted-foreground">
-            {t('otp-form.phone.helper', { phone: createOTPResponse.data!.phone! })}
+            {t('otp-form.otp.helper', { phone: createOTPResponse.data!.phone! })}
           </p>
-          {signUpWithOTPResponse.error?.otp && (
-            <p className="text-sm text-destructive">{signUpWithOTPResponse.error.otp}</p>
-          )}
+          <p className="text-sm text-destructive">
+            {signUpWithOTPResponse.error?.otp === 'failed-to-verify' &&
+              t('otp-form.otp.error.failed-to-verify')}
+            {signUpWithOTPResponse.error?.otp === 'invalid' && t('otp-form.otp.error.invalid')}
+            {signUpWithOTPResponse.error?.otp === 'unknown' && t('otp-form.otp.error.unknown')}
+          </p>
           {signUpWithOTPResponse.error?.phone && (
             <p className="text-sm text-destructive">{signUpWithOTPResponse.error.phone}</p>
           )}
@@ -82,7 +85,18 @@ const SignupForm: React.FC = () => {
         <Input name="phone" type="tel" placeholder="Phone Number" disabled={createOTPPending} />
         <p className="text-sm text-muted-foreground">{t('phone-number-form.phone.helper')}</p>
         {createOTPResponse.error?.phone && (
-          <p className="text-sm text-destructive">{createOTPResponse.error.phone}</p>
+          <p className="text-sm text-destructive">
+            {createOTPResponse.error.phone === 'already-in-use' &&
+              t('phone-number-form.phone.error.already-registered')}
+            {createOTPResponse.error.phone === 'invalid-format' &&
+              t('phone-number-form.phone.error.invalid')}
+            {createOTPResponse.error.phone === 'unknown' &&
+              t('phone-number-form.phone.error.unknown')}
+            {createOTPResponse.error.phone === 'failed-to-create-otp' &&
+              t('phone-number-form.phone.error.failed-to-create-otp')}
+            {createOTPResponse.error.phone === 'failed-to-create-user' &&
+              t('phone-number-form.phone.error.failed-to-create-user')}
+          </p>
         )}
       </div>
 

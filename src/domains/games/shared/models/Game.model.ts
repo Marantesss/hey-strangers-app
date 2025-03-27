@@ -1,7 +1,7 @@
 import { Game as PayloadGame, Registration } from '@payload-types'
-import { FieldModel } from './Field.model'
+import { FieldModel } from '../../../fields/shared/models/Field.model'
 import { RegistrationModel } from '@/domains/registrations/shared/models/Registration.model'
-import { SportModel } from './Sport.model'
+import { SportModel } from '@/domains/sports/shared/models/Sport.model'
 
 export class GameModel {
   readonly id: string
@@ -129,7 +129,11 @@ export class GameModel {
             totalDocs: this._registrations.length,
             hasNextPage: false,
           }
-        : undefined,
+        : {
+            docs: this._registrationsIds,
+            totalDocs: this._registrationsIds?.length ?? 0,
+            hasNextPage: false,
+          },
     }
   }
 

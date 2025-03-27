@@ -1,11 +1,18 @@
-"use client"
+'use client'
 
-import { usePathname } from "next/navigation";
-import { NavigationMenu, NavigationMenuList, NavigationMenuLink, NavigationMenuItem, navigationMenuTriggerStyle } from "../ui/navigation-menu"
+import { usePathname } from 'next/navigation'
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuLink,
+  NavigationMenuItem,
+  navigationMenuTriggerStyle,
+} from '../ui/navigation-menu'
+import { useLocale } from 'next-intl'
 
 const AppNavigationMenu: React.FC = () => {
-  const pathname = usePathname();
-
+  const pathname = usePathname()
+  const locale = useLocale()
 
   return (
     <NavigationMenu>
@@ -14,7 +21,7 @@ const AppNavigationMenu: React.FC = () => {
           <NavigationMenuLink
             active={pathname.includes('/app/agenda')}
             className={navigationMenuTriggerStyle()}
-            href="/app/agenda"
+            href={`${locale}/app/agenda`}
           >
             Agenda
           </NavigationMenuLink>
@@ -23,7 +30,7 @@ const AppNavigationMenu: React.FC = () => {
           <NavigationMenuLink
             active={pathname.includes('/app/games')}
             className={navigationMenuTriggerStyle()}
-            href="/app/games"
+            href={`${locale}/app/games`}
           >
             My Games
           </NavigationMenuLink>
@@ -32,7 +39,7 @@ const AppNavigationMenu: React.FC = () => {
           <NavigationMenuLink
             active={pathname.includes('/app/profile')}
             className={navigationMenuTriggerStyle()}
-            href="/app/profile"
+            href={`${locale}/app/profile`}
           >
             My Profile
           </NavigationMenuLink>
@@ -42,5 +49,4 @@ const AppNavigationMenu: React.FC = () => {
   )
 }
 
-export default AppNavigationMenu;
-
+export default AppNavigationMenu

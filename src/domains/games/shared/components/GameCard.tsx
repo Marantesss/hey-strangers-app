@@ -42,10 +42,9 @@ const GameCard: React.FC<GameCardProps> = async ({
     minute: '2-digit',
   })
   const price = game.price.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })
-  const fieldType =
-    game.field.typeHumanized.charAt(0).toUpperCase() + game.field.typeHumanized.slice(1)
+  const fieldType = game.field.type.name.charAt(0).toUpperCase() + game.field.type.name.slice(1)
   const fieldFlooring =
-    game.field.flooringHumanized.charAt(0).toUpperCase() + game.field.flooringHumanized.slice(1)
+    game.field.flooring.name.charAt(0).toUpperCase() + game.field.flooring.name.slice(1)
 
   return (
     <Card disabled={disabled} className={cn({ 'shadow-lg shadow-[#1BA781]': highlight })}>
@@ -81,9 +80,9 @@ const GameCard: React.FC<GameCardProps> = async ({
                 <div>
                   <h4 className="font-bold">Facility information</h4>
                   <ul className="text-subtle-foreground list-disc list-inside text-sm">
-                    {game.field.amenitiesHumanized.map((amenity) => (
-                      <li className="ml-2" key={amenity}>
-                        {amenity}
+                    {game.field.amenities.map((amenity) => (
+                      <li className="ml-2" key={amenity.id}>
+                        {amenity.name}
                       </li>
                     ))}
                   </ul>

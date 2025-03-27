@@ -21,16 +21,28 @@
       "phone": {
         "label": "Telemóvel",
         "placeholder": "Telemóvel",
-        "helper": "Vamos enviar-te um texto com um código de confirmação"
+        "helper": "Vamos enviar-te um texto com um código de confirmação",
+        "error": {
+          "invalid": "Número de telemóvel inválido",
+          "already-registered": "Número de telemóvel já registado",
+          "failed-to-create-otp": "Falha ao enviar mensagem",
+          "failed-to-create-user": "Falha ao criar utilizador",
+          "unknown": "Algo correu mal"
+        }
       },
       "submit": "Enviar Código"
     },
     "otp-form": {
       "title": "Introduzir código de verificação",
-      "phone": {
+      "otp": {
         "label": "Telemóvel",
         "placeholder": "Telemóvel",
-        "helper": "Introduz o código que recebeste no teu telemóvel"
+        "helper": "Introduz o código que recebeste no teu telemóvel",
+        "error": {
+          "invalid": "Código inválido",
+          "failed-to-verify": "Falha ao verificar código",
+          "unknown": "Algo correu mal"
+        }
       },
       "submit": "Verificar Código",
       "resend": "Reenviar código"

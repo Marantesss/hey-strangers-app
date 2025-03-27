@@ -7,41 +7,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Game } from '@/payload-types'
+import useSportsQuery from '@/domains/sports/get-sports/use-sports.query'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useState } from 'react'
-
-type SelectableSport = {
-  id: Game['sport']
-  name: string
-}
-
-const SELECTABLE_SPORTS: SelectableSport[] = [
-  {
-    id: 'soccer',
-    name: 'Soccer',
-  },
-  {
-    id: 'basketball',
-    name: 'Basketball',
-  },
-  {
-    id: 'tennis',
-    name: 'Tennis',
-  },
-  {
-    id: 'padel',
-    name: 'Padel',
-  },
-  {
-    id: 'volleyball',
-    name: 'Volleyball',
-  },
-] as const
 
 const SelectSport: React.FC = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { data: sports } = useSportsQuery()
   const [currentSport, setCurrentSport] = useState<string | null>(
     searchParams.get('sport') ?? 'all',
   )
@@ -63,8 +36,10 @@ const SelectSport: React.FC = () => {
         <SelectValue placeholder="Select sport" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="all">All Sports</SelectItem>
-        {SELECTABLE_SPORTS.map((sport) => (
+        <SelectItem defaultChecked value="all">
+          All Sports
+        </SelectItem>
+        {sports?.map((sport) => (
           <SelectItem key={sport.id} value={sport.id}>
             {sport.name}
           </SelectItem>

@@ -1,7 +1,6 @@
 'use server'
 
 import { OTPVerificationSchema, SignupSchema } from './schema'
-import { redirect } from 'next/navigation'
 import {
   createOTPForPhoneNumber,
   createUserWithPhoneNumber,
@@ -9,7 +8,9 @@ import {
 } from './sign-up.service'
 import { signInWithOTP } from '../sign-in-with-otp/sign-in-with-otp.service'
 import { sendWhatsappOtpMessage } from '@/lib/whatsapp'
-
+import { getUserByPhoneNumber } from '../get-user/get-user.service'
+import { redirect } from '@/i18n/navigation'
+import { getLocale } from 'next-intl/server'
 /**
  * ===============================
  * CREATE OTP
@@ -22,8 +23,12 @@ type CreateOTPActionState = {
   }
   success?: boolean
   error?: {
-    phone?: string
-    quizAnswers?: string
+    phone?:
+      | 'invalid-format'
+      | 'already-in-use'
+      | 'unknown'
+      | 'failed-to-create-otp'
+      | 'failed-to-create-user'
   }
 }
 
@@ -41,8 +46,16 @@ export const createOTPAction = async (
       data: { phone, quizAnswers },
       success: false,
       error: {
-        phone: 'Invalid phone number',
+        phone: 'invalid-format',
       },
+    }
+  }
+
+  const userWithPhoneNumber = await getUserByPhoneNumber(data.phone)
+  if (userWithPhoneNumber) {
+    return {
+      success: false,
+      error: { phone: 'already-in-use' },
     }
   }
 
@@ -53,7 +66,7 @@ export const createOTPAction = async (
     } catch (error) {
       return {
         success: false,
-        error: { phone: 'Phone number already in use' },
+        error: { phone: 'failed-to-create-user' },
       }
     }
   }
@@ -66,7 +79,7 @@ export const createOTPAction = async (
     console.error(error)
     return {
       success: false,
-      error: { phone: 'Failed to create OTP' },
+      error: { phone: 'failed-to-create-otp' },
     }
   }
 
@@ -89,7 +102,7 @@ type SignUpWithOTPActionState = {
   success?: boolean
   error?: {
     phone?: string
-    otp?: string
+    otp?: 'invalid' | 'failed-to-verify' | 'unknown'
   }
 }
 
@@ -107,8 +120,8 @@ export const signUpWithOTPAction = async (
       data: { phone, otp },
       success: false,
       error: {
-        phone: 'Invalid phone number',
-        otp: 'Invalid OTP',
+        phone: 'invalid',
+        otp: 'invalid',
       },
     }
   }
@@ -119,9 +132,10 @@ export const signUpWithOTPAction = async (
   } catch (error) {
     return {
       success: false,
-      error: { phone: 'Failed to create user' },
+      error: { phone: 'failed-to-verify' },
     }
   }
 
-  redirect('/app')
+  const locale = await getLocale()
+  return redirect({ href: '/app', locale })
 }

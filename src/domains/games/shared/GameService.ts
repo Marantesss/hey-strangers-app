@@ -1,6 +1,8 @@
-import { getPayload } from 'payload'
+import { getPayload, TypedLocale } from 'payload'
 import config from '@payload-config'
 import { GameModel } from './models/Game.model'
+import { Sport } from '@/payload-types'
+import { getLocale } from 'next-intl/server'
 
 interface GetGamesOptions {
   timeFrame?: 'past' | 'future'
@@ -58,11 +60,12 @@ export async function getGamesWhereUserIsRegistered(
 export async function getGames(
   options: {
     city?: string
-    sport?: GameModel['sport']
+    sportId?: Sport['id']
     timeFrame?: 'past' | 'future'
   } = {},
   { expand }: { expand?: ExpandOptions } = {},
 ): Promise<GameModel[]> {
+  const locale = await getLocale()
   const payload = await getPayload({ config })
   const now = new Date()
 
@@ -76,10 +79,10 @@ export async function getGames(
             },
           }
         : {}),
-      ...(options.sport
+      ...(options.sportId
         ? {
-            sport: {
-              equals: options.sport,
+            'sport.id': {
+              equals: options.sportId,
             },
           }
         : {}),
@@ -99,6 +102,7 @@ export async function getGames(
     },
     sort: '-createdAt',
     depth: expand?.field || expand?.registrations ? 2 : 1,
+    locale: locale as TypedLocale,
   }
 
   const { docs } = await payload.find(query)
