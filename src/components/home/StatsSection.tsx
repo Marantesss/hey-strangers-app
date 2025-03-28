@@ -10,7 +10,8 @@ export default function StatsSection({ stats }: StatsSectionProps) {
     <section className="container py-20">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="flex flex-col gap-8">
-          <h2 className="text-2xl font-bold">{stats.title}</h2>
+          <h2 className="text-2xl font-bold md:text-left text-center">{stats.title}</h2>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {stats.statistics.map((item, index) => (
               <div key={index} className="flex flex-col gap-2 p-6 border rounded-2xl">

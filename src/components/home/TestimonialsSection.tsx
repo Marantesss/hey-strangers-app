@@ -8,15 +8,16 @@ interface TestimonialsSectionProps {
 export default function TestimonialsSection({ testimonials }: TestimonialsSectionProps) {
   return (
     <section className="bg-[#F5F7F9] py-20">
-      <div className="container space-y-20">
-        <h2 className="text-5xl font-bold text-center">{testimonials.title}</h2>
-        <div className="relative">
-          {/* Testimonials Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="space-y-20">
+        <div className="container">
+          <h2 className="text-5xl font-bold text-center">{testimonials.title}</h2>
+        </div>
+        <div className="flex justify-center">
+          <div className="flex overflow-x-auto gap-8 px-4 snap-x no-scrollbar">
             {testimonials.reviews.map((testimonial) => (
               <div
                 key={testimonial.id}
-                className="bg-primary text-white p-8 rounded-2xl flex flex-col justify-between gap-8"
+                className="relative w-[calc(100vw-2rem)] md:w-96 flex-none snap-center bg-primary text-white p-8 rounded-2xl flex flex-col justify-between gap-8"
               >
                 <p className="text-lg">"{testimonial.quote}"</p>
                 <div className="flex items-center gap-3">

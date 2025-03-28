@@ -2,7 +2,8 @@
   "home": {
     "register": "Registo",
     "my-space": "O meu espaço",
-    "next-match-in": "Próximo jogo em"
+    "next-match-in": "Próximo jogo em",
+    "years-old": "{count, plural, =0 {anos} one {# ano} other {# anos}}"
   },
   "sign-up": {
     "quiz": {

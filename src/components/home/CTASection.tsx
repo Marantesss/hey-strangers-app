@@ -9,16 +9,16 @@ interface CTASectionProps {
 
 export default function CTASection({ cta }: CTASectionProps) {
   return (
-    <section className="container py-20">
-      <div className="bg-[#E3FFCD] rounded-3xl p-12 flex flex-col md:flex-row justify-between gap-12">
+    <section className="md:container pb-20 md:pt-20">
+      <div className="bg-[#E3FFCD] md:rounded-3xl p-8 md:p-12 flex flex-col md:flex-row justify-between gap-12">
         {/* Left Side */}
-        <div className="flex flex-col gap-4 justify-center">
+        <div className="flex flex-col items-center md:items-start gap-4 justify-center">
           <p className="text-sm">{cta.subtitle}</p>
           <h2 className="text-4xl font-bold">{cta.title}</h2>
         </div>
 
         {/* Right Side - Quiz Card */}
-        <div className="bg-white rounded-2xl p-8 md:w-[600px]">
+        <div className="bg-white rounded-2xl p-8 md:w-[600px] overflow-hidden">
           {/* Progress Steps */}
           <div className="flex items-center gap-2 text-sm mb-8">
             <span className="flex items-center gap-2">
@@ -46,11 +46,11 @@ export default function CTASection({ cta }: CTASectionProps) {
           <h3 className="text-2xl font-bold mb-6">Choose your sport to get started</h3>
 
           {/* Sport Options Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             {cta.sports.map((sport) => (
               <div
                 key={sport.name}
-                className={`relative aspect-square rounded-2xl overflow-hidden cursor-pointer group ${
+                className={`relative md:aspect-square aspect-[4/1] rounded-2xl overflow-hidden cursor-pointer group ${
                   sport.selected ? 'ring-2 ring-primary' : ''
                 }`}
               >

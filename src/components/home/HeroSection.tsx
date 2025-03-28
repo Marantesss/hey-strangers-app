@@ -71,10 +71,19 @@ export default async function HeroSection({ hero }: HeroSectionProps) {
         </div>
 
         {/* Partner Logos */}
-        <div className="flex flex-wrap justify-between mt-4 w-full max-w-xl">
+        <div className="flex justify-between mt-4 w-full max-w-xl">
           {hero.partners.map((logo) => {
             const media = logo.logo as Media
-            return <Image key={logo.id} src={media.url!} alt={media.alt!} width={100} height={40} />
+            return (
+              <Image
+                key={logo.id}
+                src={media.url!}
+                alt={media.alt!}
+                width={100}
+                height={32}
+                className="w-16 md:w-[100px]"
+              />
+            )
           })}
         </div>
       </div>

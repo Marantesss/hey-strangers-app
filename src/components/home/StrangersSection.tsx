@@ -3,12 +3,14 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { Home, Media } from '@/payload-types'
+import { useTranslations } from 'next-intl'
 
 interface StrangersSectionProps {
   strangers: Home['strangers']
 }
 
 export default function StrangersSection({ strangers }: StrangersSectionProps) {
+  const t = useTranslations('home')
   const [selectedSport, setSelectedSport] = useState('All Sports')
 
   const sportFilters = [
@@ -26,7 +28,7 @@ export default function StrangersSection({ strangers }: StrangersSectionProps) {
       <h2 className="text-4xl font-bold text-center">{strangers.title}</h2>
 
       <div className="flex justify-center gap-4">
-        <div className="flex gap-2">
+        <div className="flex flex-wrap justify-center gap-2">
           {sportFilters.map((sport) => (
             <button
               key={sport}
@@ -58,12 +60,14 @@ export default function StrangersSection({ strangers }: StrangersSectionProps) {
               </div>
               <div>
                 <h3 className="font-semibold text-lg">{stranger.name}</h3>
-                <span className="text-sm text-muted-foreground">{stranger.age}</span>
+                <span className="text-sm text-muted-foreground">
+                  {t('years-old', { count: stranger.age })}
+                </span>
               </div>
             </div>
 
             <p className="text-muted-foreground">{stranger.bio}</p>
-            <span className="text-sm font-medium text-primary">{stranger.sport}</span>
+            <p className="text-sm font-medium text-primary">{stranger.sport}</p>
           </div>
         ))}
       </div>

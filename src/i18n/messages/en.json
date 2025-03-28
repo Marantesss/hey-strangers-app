@@ -2,7 +2,8 @@
   "home": {
     "register": "Register",
     "my-space": "My Space",
-    "next-match-in": "Next match in"
+    "next-match-in": "Next match in",
+    "years-old": "{count, plural, =0 {years old} one {# year old} other {# years old}}"
   },
   "sign-up": {
     "quiz": {

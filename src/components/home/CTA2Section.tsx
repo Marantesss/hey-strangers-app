@@ -10,7 +10,7 @@ export default function CTA2Section({ cta2 }: CTA2SectionProps) {
   return (
     <section className="bg-primary py-20">
       <div className="container gap-8 flex flex-col items-center">
-        <h2 className="text-4xl font-bold text-[#E3FFCD]">{cta2.title}</h2>
+        <h2 className="text-4xl font-bold text-[#E3FFCD] text-center">{cta2.title}</h2>
         <Button
           asChild
           className="bg-[#E3FFCD] hover:bg-[#D1F7B0] border-0 text-primary font-semibold"
