@@ -143,7 +143,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
       <div className="space-y-2">
         <Label htmlFor="city">City</Label>
         <Select name="city" defaultValue={updateProfileResponse.data?.city ?? ''}>
-          <SelectTrigger>
+          <SelectTrigger className="rounded-sm">
             <SelectValue placeholder="Select city" />
           </SelectTrigger>
           <SelectContent>
