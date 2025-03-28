@@ -52,14 +52,14 @@ export class GameModel {
     this._field = data.field instanceof Object ? FieldModel.from(data.field) : undefined
     this._fieldId = data.field instanceof Object ? data.field.id : data.field
 
-    const isRegistrationsPresent = !!data.registrations?.docs
+    const isRegistrationsPresent = !!data.registrations
     const isRegistrationsExpanded =
       isRegistrationsPresent &&
-      data.registrations!.docs!.length > 0 &&
-      data.registrations!.docs![0] instanceof Object
+      data.registrations!.length > 0 &&
+      data.registrations![0] instanceof Object
 
     this._registrations = isRegistrationsExpanded
-      ? data.registrations!.docs!.map((registration) =>
+      ? data.registrations!.map((registration) =>
           RegistrationModel.from(registration as Registration),
         )
       : isRegistrationsPresent
@@ -69,7 +69,7 @@ export class GameModel {
     this._registrationsIds = isRegistrationsExpanded
       ? this._registrations!.map((registration) => registration.id)
       : isRegistrationsPresent
-        ? data.registrations!.docs!.map((registration) => registration as string)
+        ? data.registrations!.map((registration) => registration as string)
         : undefined
   }
 
@@ -130,112 +130,8 @@ export class GameModel {
       updatedAt: this.updatedAt.toISOString(),
       field: this._field ? this._field.toSerializable() : this._fieldId,
       registrations: this._registrations
-        ? {
-            docs: this._registrations.map((registration) => registration.toSerializable()),
-            totalDocs: this._registrations.length,
-            hasNextPage: false,
-          }
-        : {
-            docs: this._registrationsIds,
-            totalDocs: this._registrationsIds?.length ?? 0,
-            hasNextPage: false,
-          },
+        ? this._registrations.map((registration) => registration.toSerializable())
+        : this._registrationsIds,
     }
-  }
-
-  static get dummy(): GameModel[] {
-    return [
-      GameModel.from({
-        id: '1',
-        name: 'Game 1',
-        description: 'Description 1',
-        startsAt: '2025-03-01T08:00:00Z',
-        endsAt: '2025-03-01T09:00:00Z',
-        price: 100,
-        maxPlayers: 10,
-        sport: 'soccer',
-        createdAt: '2025-03-01T08:00:00Z',
-        updatedAt: '2025-03-01T08:00:00Z',
-        field: {
-          id: '1',
-          name: 'Field 1',
-          address: '123 Main St',
-          type: 'indoor',
-          flooring: 'artificial_turf',
-          createdAt: '2025-03-01T08:00:00Z',
-          updatedAt: '2025-03-01T08:00:00Z',
-          sport: 'soccer',
-          amenities: ['restrooms', 'showers', 'first_aid_station', 'lighting', 'scoreboard'],
-        },
-        // registrations: [
-        //   {
-        //     id: '1',
-        //     createdAt: "2025-03-01T08:00:00Z",
-        //     deletedAt: null,
-        //     updatedAt: "2025-03-01T08:00:00Z",
-        //     gameId: '1',
-        //     userId: '1',
-        //     user: {
-        //       id: '1',
-        //       name: 'John Doe',
-        //       city: 'Lisbon',
-        //       phoneNumber: '+351 912 345 678',
-        //       createdAt: "2025-03-01T08:00:00Z",
-        //       deletedAt: null,
-        //       updatedAt: "2025-03-01T08:00:00Z",
-        //     },
-        //   },
-        //   {
-        //     id: '2',
-        //     createdAt: "2025-03-01T08:00:00Z",
-        //     deletedAt: null,
-        //     updatedAt: "2025-03-01T08:00:00Z",
-        //     gameId: '1',
-        //     userId: '2',
-        //     user: {
-        //       id: '2',
-        //       name: 'Jane Doe',
-        //       city: 'Lisbon',
-        //       phoneNumber: '+351 912 345 678',
-        //       createdAt: "2025-03-01T08:00:00Z",
-        //       deletedAt: null,
-        //       updatedAt: "2025-03-01T08:00:00Z",
-        //     },
-        //   },
-        // ],
-      }),
-      GameModel.from({
-        id: '2',
-        name: 'Game 2',
-        description: 'Description 2',
-        startsAt: '2025-03-01T09:00:00Z',
-        endsAt: '2025-03-01T10:00:00Z',
-        price: 100,
-        maxPlayers: 10,
-        sport: 'soccer',
-        createdAt: '2025-03-01T08:00:00Z',
-        updatedAt: '2025-03-01T08:00:00Z',
-        field: {
-          id: '1',
-          name: 'Field 1',
-          address: '123 Main St',
-          type: 'indoor',
-          flooring: 'artificial_turf',
-          sport: 'soccer',
-          createdAt: '2025-03-01T08:00:00Z',
-          updatedAt: '2025-03-01T08:00:00Z',
-          amenities: [
-            'cafe',
-            'parking',
-            'wifi',
-            'changing_rooms',
-            'equipment_rental',
-            'lockers',
-            'storage_space',
-            'water_fountain',
-          ],
-        },
-      }),
-    ]
   }
 }

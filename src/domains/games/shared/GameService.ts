@@ -22,10 +22,10 @@ export async function getGamesWhereUserIsRegistered(
   const now = new Date()
 
   const query = {
-    collection: 'registrations' as const,
+    collection: 'games' as const,
     where: {
-      user: {
-        equals: userId,
+      registrations: {
+        contains: userId,
       },
       ...(options.timeFrame === 'past'
         ? {
@@ -46,13 +46,7 @@ export async function getGamesWhereUserIsRegistered(
 
   const { docs } = await payload.find(query)
 
-  const games = docs.map(({ game }) => {
-    if (game instanceof Object) {
-      return GameModel.from(game)
-    }
-
-    throw new Error('Game not found')
-  })
+  const games = docs.map((game) => GameModel.from(game))
 
   return games
 }

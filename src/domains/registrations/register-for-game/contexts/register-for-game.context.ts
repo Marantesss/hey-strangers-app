@@ -1,15 +1,16 @@
+import { GameModel } from '@/domains/games/shared/models/Game.model'
 import { createContext } from 'react'
 
 interface IRegisterForGameContext {
-  gameId: string | null
-  setGameId: (gameId: string) => void
+  game: GameModel | null
+  setGame: (game: GameModel) => void
   isOpen: boolean
   toggleOpen: (isOpen?: boolean) => void
 }
 
 const RegisterForGameContext = createContext<IRegisterForGameContext>({
-  gameId: null,
-  setGameId: () => {},
+  game: null,
+  setGame: () => {},
   isOpen: false,
   toggleOpen: () => {},
 })

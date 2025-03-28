@@ -10,7 +10,7 @@ export const createStripeProduct: CollectionBeforeChangeHook<Game> = async ({
   if (operation !== 'create') return data
 
   const fieldId = data.field instanceof Object ? data.field.id : data.field!
-
+  const sportId = data.sport instanceof Object ? data.sport.id : data.sport!
   // Create the Stripe product
   const product = await stripe.products.create({
     name: data.name!,
@@ -21,7 +21,7 @@ export const createStripeProduct: CollectionBeforeChangeHook<Game> = async ({
     },
     metadata: {
       id: data.id!,
-      sport: data.sport!,
+      sportId,
       fieldId,
       startsAt: data.startsAt!,
       endsAt: data.endsAt!,
@@ -44,6 +44,7 @@ export const updateStripeProduct: CollectionBeforeChangeHook<Game> = async ({
   if (operation !== 'update') return data
 
   const fieldId = data.field instanceof Object ? data.field.id : data.field!
+  const sportId = data.sport instanceof Object ? data.sport.id : data.sport!
 
   const didPriceChange = originalDoc?.price !== data.price
 
@@ -61,7 +62,7 @@ export const updateStripeProduct: CollectionBeforeChangeHook<Game> = async ({
     description: data.description ?? '',
     metadata: {
       id: data.id!,
-      sport: data.sport!,
+      sportId,
       fieldId,
       startsAt: data.startsAt!,
       endsAt: data.endsAt!,

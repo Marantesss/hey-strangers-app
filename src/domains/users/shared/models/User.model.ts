@@ -13,6 +13,8 @@ export class UserModel {
   readonly createdAt: Date
   readonly updatedAt: Date
 
+  readonly quizAnswers: User['quizAnswers']
+
   // Relations
   private readonly _registrations?: RegistrationModel[]
 
@@ -24,6 +26,7 @@ export class UserModel {
     this.email = data.email ?? null
     this.isVerified = data.isVerified ?? false
     this.stripeCustomerId = data.stripeCustomerId ?? null
+    this.quizAnswers = data.quizAnswers
 
     this.createdAt = new Date(data.createdAt)
     this.updatedAt = new Date(data.updatedAt)
@@ -77,6 +80,7 @@ export class UserModel {
       stripeCustomerId: this.stripeCustomerId,
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
+      quizAnswers: this.quizAnswers,
     }
   }
 }

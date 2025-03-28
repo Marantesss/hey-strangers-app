@@ -30,8 +30,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL!
 
 const RegisterForGameSheetForm: React.FC = () => {
-  const { gameId, toggleOpen } = useRegisterFormGame()
-  const { data: game, isLoading: isGameLoading } = useGameQuery(gameId ?? undefined)
+  const { game, toggleOpen } = useRegisterFormGame()
   const { data: paymentMethods, isLoading: isPaymentMethodsLoading } = usePaymentMethodsQuery()
 
   const { trigger, isMutating } = useCreatePaymentIntentMutation()
@@ -68,7 +67,7 @@ const RegisterForGameSheetForm: React.FC = () => {
     }
 
     const paymentIntentResponse = await trigger({
-      id: gameId!,
+      id: game!.id,
       body: {
         playerCount: values.playerCount,
         paymentMethodId: values.paymentMethodId,
@@ -83,7 +82,7 @@ const RegisterForGameSheetForm: React.FC = () => {
     const { error } = await stripe.confirmPayment({
       clientSecret: paymentIntentResponse.clientSecret!,
       confirmParams: {
-        return_url: `${APP_URL}/app/games/${gameId!}/confirm-payment`,
+        return_url: `${APP_URL}/app/games/${game!.id}/confirm-payment`,
       },
     })
 
@@ -119,29 +118,28 @@ const RegisterForGameSheetForm: React.FC = () => {
 
       <div className="mt-6 space-y-6 grow overflow-y-auto">
         <div className="text-lg font-semibold">Booking Details</div>
-        {isGameLoading ? (
+        {!game ? (
           <div>Loading...</div>
         ) : (
           <>
             <div className="flex items-start">
               <div className="grow space-y-1">
                 <div className="text-lg font-semibold">
-                  {game?.sport.emoji} {gameDay}
+                  {game.sport.emoji} {gameDay}
                 </div>
-                <div className="text-muted-foreground">{game?.field.name}</div>
+                <div className="text-muted-foreground">{game.field.name}</div>
               </div>
               <div className="text-lg font-semibold">{price}</div>
             </div>
             <div>
               <div>
-                <span className="font-bold">{gameStartTime}</span>• ({game?.durationInMinutes}
+                <span className="font-bold">{gameStartTime}</span>• ({game.durationInMinutes}
                 min.)
               </div>
               <div className="text-[#454745]">
-                {game?.description} -{' '}
-                {game &&
-                  game.field.flooring.name.charAt(0).toUpperCase() +
-                    game.field.flooring.name.slice(1)}
+                {game.description} -{' '}
+                {game.field.flooring.name.charAt(0).toUpperCase() +
+                  game.field.flooring.name.slice(1)}
               </div>
             </div>
           </>
@@ -206,6 +204,7 @@ const RegisterForGameSheetForm: React.FC = () => {
                     >
                       <FormControl>
                         <RadioGroupItem
+                          disabled
                           value="apple-pay"
                           id="apple-pay"
                           className={
@@ -227,6 +226,7 @@ const RegisterForGameSheetForm: React.FC = () => {
                     >
                       <FormControl>
                         <RadioGroupItem
+                          disabled
                           value="google-pay"
                           id="google-pay"
                           className={
@@ -248,6 +248,7 @@ const RegisterForGameSheetForm: React.FC = () => {
                     >
                       <FormControl>
                         <RadioGroupItem
+                          disabled
                           value="paypal"
                           id="paypal"
                           className={

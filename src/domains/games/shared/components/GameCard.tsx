@@ -13,7 +13,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { GameModel } from '../models/Game.model'
 import RegisterForGameButton from '@/domains/registrations/register-for-game/components/RegisterForGameButton'
 import { cn } from '@/lib/utils'
-import useRegistrationsByGameQuery from '@/domains/registrations/get-registrations-by-game/get-registration-by-game.query'
 
 export interface GameCardProps {
   game: GameModel
@@ -32,8 +31,6 @@ const GameCard: React.FC<GameCardProps> = ({
   hidePrice = false,
   highlight = false,
 }) => {
-  const { data: registrations } = useRegistrationsByGameQuery(simple ? undefined : game.id)
-
   const gameDay = game.startsAt.toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'long',
@@ -47,6 +44,25 @@ const GameCard: React.FC<GameCardProps> = ({
   const fieldType = game.field.type.name.charAt(0).toUpperCase() + game.field.type.name.slice(1)
   const fieldFlooring =
     game.field.flooring.name.charAt(0).toUpperCase() + game.field.flooring.name.slice(1)
+
+  const registeredPlayers = game.registrations?.reduce<{ name: string; count: number }[]>(
+    (acc, registration) => {
+      const existingUser = acc.find((entry) => entry.name === registration.user.privateName)
+      if (existingUser) {
+        existingUser.count += 1
+        return acc
+      }
+
+      return [
+        ...acc,
+        {
+          name: registration.user.privateName,
+          count: 1,
+        },
+      ]
+    },
+    [],
+  )
 
   return (
     <Card disabled={disabled} className={cn({ 'shadow-lg shadow-[#1BA781]': highlight })}>
@@ -93,9 +109,9 @@ const GameCard: React.FC<GameCardProps> = ({
                 <div>
                   <h4 className="font-bold">Registered Players</h4>
                   <ul className="text-subtle-foreground list-disc list-inside text-sm">
-                    {registrations?.map((registration) => (
-                      <li className="ml-2" key={registration.id}>
-                        {registration.user.privateName}
+                    {registeredPlayers.map(({ name, count }) => (
+                      <li className="ml-2" key={name}>
+                        {count > 1 ? `${name} + ${count - 1} friends` : name}
                       </li>
                     ))}
                   </ul>

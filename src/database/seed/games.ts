@@ -1,5 +1,5 @@
 import { Payload } from 'payload'
-import { Field, Sport } from '@payload-types'
+import { Field, Registration, Sport } from '@payload-types'
 
 export const seedGames = async (payload: Payload) => {
   // Get all fields to reference them
@@ -30,6 +30,20 @@ export const seedGames = async (payload: Payload) => {
     {} as Record<Sport['name'], Sport['id']>,
   )
 
+  // Get all registrations to reference them
+  const registrations = await payload.find({
+    collection: 'registrations',
+    limit: 100,
+    locale: 'en',
+  })
+  const registrationMap = registrations.docs.reduce(
+    (acc, registration) => {
+      acc[registration.stripePaymentIntentId] = registration.id
+      return acc
+    },
+    {} as Record<Registration['stripePaymentIntentId'], Registration['id']>,
+  )
+
   const games = [
     // Soccer Games
     {
@@ -42,6 +56,7 @@ export const seedGames = async (payload: Payload) => {
         maxPlayers: 14,
         sport: sportMap['Soccer'],
         field: fieldMap['Parque das Nações Football Field'],
+        registrations: [registrationMap['pi_1'], registrationMap['pi_2'], registrationMap['pi_3']],
       },
       en: {
         name: 'Morning Soccer Match',
@@ -58,6 +73,7 @@ export const seedGames = async (payload: Payload) => {
         maxPlayers: 14,
         sport: sportMap['Soccer'],
         field: fieldMap['Parque das Nações Football Field'],
+        registrations: [registrationMap['pi_4'], registrationMap['pi_5']],
       },
       en: {
         name: 'Evening Soccer League',
@@ -74,6 +90,7 @@ export const seedGames = async (payload: Payload) => {
         maxPlayers: 12,
         sport: sportMap['Soccer'],
         field: fieldMap['Benfica Indoor Arena'],
+        registrations: [registrationMap['pi_6'], registrationMap['pi_7']],
       },
       en: {
         name: 'Indoor Soccer Training',
@@ -92,6 +109,7 @@ export const seedGames = async (payload: Payload) => {
         maxPlayers: 2,
         sport: sportMap['Tennis'],
         field: fieldMap['Lisbon Tennis Club'],
+        registrations: [registrationMap['pi_8'], registrationMap['pi_9'], registrationMap['pi_10']],
       },
       en: {
         name: 'Tennis Singles Match',
@@ -108,6 +126,12 @@ export const seedGames = async (payload: Payload) => {
         maxPlayers: 8,
         sport: sportMap['Tennis'],
         field: fieldMap['Lisbon Tennis Club'],
+        registrations: [
+          registrationMap['pi_11'],
+          registrationMap['pi_12'],
+          registrationMap['pi_13'],
+          registrationMap['pi_14'],
+        ],
       },
       en: {
         name: 'Tennis Doubles Tournament',

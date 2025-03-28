@@ -88,8 +88,8 @@ export interface Config {
     fields: {
       games: 'games';
     };
-    games: {
-      registrations: 'registrations';
+    registrations: {
+      game: 'games';
     };
   };
   collectionsSelect: {
@@ -251,7 +251,11 @@ export interface Registration {
    * If true, the user was the one who registered for the game and made the reservation
    */
   isMainRegistration?: boolean | null;
-  game: string | Game;
+  game?: {
+    docs?: (string | Game)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   user: string | User;
   updatedAt: string;
   createdAt: string;
@@ -271,11 +275,7 @@ export interface Game {
   stripeProductId?: string | null;
   sport: string | Sport;
   field: string | Field;
-  registrations?: {
-    docs?: (string | Registration)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
+  registrations?: (string | Registration)[] | null;
   updatedAt: string;
   createdAt: string;
 }

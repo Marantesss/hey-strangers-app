@@ -20,6 +20,13 @@ export const Registrations: CollectionConfig = {
       type: 'text',
       required: true,
       unique: true,
+      access: {
+        read: hasRole('admins'),
+        update: () => false,
+      },
+      admin: {
+        readOnly: true,
+      },
     },
     {
       name: 'isMainRegistration',
@@ -33,9 +40,9 @@ export const Registrations: CollectionConfig = {
     // --- relations and joins
     {
       name: 'game',
-      type: 'relationship',
-      relationTo: 'games',
-      required: true,
+      type: 'join',
+      collection: 'games',
+      on: 'registrations',
       hasMany: false,
     },
     {

@@ -5,6 +5,7 @@ import {
   deleteStripeProduct,
   updateStripeProduct,
 } from '@/domains/games/sync-stripe-product/sync-stripe-product.hooks'
+import { Registration } from '@/payload-types'
 import { CollectionConfig } from 'payload'
 
 export const Games: CollectionConfig = {
@@ -71,6 +72,10 @@ export const Games: CollectionConfig = {
       admin: {
         readOnly: true,
       },
+      access: {
+        read: hasRole('admins'),
+        update: () => false,
+      },
     },
     // --- relations and joins
     {
@@ -87,9 +92,8 @@ export const Games: CollectionConfig = {
     },
     {
       name: 'registrations',
-      type: 'join',
-      collection: 'registrations',
-      on: 'game',
+      type: 'relationship',
+      relationTo: 'registrations',
       hasMany: true,
     },
   ],

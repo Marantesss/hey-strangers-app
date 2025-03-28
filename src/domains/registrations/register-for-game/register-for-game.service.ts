@@ -18,21 +18,52 @@ export async function registerForGame({
 }: RegisterForGameArgs) {
   const payload = await getPayload({ config })
 
-  const registrations = await Promise.all(
-    Array(playerCount)
-      .fill(null)
-      .map((_, index) =>
-        payload.create({
-          collection: 'registrations',
-          data: {
-            game: gameId,
-            user: userId,
-            stripePaymentIntentId: paymentIntentId,
-            isMainRegistration: index === 0,
-          },
-        }),
-      ),
-  )
+  const transactionID = await payload.db.beginTransaction()
 
-  return registrations.map((registration) => RegistrationModel.from(registration))
+  if (!transactionID) {
+    throw new Error('Failed to start transaction')
+  }
+
+  try {
+    const registrations = await Promise.all(
+      Array(playerCount)
+        .fill(null)
+        .map((_, index) =>
+          payload.create({
+            collection: 'registrations',
+            data: {
+              user: userId,
+              stripePaymentIntentId: paymentIntentId,
+              isMainRegistration: index === 0,
+            },
+            req: { transactionID },
+          }),
+        ),
+    )
+
+    const game = await payload.findByID({
+      collection: 'games',
+      id: gameId,
+      req: { transactionID },
+    })
+
+    const newRegistrations = [
+      ...(game.registrations || []),
+      ...registrations.map((registration) => registration.id),
+    ]
+
+    await payload.update({
+      collection: 'games',
+      id: gameId,
+      data: { registrations: newRegistrations },
+      req: { transactionID },
+    })
+
+    await payload.db.commitTransaction(transactionID)
+
+    return registrations.map((registration) => RegistrationModel.from(registration))
+  } catch (error) {
+    await payload.db.rollbackTransaction(transactionID)
+    throw error
+  }
 }

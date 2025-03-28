@@ -22,12 +22,12 @@ const deleteAll = async (payload: Payload) => {
   })
 
   await payload.delete({
-    collection: 'registrations',
+    collection: 'games',
     where: { id: { exists: true } },
   })
 
   await payload.delete({
-    collection: 'games',
+    collection: 'registrations',
     where: { id: { exists: true } },
   })
 
@@ -102,8 +102,8 @@ const seed = async () => {
 
   // "main" data
   await seedFields(payload)
-  await seedGames(payload)
   await seedRegistrations(payload)
+  await seedGames(payload)
 
   // globals
   await seedGlobals(payload)
