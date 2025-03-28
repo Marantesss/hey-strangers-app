@@ -31,6 +31,7 @@ const AgendaClientPage: React.FC<AgendaClientPageProps> = ({ city, sport }) => {
         </>
       )}
       {hasGames && games?.map((game) => <GameCard key={game.id} game={game} />)}
+      {!hasGames && <div className="text-center text-sm text-muted-foreground">No games found</div>}
     </div>
   )
 }
