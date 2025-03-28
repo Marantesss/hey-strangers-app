@@ -24,6 +24,7 @@ import { Home, Footer, Quiz, Pages } from './globals'
 import { seedHome } from './database/seed/home'
 import { seedFooter } from './database/seed/footer'
 import { seedQuiz } from './database/seed/quiz'
+import { seedPages } from './database/seed/pages'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -99,6 +100,11 @@ export default buildConfig({
     const quiz = await payload.findGlobal({ slug: 'quiz' })
     if (!quiz.createdAt) {
       await seedQuiz(payload)
+    }
+
+    const pages = await payload.findGlobal({ slug: 'pages' })
+    if (!pages.createdAt) {
+      await seedPages(payload)
     }
   },
 })

@@ -1,5 +1,5 @@
 {
-  "id": "55c2f0af-0e9f-49d9-8493-532a4aca55e2",
+  "id": "b41e25d4-9ab4-4f42-b876-70d1f00cdb17",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1450,6 +1450,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "stripe_product_id": {
+          "name": "stripe_product_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "sport_id": {
           "name": "sport_id",
           "type": "uuid",
@@ -1461,12 +1467,6 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
-        },
-        "stripe_product_id": {
-          "name": "stripe_product_id",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
         },
         "updated_at": {
           "name": "updated_at",
@@ -1484,6 +1484,21 @@
         }
       },
       "indexes": {
+        "games_stripe_product_id_idx": {
+          "name": "games_stripe_product_id_idx",
+          "columns": [
+            {
+              "expression": "stripe_product_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "games_sport_idx": {
           "name": "games_sport_idx",
           "columns": [
@@ -1510,21 +1525,6 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "games_stripe_product_id_idx": {
-          "name": "games_stripe_product_id_idx",
-          "columns": [
-            {
-              "expression": "stripe_product_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -1674,6 +1674,137 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.games_rels": {
+      "name": "games_rels",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "path": {
+          "name": "path",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrations_id": {
+          "name": "registrations_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "games_rels_order_idx": {
+          "name": "games_rels_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "games_rels_parent_idx": {
+          "name": "games_rels_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "games_rels_path_idx": {
+          "name": "games_rels_path_idx",
+          "columns": [
+            {
+              "expression": "path",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "games_rels_registrations_id_idx": {
+          "name": "games_rels_registrations_id_idx",
+          "columns": [
+            {
+              "expression": "registrations_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "games_rels_parent_fk": {
+          "name": "games_rels_parent_fk",
+          "tableFrom": "games_rels",
+          "tableTo": "games",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "games_rels_registrations_fk": {
+          "name": "games_rels_registrations_fk",
+          "tableFrom": "games_rels",
+          "tableTo": "registrations",
+          "columnsFrom": [
+            "registrations_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.registrations": {
       "name": "registrations",
       "schema": "",
@@ -1697,12 +1828,6 @@
           "primaryKey": false,
           "notNull": false,
           "default": true
-        },
-        "game_id": {
-          "name": "game_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
         },
         "user_id": {
           "name": "user_id",
@@ -1737,21 +1862,6 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "registrations_game_idx": {
-          "name": "registrations_game_idx",
-          "columns": [
-            {
-              "expression": "game_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -1803,19 +1913,6 @@
         }
       },
       "foreignKeys": {
-        "registrations_game_id_games_id_fk": {
-          "name": "registrations_game_id_games_id_fk",
-          "tableFrom": "registrations",
-          "tableTo": "games",
-          "columnsFrom": [
-            "game_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
         "registrations_user_id_users_id_fk": {
           "name": "registrations_user_id_users_id_fk",
           "tableFrom": "registrations",
@@ -5816,6 +5913,136 @@
       },
       "indexes": {},
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pages": {
+      "name": "pages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pages_locales": {
+      "name": "pages_locales",
+      "schema": "",
+      "columns": {
+        "contact_us": {
+          "name": "contact_us",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "safety": {
+          "name": "safety",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "community_guidelines": {
+          "name": "community_guidelines",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "terms_of_service": {
+          "name": "terms_of_service",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "privacy_policy": {
+          "name": "privacy_policy",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "pages_locales_locale_parent_id_unique": {
+          "name": "pages_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "pages_locales_parent_id_fk": {
+          "name": "pages_locales_parent_id_fk",
+          "tableFrom": "pages_locales",
+          "tableTo": "pages",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},

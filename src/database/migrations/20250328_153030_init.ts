@@ -134,9 +134,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"ends_at" timestamp(3) with time zone NOT NULL,
   	"price" numeric NOT NULL,
   	"max_players" numeric NOT NULL,
+  	"stripe_product_id" varchar,
   	"sport_id" uuid NOT NULL,
   	"field_id" uuid NOT NULL,
-  	"stripe_product_id" varchar,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
@@ -149,11 +149,18 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"_parent_id" uuid NOT NULL
   );
   
+  CREATE TABLE IF NOT EXISTS "games_rels" (
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"order" integer,
+  	"parent_id" uuid NOT NULL,
+  	"path" varchar NOT NULL,
+  	"registrations_id" uuid
+  );
+  
   CREATE TABLE IF NOT EXISTS "registrations" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"stripe_payment_intent_id" varchar NOT NULL,
   	"is_main_registration" boolean DEFAULT true,
-  	"game_id" uuid NOT NULL,
   	"user_id" uuid NOT NULL,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
@@ -492,6 +499,23 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"created_at" timestamp(3) with time zone
   );
   
+  CREATE TABLE IF NOT EXISTS "pages" (
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  	"updated_at" timestamp(3) with time zone,
+  	"created_at" timestamp(3) with time zone
+  );
+  
+  CREATE TABLE IF NOT EXISTS "pages_locales" (
+  	"contact_us" jsonb NOT NULL,
+  	"safety" jsonb NOT NULL,
+  	"community_guidelines" jsonb NOT NULL,
+  	"terms_of_service" jsonb NOT NULL,
+  	"privacy_policy" jsonb NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" uuid NOT NULL
+  );
+  
   DO $$ BEGIN
    ALTER TABLE "users" ADD CONSTRAINT "users_profile_picture_id_media_id_fk" FOREIGN KEY ("profile_picture_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   EXCEPTION
@@ -577,7 +601,13 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   END $$;
   
   DO $$ BEGIN
-   ALTER TABLE "registrations" ADD CONSTRAINT "registrations_game_id_games_id_fk" FOREIGN KEY ("game_id") REFERENCES "public"."games"("id") ON DELETE set null ON UPDATE no action;
+   ALTER TABLE "games_rels" ADD CONSTRAINT "games_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."games"("id") ON DELETE cascade ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "games_rels" ADD CONSTRAINT "games_rels_registrations_fk" FOREIGN KEY ("registrations_id") REFERENCES "public"."registrations"("id") ON DELETE cascade ON UPDATE no action;
   EXCEPTION
    WHEN duplicate_object THEN null;
   END $$;
@@ -924,6 +954,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
    WHEN duplicate_object THEN null;
   END $$;
   
+  DO $$ BEGIN
+   ALTER TABLE "pages_locales" ADD CONSTRAINT "pages_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
   CREATE INDEX IF NOT EXISTS "media_updated_at_idx" ON "media" USING btree ("updated_at");
   CREATE INDEX IF NOT EXISTS "media_created_at_idx" ON "media" USING btree ("created_at");
   CREATE UNIQUE INDEX IF NOT EXISTS "media_filename_idx" ON "media" USING btree ("filename");
@@ -958,14 +994,17 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX IF NOT EXISTS "fields_rels_parent_idx" ON "fields_rels" USING btree ("parent_id");
   CREATE INDEX IF NOT EXISTS "fields_rels_path_idx" ON "fields_rels" USING btree ("path");
   CREATE INDEX IF NOT EXISTS "fields_rels_field_amenities_id_idx" ON "fields_rels" USING btree ("field_amenities_id");
+  CREATE UNIQUE INDEX IF NOT EXISTS "games_stripe_product_id_idx" ON "games" USING btree ("stripe_product_id");
   CREATE INDEX IF NOT EXISTS "games_sport_idx" ON "games" USING btree ("sport_id");
   CREATE INDEX IF NOT EXISTS "games_field_idx" ON "games" USING btree ("field_id");
-  CREATE UNIQUE INDEX IF NOT EXISTS "games_stripe_product_id_idx" ON "games" USING btree ("stripe_product_id");
   CREATE INDEX IF NOT EXISTS "games_updated_at_idx" ON "games" USING btree ("updated_at");
   CREATE INDEX IF NOT EXISTS "games_created_at_idx" ON "games" USING btree ("created_at");
   CREATE UNIQUE INDEX IF NOT EXISTS "games_locales_locale_parent_id_unique" ON "games_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX IF NOT EXISTS "games_rels_order_idx" ON "games_rels" USING btree ("order");
+  CREATE INDEX IF NOT EXISTS "games_rels_parent_idx" ON "games_rels" USING btree ("parent_id");
+  CREATE INDEX IF NOT EXISTS "games_rels_path_idx" ON "games_rels" USING btree ("path");
+  CREATE INDEX IF NOT EXISTS "games_rels_registrations_id_idx" ON "games_rels" USING btree ("registrations_id");
   CREATE UNIQUE INDEX IF NOT EXISTS "registrations_stripe_payment_intent_id_idx" ON "registrations" USING btree ("stripe_payment_intent_id");
-  CREATE INDEX IF NOT EXISTS "registrations_game_idx" ON "registrations" USING btree ("game_id");
   CREATE INDEX IF NOT EXISTS "registrations_user_idx" ON "registrations" USING btree ("user_id");
   CREATE INDEX IF NOT EXISTS "registrations_updated_at_idx" ON "registrations" USING btree ("updated_at");
   CREATE INDEX IF NOT EXISTS "registrations_created_at_idx" ON "registrations" USING btree ("created_at");
@@ -1052,7 +1091,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX IF NOT EXISTS "quiz_dummy_game_results_parent_id_idx" ON "quiz_dummy_game_results" USING btree ("_parent_id");
   CREATE INDEX IF NOT EXISTS "quiz_dummy_game_results_sport_idx" ON "quiz_dummy_game_results" USING btree ("sport_id");
   CREATE INDEX IF NOT EXISTS "quiz_dummy_game_results_field_idx" ON "quiz_dummy_game_results" USING btree ("field_id");
-  CREATE UNIQUE INDEX IF NOT EXISTS "quiz_dummy_game_results_locales_locale_parent_id_unique" ON "quiz_dummy_game_results_locales" USING btree ("_locale","_parent_id");`)
+  CREATE UNIQUE INDEX IF NOT EXISTS "quiz_dummy_game_results_locales_locale_parent_id_unique" ON "quiz_dummy_game_results_locales" USING btree ("_locale","_parent_id");
+  CREATE UNIQUE INDEX IF NOT EXISTS "pages_locales_locale_parent_id_unique" ON "pages_locales" USING btree ("_locale","_parent_id");`)
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
@@ -1073,6 +1113,7 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "fields_rels" CASCADE;
   DROP TABLE "games" CASCADE;
   DROP TABLE "games_locales" CASCADE;
+  DROP TABLE "games_rels" CASCADE;
   DROP TABLE "registrations" CASCADE;
   DROP TABLE "payload_locked_documents" CASCADE;
   DROP TABLE "payload_locked_documents_rels" CASCADE;
@@ -1114,6 +1155,8 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "quiz_dummy_game_results" CASCADE;
   DROP TABLE "quiz_dummy_game_results_locales" CASCADE;
   DROP TABLE "quiz" CASCADE;
+  DROP TABLE "pages" CASCADE;
+  DROP TABLE "pages_locales" CASCADE;
   DROP TYPE "public"."_locales";
   DROP TYPE "public"."enum_footer_social_links_platform";`)
 }
