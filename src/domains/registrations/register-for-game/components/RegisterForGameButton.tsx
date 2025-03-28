@@ -2,19 +2,20 @@
 
 import { Button } from '@/components/ui/button'
 import useRegisterFormGame from '../hooks/use-register-for-game'
+import { GameModel } from '@/domains/games/shared/models/Game.model'
 
 interface RegisterForGameButtonProps {
-  gameId: string
+  game: GameModel
 }
 
-const RegisterForGameButton: React.FC<RegisterForGameButtonProps> = ({ gameId }) => {
-  const { toggleOpen, setGameId } = useRegisterFormGame()
+const RegisterForGameButton: React.FC<RegisterForGameButtonProps> = ({ game }) => {
+  const { toggleOpen, setGame } = useRegisterFormGame()
 
   return (
     <Button
       className="w-full"
       onClick={() => {
-        setGameId(gameId)
+        setGame(game)
         toggleOpen()
       }}
     >

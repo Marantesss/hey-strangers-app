@@ -132,7 +132,7 @@ const GameCard: React.FC<GameCardProps> = ({
       </CardContent>
       {!simple && (
         <CardFooter className="flex-col gap-2">
-          <RegisterForGameButton gameId={game.id} />
+          <RegisterForGameButton game={game} />
           <Button variant="ghost" className="w-full">
             Invite friends
           </Button>

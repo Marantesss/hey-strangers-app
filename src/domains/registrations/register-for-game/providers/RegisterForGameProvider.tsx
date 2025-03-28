@@ -3,9 +3,9 @@
 import { useCallback, useMemo, useState, type PropsWithChildren } from 'react'
 
 import RegisterForGameContext from '../contexts/register-for-game.context'
-
+import { GameModel } from '@/domains/games/shared/models/Game.model'
 const RegisterForGameProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [gameId, setGameId] = useState<string | null>(null)
+  const [game, setGame] = useState<GameModel | null>(null)
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleOpen = useCallback((isOpen?: boolean) => {
@@ -13,8 +13,8 @@ const RegisterForGameProvider: React.FC<PropsWithChildren> = ({ children }) => {
   }, [])
 
   const context = useMemo(
-    () => ({ gameId, isOpen, toggleOpen, setGameId }),
-    [gameId, isOpen, toggleOpen, setGameId],
+    () => ({ game, isOpen, toggleOpen, setGame }),
+    [game, isOpen, toggleOpen, setGame],
   )
 
   return (
