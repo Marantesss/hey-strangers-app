@@ -41,7 +41,10 @@ const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
     const [countryCode, setCountryCode] = useState('+351')
     const [phoneNumber, setPhoneNumber] = useState('')
 
-    const _value = useMemo(() => `${countryCode}${phoneNumber}`, [countryCode, phoneNumber])
+    const _value = useMemo(
+      () => (!!countryCode && !!phoneNumber ? `${countryCode}${phoneNumber}` : ''),
+      [countryCode, phoneNumber],
+    )
 
     useEffect(() => {
       // Initialize from value prop if provided
@@ -80,7 +83,7 @@ const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
       <div className={cn('flex', className)}>
         <input ref={ref} type="hidden" name={name} value={_value} />
         <Select disabled={disabled} value={countryCode} onValueChange={handleCountryCodeChange}>
-          <SelectTrigger className="w-44 border-r-0 rounded-r-none">
+          <SelectTrigger className="w-40 border-r-0 rounded-r-none">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
