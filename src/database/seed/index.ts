@@ -12,6 +12,7 @@ import { seedFieldFlooring } from './field-flooring'
 import { seedSports } from './sports'
 import { seedQuiz } from './quiz'
 import { seedAdmins } from './admins'
+import { seedPages } from './pages'
 
 const deleteAll = async (payload: Payload) => {
   await payload.updateGlobal({
@@ -80,6 +81,7 @@ export const seedGlobals = async (payload: Payload) => {
   await seedHome(payload)
   await seedFooter(payload)
   await seedQuiz(payload)
+  await seedPages(payload)
 }
 
 const seed = async () => {
