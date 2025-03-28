@@ -83,7 +83,7 @@ const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
       <div className={cn('flex', className)}>
         <input ref={ref} type="hidden" name={name} value={_value} />
         <Select disabled={disabled} value={countryCode} onValueChange={handleCountryCodeChange}>
-          <SelectTrigger className="w-40 border-r-0 rounded-r-none">
+          <SelectTrigger className="w-40 border-r-0 rounded-r-none rounded-l-sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

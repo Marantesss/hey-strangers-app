@@ -16,5 +16,6 @@
     "ui": "@/components/ui",
     "components": "@/components",
     "utils": "@/lib/utils"
-  }
+  },
+  "iconLibrary": "lucide"
 }

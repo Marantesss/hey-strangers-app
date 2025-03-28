@@ -1,4 +1,9 @@
 {
+  "home": {
+    "register": "Registo",
+    "my-space": "O meu espaço",
+    "next-match-in": "Próximo jogo em"
+  },
   "sign-up": {
     "quiz": {
       "next": "Próximo",

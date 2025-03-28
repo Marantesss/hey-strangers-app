@@ -1,4 +1,9 @@
 {
+  "home": {
+    "register": "Register",
+    "my-space": "My Space",
+    "next-match-in": "Next match in"
+  },
   "sign-up": {
     "quiz": {
       "next": "Next",

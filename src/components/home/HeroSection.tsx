@@ -2,7 +2,6 @@ import Image from 'next/image'
 import { Home, Media } from '@/payload-types'
 import Logo from '../common/Logo'
 import { Button } from '../ui/button'
-import Link from 'next/link'
 import {
   Select,
   SelectItem,
@@ -13,12 +12,15 @@ import {
 import { getNextGame } from '@/domains/games/shared/GameService'
 import Countdown from '../common/Countdown'
 import LocaleSwitcher from '../common/LocaleSwitcher'
+import { getTranslations } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
 
-interface NextGamesSectionProps {
+interface HeroSectionProps {
   hero: Home['hero']
 }
 
-export default async function NextGamesSection({ hero }: NextGamesSectionProps) {
+export default async function HeroSection({ hero }: HeroSectionProps) {
+  const t = await getTranslations('home')
   const nextGame = await getNextGame()
 
   return (
@@ -29,10 +31,10 @@ export default async function NextGamesSection({ hero }: NextGamesSectionProps) 
           <div className="flex items-center gap-4">
             <LocaleSwitcher />
             <Button asChild variant="ghost">
-              <Link href="/sign-up">Registo</Link>
+              <Link href="/sign-up">{t('register')}</Link>
             </Button>
             <Button asChild>
-              <Link href="/app">O meu espaço</Link>
+              <Link href="/app">{t('my-space')}</Link>
             </Button>
           </div>
         </nav>
@@ -59,8 +61,7 @@ export default async function NextGamesSection({ hero }: NextGamesSectionProps) 
 
           {nextGame && (
             <p className="max-w-lg">
-              Next match in:
-              <Countdown className="font-bold" date={nextGame.startsAt} />
+              {t('next-match-in')} <Countdown className="font-bold" date={nextGame.startsAt} />
             </p>
           )}
 
