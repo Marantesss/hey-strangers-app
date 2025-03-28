@@ -6,11 +6,13 @@ export const seedRegistrations = async (payload: Payload) => {
   const users = await payload.find({
     collection: 'users',
     limit: 100,
+    locale: 'en',
   })
 
   const games = await payload.find({
     collection: 'games',
     limit: 100,
+    locale: 'en',
   })
 
   // Create maps for easy lookup

@@ -1,5 +1,5 @@
 {
-  "id": "8a418ea2-f0c2-49bc-a3cb-e77b8012bfa9",
+  "id": "55c2f0af-0e9f-49d9-8493-532a4aca55e2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -339,6 +339,12 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
+        },
+        "quiz_answers": {
+          "name": "quiz_answers",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
         },
         "updated_at": {
           "name": "updated_at",
@@ -752,8 +758,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.field_flooring": {
-      "name": "field_flooring",
+    "public.field_floorings": {
+      "name": "field_floorings",
       "schema": "",
       "columns": {
         "id": {
@@ -779,8 +785,8 @@
         }
       },
       "indexes": {
-        "field_flooring_updated_at_idx": {
-          "name": "field_flooring_updated_at_idx",
+        "field_floorings_updated_at_idx": {
+          "name": "field_floorings_updated_at_idx",
           "columns": [
             {
               "expression": "updated_at",
@@ -794,8 +800,8 @@
           "method": "btree",
           "with": {}
         },
-        "field_flooring_created_at_idx": {
-          "name": "field_flooring_created_at_idx",
+        "field_floorings_created_at_idx": {
+          "name": "field_floorings_created_at_idx",
           "columns": [
             {
               "expression": "created_at",
@@ -817,8 +823,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.field_flooring_locales": {
-      "name": "field_flooring_locales",
+    "public.field_floorings_locales": {
+      "name": "field_floorings_locales",
       "schema": "",
       "columns": {
         "name": {
@@ -848,8 +854,8 @@
         }
       },
       "indexes": {
-        "field_flooring_locales_locale_parent_id_unique": {
-          "name": "field_flooring_locales_locale_parent_id_unique",
+        "field_floorings_locales_locale_parent_id_unique": {
+          "name": "field_floorings_locales_locale_parent_id_unique",
           "columns": [
             {
               "expression": "_locale",
@@ -871,10 +877,10 @@
         }
       },
       "foreignKeys": {
-        "field_flooring_locales_parent_id_fk": {
-          "name": "field_flooring_locales_parent_id_fk",
-          "tableFrom": "field_flooring_locales",
-          "tableTo": "field_flooring",
+        "field_floorings_locales_parent_id_fk": {
+          "name": "field_floorings_locales_parent_id_fk",
+          "tableFrom": "field_floorings_locales",
+          "tableTo": "field_floorings",
           "columnsFrom": [
             "_parent_id"
           ],
@@ -1041,12 +1047,6 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "name": {
-          "name": "name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
         "address": {
           "name": "address",
           "type": "varchar",
@@ -1177,10 +1177,10 @@
           "onDelete": "set null",
           "onUpdate": "no action"
         },
-        "fields_flooring_id_field_flooring_id_fk": {
-          "name": "fields_flooring_id_field_flooring_id_fk",
+        "fields_flooring_id_field_floorings_id_fk": {
+          "name": "fields_flooring_id_field_floorings_id_fk",
           "tableFrom": "fields",
-          "tableTo": "field_flooring",
+          "tableTo": "field_floorings",
           "columnsFrom": [
             "flooring_id"
           ],
@@ -1201,6 +1201,80 @@
             "id"
           ],
           "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.fields_locales": {
+      "name": "fields_locales",
+      "schema": "",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "fields_locales_locale_parent_id_unique": {
+          "name": "fields_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "fields_locales_parent_id_fk": {
+          "name": "fields_locales_parent_id_fk",
+          "tableFrom": "fields_locales",
+          "tableTo": "fields",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1351,18 +1425,6 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
         },
         "starts_at": {
           "name": "starts_at",
@@ -1523,6 +1585,86 @@
             "id"
           ],
           "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.games_locales": {
+      "name": "games_locales",
+      "schema": "",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "games_locales_locale_parent_id_unique": {
+          "name": "games_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "games_locales_parent_id_fk": {
+          "name": "games_locales_parent_id_fk",
+          "tableFrom": "games_locales",
+          "tableTo": "games",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1838,8 +1980,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "field_flooring_id": {
-          "name": "field_flooring_id",
+        "field_floorings_id": {
+          "name": "field_floorings_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -1990,11 +2132,11 @@
           "method": "btree",
           "with": {}
         },
-        "payload_locked_documents_rels_field_flooring_id_idx": {
-          "name": "payload_locked_documents_rels_field_flooring_id_idx",
+        "payload_locked_documents_rels_field_floorings_id_idx": {
+          "name": "payload_locked_documents_rels_field_floorings_id_idx",
           "columns": [
             {
-              "expression": "field_flooring_id",
+              "expression": "field_floorings_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2145,12 +2287,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "payload_locked_documents_rels_field_flooring_fk": {
-          "name": "payload_locked_documents_rels_field_flooring_fk",
+        "payload_locked_documents_rels_field_floorings_fk": {
+          "name": "payload_locked_documents_rels_field_floorings_fk",
           "tableFrom": "payload_locked_documents_rels",
-          "tableTo": "field_flooring",
+          "tableTo": "field_floorings",
           "columnsFrom": [
-            "field_flooring_id"
+            "field_floorings_id"
           ],
           "columnsTo": [
             "id"
@@ -2578,12 +2720,6 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {
@@ -2667,6 +2803,80 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.home_hero_partners_locales": {
+      "name": "home_hero_partners_locales",
+      "schema": "",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "home_hero_partners_locales_locale_parent_id_unique": {
+          "name": "home_hero_partners_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "home_hero_partners_locales_parent_id_fk": {
+          "name": "home_hero_partners_locales_parent_id_fk",
+          "tableFrom": "home_hero_partners_locales",
+          "tableTo": "home_hero_partners",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.home_next_games_games": {
       "name": "home_next_games_games",
       "schema": "",
@@ -2695,20 +2905,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "sport": {
-          "name": "sport",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
         "location": {
           "name": "location",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -2807,6 +3005,86 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.home_next_games_games_locales": {
+      "name": "home_next_games_games_locales",
+      "schema": "",
+      "columns": {
+        "sport": {
+          "name": "sport",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "home_next_games_games_locales_locale_parent_id_unique": {
+          "name": "home_next_games_games_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "home_next_games_games_locales_parent_id_fk": {
+          "name": "home_next_games_games_locales_parent_id_fk",
+          "tableFrom": "home_next_games_games_locales",
+          "tableTo": "home_next_games_games",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.home_how_it_works_steps": {
       "name": "home_how_it_works_steps",
       "schema": "",
@@ -2832,18 +3110,6 @@
         "icon_id": {
           "name": "icon_id",
           "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         }
@@ -2929,6 +3195,86 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.home_how_it_works_steps_locales": {
+      "name": "home_how_it_works_steps_locales",
+      "schema": "",
+      "columns": {
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "home_how_it_works_steps_locales_locale_parent_id_unique": {
+          "name": "home_how_it_works_steps_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "home_how_it_works_steps_locales_parent_id_fk": {
+          "name": "home_how_it_works_steps_locales_parent_id_fk",
+          "tableFrom": "home_how_it_works_steps_locales",
+          "tableTo": "home_how_it_works_steps",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.home_stats_statistics": {
       "name": "home_stats_statistics",
       "schema": "",
@@ -2954,18 +3300,6 @@
         "value": {
           "name": "value",
           "type": "numeric",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "label": {
-          "name": "label",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         }
@@ -3023,6 +3357,86 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.home_stats_statistics_locales": {
+      "name": "home_stats_statistics_locales",
+      "schema": "",
+      "columns": {
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "home_stats_statistics_locales_locale_parent_id_unique": {
+          "name": "home_stats_statistics_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "home_stats_statistics_locales_parent_id_fk": {
+          "name": "home_stats_statistics_locales_parent_id_fk",
+          "tableFrom": "home_stats_statistics_locales",
+          "tableTo": "home_stats_statistics",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.home_testimonials_reviews": {
       "name": "home_testimonials_reviews",
       "schema": "",
@@ -3043,18 +3457,6 @@
           "name": "id",
           "type": "varchar",
           "primaryKey": true,
-          "notNull": true
-        },
-        "quote": {
-          "name": "quote",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "author": {
-          "name": "author",
-          "type": "varchar",
-          "primaryKey": false,
           "notNull": true
         },
         "image_id": {
@@ -3145,6 +3547,86 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.home_testimonials_reviews_locales": {
+      "name": "home_testimonials_reviews_locales",
+      "schema": "",
+      "columns": {
+        "quote": {
+          "name": "quote",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "author": {
+          "name": "author",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "home_testimonials_reviews_locales_locale_parent_id_unique": {
+          "name": "home_testimonials_reviews_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "home_testimonials_reviews_locales_parent_id_fk": {
+          "name": "home_testimonials_reviews_locales_parent_id_fk",
+          "tableFrom": "home_testimonials_reviews_locales",
+          "tableTo": "home_testimonials_reviews",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.home_cta_sports": {
       "name": "home_cta_sports",
       "schema": "",
@@ -3165,12 +3647,6 @@
           "name": "id",
           "type": "varchar",
           "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar",
-          "primaryKey": false,
           "notNull": true
         },
         "image_id": {
@@ -3268,6 +3744,80 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.home_cta_sports_locales": {
+      "name": "home_cta_sports_locales",
+      "schema": "",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "home_cta_sports_locales_locale_parent_id_unique": {
+          "name": "home_cta_sports_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "home_cta_sports_locales_parent_id_fk": {
+          "name": "home_cta_sports_locales_parent_id_fk",
+          "tableFrom": "home_cta_sports_locales",
+          "tableTo": "home_cta_sports",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.home_strangers_strangers": {
       "name": "home_strangers_strangers",
       "schema": "",
@@ -3299,18 +3849,6 @@
         "age": {
           "name": "age",
           "type": "numeric",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "bio": {
-          "name": "bio",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "sport": {
-          "name": "sport",
-          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -3402,6 +3940,86 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.home_strangers_strangers_locales": {
+      "name": "home_strangers_strangers_locales",
+      "schema": "",
+      "columns": {
+        "bio": {
+          "name": "bio",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sport": {
+          "name": "sport",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "home_strangers_strangers_locales_locale_parent_id_unique": {
+          "name": "home_strangers_strangers_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "home_strangers_strangers_locales_parent_id_fk": {
+          "name": "home_strangers_strangers_locales_parent_id_fk",
+          "tableFrom": "home_strangers_strangers_locales",
+          "tableTo": "home_strangers_strangers",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.home_when_and_where_features": {
       "name": "home_when_and_where_features",
       "schema": "",
@@ -3426,18 +4044,6 @@
         },
         "emoji": {
           "name": "emoji",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -3496,6 +4102,86 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.home_when_and_where_features_locales": {
+      "name": "home_when_and_where_features_locales",
+      "schema": "",
+      "columns": {
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "home_when_and_where_features_locales_locale_parent_id_unique": {
+          "name": "home_when_and_where_features_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "home_when_and_where_features_locales_parent_id_fk": {
+          "name": "home_when_and_where_features_locales_parent_id_fk",
+          "tableFrom": "home_when_and_where_features_locales",
+          "tableTo": "home_when_and_where_features",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.home_numbers_numbers": {
       "name": "home_numbers_numbers",
       "schema": "",
@@ -3521,12 +4207,6 @@
         "value": {
           "name": "value",
           "type": "numeric",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "label": {
-          "name": "label",
-          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         }
@@ -3584,6 +4264,80 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.home_numbers_numbers_locales": {
+      "name": "home_numbers_numbers_locales",
+      "schema": "",
+      "columns": {
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "home_numbers_numbers_locales_locale_parent_id_unique": {
+          "name": "home_numbers_numbers_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "home_numbers_numbers_locales_parent_id_fk": {
+          "name": "home_numbers_numbers_locales_parent_id_fk",
+          "tableFrom": "home_numbers_numbers_locales",
+          "tableTo": "home_numbers_numbers",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.home_faq_questions": {
       "name": "home_faq_questions",
       "schema": "",
@@ -3604,18 +4358,6 @@
           "name": "id",
           "type": "varchar",
           "primaryKey": true,
-          "notNull": true
-        },
-        "question": {
-          "name": "question",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "answer": {
-          "name": "answer",
-          "type": "varchar",
-          "primaryKey": false,
           "notNull": true
         }
       },
@@ -3672,6 +4414,86 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.home_faq_questions_locales": {
+      "name": "home_faq_questions_locales",
+      "schema": "",
+      "columns": {
+        "question": {
+          "name": "question",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "answer": {
+          "name": "answer",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "home_faq_questions_locales_locale_parent_id_unique": {
+          "name": "home_faq_questions_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "home_faq_questions_locales_parent_id_fk": {
+          "name": "home_faq_questions_locales_parent_id_fk",
+          "tableFrom": "home_faq_questions_locales",
+          "tableTo": "home_faq_questions",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.home": {
       "name": "home",
       "schema": "",
@@ -3683,141 +4505,15 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "hero_title": {
-          "name": "hero_title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "hero_subtitle": {
-          "name": "hero_subtitle",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "hero_description": {
-          "name": "hero_description",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "hero_button_label": {
-          "name": "hero_button_label",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "next_games_title": {
-          "name": "next_games_title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "how_it_works_title": {
-          "name": "how_it_works_title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "how_it_works_subtitle": {
-          "name": "how_it_works_subtitle",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "how_it_works_button_label": {
-          "name": "how_it_works_button_label",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "stats_title": {
-          "name": "stats_title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
         "stats_image_id": {
           "name": "stats_image_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "testimonials_title": {
-          "name": "testimonials_title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "cta_title": {
-          "name": "cta_title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "cta_subtitle": {
-          "name": "cta_subtitle",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "cta_button_label": {
-          "name": "cta_button_label",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "strangers_title": {
-          "name": "strangers_title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "when_and_where_title": {
-          "name": "when_and_where_title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "when_and_where_subtitle": {
-          "name": "when_and_where_subtitle",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "when_and_where_button_label": {
-          "name": "when_and_where_button_label",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
         "when_and_where_image_id": {
           "name": "when_and_where_image_id",
           "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "numbers_title": {
-          "name": "numbers_title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "faq_title": {
-          "name": "faq_title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "cta2_title": {
-          "name": "cta2_title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "cta2_button_label": {
-          "name": "cta2_button_label",
-          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -3891,6 +4587,200 @@
             "id"
           ],
           "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.home_locales": {
+      "name": "home_locales",
+      "schema": "",
+      "columns": {
+        "hero_title": {
+          "name": "hero_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hero_subtitle": {
+          "name": "hero_subtitle",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hero_description": {
+          "name": "hero_description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hero_button_label": {
+          "name": "hero_button_label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "next_games_title": {
+          "name": "next_games_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "how_it_works_title": {
+          "name": "how_it_works_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "how_it_works_subtitle": {
+          "name": "how_it_works_subtitle",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "how_it_works_button_label": {
+          "name": "how_it_works_button_label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stats_title": {
+          "name": "stats_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "testimonials_title": {
+          "name": "testimonials_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cta_title": {
+          "name": "cta_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cta_subtitle": {
+          "name": "cta_subtitle",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cta_button_label": {
+          "name": "cta_button_label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "strangers_title": {
+          "name": "strangers_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "when_and_where_title": {
+          "name": "when_and_where_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "when_and_where_subtitle": {
+          "name": "when_and_where_subtitle",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "when_and_where_button_label": {
+          "name": "when_and_where_button_label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numbers_title": {
+          "name": "numbers_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "faq_title": {
+          "name": "faq_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cta2_title": {
+          "name": "cta2_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cta2_button_label": {
+          "name": "cta2_button_label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "home_locales_locale_parent_id_unique": {
+          "name": "home_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "home_locales_parent_id_fk": {
+          "name": "home_locales_parent_id_fk",
+          "tableFrom": "home_locales",
+          "tableTo": "home",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -4176,6 +5066,761 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.quiz_sports": {
+      "name": "quiz_sports",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "quiz_sports_order_idx": {
+          "name": "quiz_sports_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "quiz_sports_parent_id_idx": {
+          "name": "quiz_sports_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "quiz_sports_parent_id_fk": {
+          "name": "quiz_sports_parent_id_fk",
+          "tableFrom": "quiz_sports",
+          "tableTo": "quiz",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.quiz_sports_locales": {
+      "name": "quiz_sports_locales",
+      "schema": "",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "quiz_sports_locales_locale_parent_id_unique": {
+          "name": "quiz_sports_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "quiz_sports_locales_parent_id_fk": {
+          "name": "quiz_sports_locales_parent_id_fk",
+          "tableFrom": "quiz_sports_locales",
+          "tableTo": "quiz_sports",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.quiz_questions_options": {
+      "name": "quiz_questions_options",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "enabled": {
+          "name": "enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "value": {
+          "name": "value",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "quiz_questions_options_order_idx": {
+          "name": "quiz_questions_options_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "quiz_questions_options_parent_id_idx": {
+          "name": "quiz_questions_options_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "quiz_questions_options_parent_id_fk": {
+          "name": "quiz_questions_options_parent_id_fk",
+          "tableFrom": "quiz_questions_options",
+          "tableTo": "quiz_questions",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.quiz_questions_options_locales": {
+      "name": "quiz_questions_options_locales",
+      "schema": "",
+      "columns": {
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "quiz_questions_options_locales_locale_parent_id_unique": {
+          "name": "quiz_questions_options_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "quiz_questions_options_locales_parent_id_fk": {
+          "name": "quiz_questions_options_locales_parent_id_fk",
+          "tableFrom": "quiz_questions_options_locales",
+          "tableTo": "quiz_questions_options",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.quiz_questions": {
+      "name": "quiz_questions",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "key": {
+          "name": "key",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "quiz_questions_order_idx": {
+          "name": "quiz_questions_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "quiz_questions_parent_id_idx": {
+          "name": "quiz_questions_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "quiz_questions_parent_id_fk": {
+          "name": "quiz_questions_parent_id_fk",
+          "tableFrom": "quiz_questions",
+          "tableTo": "quiz",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.quiz_questions_locales": {
+      "name": "quiz_questions_locales",
+      "schema": "",
+      "columns": {
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "quiz_questions_locales_locale_parent_id_unique": {
+          "name": "quiz_questions_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "quiz_questions_locales_parent_id_fk": {
+          "name": "quiz_questions_locales_parent_id_fk",
+          "tableFrom": "quiz_questions_locales",
+          "tableTo": "quiz_questions",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.quiz_dummy_game_results": {
+      "name": "quiz_dummy_game_results",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "starts_at": {
+          "name": "starts_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ends_at": {
+          "name": "ends_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price": {
+          "name": "price",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "max_players": {
+          "name": "max_players",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sport_id": {
+          "name": "sport_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "field_id": {
+          "name": "field_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "quiz_dummy_game_results_order_idx": {
+          "name": "quiz_dummy_game_results_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "quiz_dummy_game_results_parent_id_idx": {
+          "name": "quiz_dummy_game_results_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "quiz_dummy_game_results_sport_idx": {
+          "name": "quiz_dummy_game_results_sport_idx",
+          "columns": [
+            {
+              "expression": "sport_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "quiz_dummy_game_results_field_idx": {
+          "name": "quiz_dummy_game_results_field_idx",
+          "columns": [
+            {
+              "expression": "field_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "quiz_dummy_game_results_sport_id_sports_id_fk": {
+          "name": "quiz_dummy_game_results_sport_id_sports_id_fk",
+          "tableFrom": "quiz_dummy_game_results",
+          "tableTo": "sports",
+          "columnsFrom": [
+            "sport_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "quiz_dummy_game_results_field_id_fields_id_fk": {
+          "name": "quiz_dummy_game_results_field_id_fields_id_fk",
+          "tableFrom": "quiz_dummy_game_results",
+          "tableTo": "fields",
+          "columnsFrom": [
+            "field_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "quiz_dummy_game_results_parent_id_fk": {
+          "name": "quiz_dummy_game_results_parent_id_fk",
+          "tableFrom": "quiz_dummy_game_results",
+          "tableTo": "quiz",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.quiz_dummy_game_results_locales": {
+      "name": "quiz_dummy_game_results_locales",
+      "schema": "",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "quiz_dummy_game_results_locales_locale_parent_id_unique": {
+          "name": "quiz_dummy_game_results_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "quiz_dummy_game_results_locales_parent_id_fk": {
+          "name": "quiz_dummy_game_results_locales_parent_id_fk",
+          "tableFrom": "quiz_dummy_game_results_locales",
+          "tableTo": "quiz_dummy_game_results",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.quiz": {
+      "name": "quiz",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
@@ -4191,10 +5836,10 @@
       "name": "enum_footer_social_links_platform",
       "schema": "public",
       "values": [
-        "Facebook",
-        "YouTube",
-        "LinkedIn",
-        "Instagram"
+        "facebook",
+        "youtube",
+        "linkedin",
+        "instagram"
       ]
     }
   },

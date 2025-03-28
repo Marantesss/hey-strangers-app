@@ -3,6 +3,12 @@ import { FieldModel } from '../../../fields/shared/models/Field.model'
 import { RegistrationModel } from '@/domains/registrations/shared/models/Registration.model'
 import { SportModel } from '@/domains/sports/shared/models/Sport.model'
 
+export type GameModelRelations = {
+  registrations: RegistrationModel[]
+  sport: SportModel
+  field: FieldModel
+}
+
 export class GameModel {
   readonly id: string
   readonly name: string
@@ -26,7 +32,7 @@ export class GameModel {
   private readonly _registrations?: RegistrationModel[]
   private readonly _registrationsIds?: string[]
 
-  private constructor(data: PayloadGame) {
+  private constructor(data: PayloadGame, relations?: GameModelRelations) {
     this.id = data.id
     this.name = data.name
     this.description = data.description ?? null

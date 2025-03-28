@@ -7,6 +7,8 @@ import { useState } from 'react'
 import { useQuiz } from '../hooks/quiz.hook'
 import SignupForm from './SignupForm'
 import { useTranslations } from 'next-intl'
+import { GameModel } from '@/domains/games/shared/models/Game.model'
+import GameCard from '@/domains/games/shared/components/GameCard'
 
 const Quiz: React.FC = () => {
   const { quiz, currentQuestion, setCurrentQuestion, answers, setAnswer } = useQuiz()
@@ -37,6 +39,17 @@ const Quiz: React.FC = () => {
       setShowResults(true)
     }
   }
+
+  const dummyGames = quiz.dummyGameResults
+    ?.map((game) =>
+      GameModel.from({
+        ...game,
+        id: game.id!,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }),
+    )
+    .slice(0, 2)
 
   return (
     <div className="flex flex-col gap-12 w-full max-w-lg">
@@ -81,9 +94,7 @@ const Quiz: React.FC = () => {
           <h2 className="text-3xl font-bold text-center">{t('results', { count: '+10' })}</h2>
 
           <div className="space-y-4">
-            {/* {GameModel.dummy.map((game) => (
-              <GameCard key={game.id} game={game} simple hidePrice />
-            ))} */}
+            {dummyGames?.map((game) => <GameCard key={game.id} game={game} simple hidePrice />)}
           </div>
 
           <SignupForm />

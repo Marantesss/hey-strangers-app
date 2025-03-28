@@ -71,13 +71,13 @@ export const seedFieldAmenities = async (payload: Payload) => {
   try {
     for (const fieldAmenity of fieldAmenities) {
       const createdFieldAmenity = await payload.create({
-        collection: 'field_amenities',
+        collection: 'fieldAmenities',
         data: fieldAmenity.pt,
         locale: 'pt',
       })
 
       await payload.update({
-        collection: 'field_amenities',
+        collection: 'fieldAmenities',
         id: createdFieldAmenity.id,
         data: fieldAmenity.en,
         locale: 'en',

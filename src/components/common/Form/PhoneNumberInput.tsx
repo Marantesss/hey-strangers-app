@@ -32,12 +32,13 @@ const countryCodes = [
 export interface PhoneNumberInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
   value?: string
+  defaultValue?: string
   onChange?: (value: string) => void
   className?: string
 }
 
 const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
-  ({ className, name, disabled, value = '', onChange, ...props }, ref) => {
+  ({ className, name, disabled, value = '', defaultValue, onChange, ...props }, ref) => {
     const [countryCode, setCountryCode] = useState('+351')
     const [phoneNumber, setPhoneNumber] = useState('')
 
@@ -47,22 +48,22 @@ const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
     )
 
     useEffect(() => {
-      // Initialize from value prop if provided
-      if (value) {
-        const match = value.match(/^\+(\d+)(.*)$/)
-        if (match) {
-          const [, code, number] = match
-          setCountryCode(code)
-          setPhoneNumber(number)
-        }
-      }
-    }, [])
+      const phoneStr = value || defaultValue
+      if (!phoneStr) return
+
+      // Find matching country code
+      const matchingCode = countryCodes.find(({ code }) => phoneStr.startsWith(code))
+      if (!matchingCode) return
+
+      // Set country code and remaining digits as phone number
+      setCountryCode(matchingCode.code)
+      setPhoneNumber(phoneStr.slice(matchingCode.code.length))
+    }, [value, defaultValue])
 
     const handleCountryCodeChange = useCallback(
       (code: string) => {
         setCountryCode(code)
         const newValue = `${code}${phoneNumber}`
-        console.log(newValue)
         onChange?.(newValue)
       },
       [phoneNumber, onChange],

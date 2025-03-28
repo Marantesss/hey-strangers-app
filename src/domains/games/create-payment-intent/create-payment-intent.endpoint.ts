@@ -1,6 +1,6 @@
 import { addDataAndFileToRequest, Endpoint } from 'payload'
 import { getGameById } from '../get-game-by-id/get-game-by-id.service'
-import { getRegistrationsByGameId } from '@/domains/registrations/get-registration/get-registration.service'
+import { getRegistrationsByGameId } from '@/domains/registrations/get-registrations-by-game/get-registrations-by-game-id.service'
 import stripe from '@/lib/stripe'
 import { PaymentIntentParamsSchema, PaymentIntentBodySchema } from './schema'
 

@@ -71,9 +71,9 @@ export interface Config {
     admins: Admin;
     users: User;
     sports: Sport;
-    field_types: FieldType;
-    field_flooring: FieldFlooring;
-    field_amenities: FieldAmenity;
+    fieldTypes: FieldType;
+    fieldFloorings: FieldFlooring;
+    fieldAmenities: FieldAmenity;
     fields: Field;
     games: Game;
     registrations: Registration;
@@ -97,9 +97,9 @@ export interface Config {
     admins: AdminsSelect<false> | AdminsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     sports: SportsSelect<false> | SportsSelect<true>;
-    field_types: FieldTypesSelect<false> | FieldTypesSelect<true>;
-    field_flooring: FieldFlooringSelect<false> | FieldFlooringSelect<true>;
-    field_amenities: FieldAmenitiesSelect<false> | FieldAmenitiesSelect<true>;
+    fieldTypes: FieldTypesSelect<false> | FieldTypesSelect<true>;
+    fieldFloorings: FieldFlooringsSelect<false> | FieldFlooringsSelect<true>;
+    fieldAmenities: FieldAmenitiesSelect<false> | FieldAmenitiesSelect<true>;
     fields: FieldsSelect<false> | FieldsSelect<true>;
     games: GamesSelect<false> | GamesSelect<true>;
     registrations: RegistrationsSelect<false> | RegistrationsSelect<true>;
@@ -268,9 +268,9 @@ export interface Game {
   endsAt: string;
   price: number;
   maxPlayers: number;
+  stripeProductId?: string | null;
   sport: string | Sport;
   field: string | Field;
-  stripeProductId?: string | null;
   registrations?: {
     docs?: (string | Registration)[];
     hasNextPage?: boolean;
@@ -312,7 +312,7 @@ export interface Field {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "field_types".
+ * via the `definition` "fieldTypes".
  */
 export interface FieldType {
   id: string;
@@ -322,7 +322,7 @@ export interface FieldType {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "field_flooring".
+ * via the `definition` "fieldFloorings".
  */
 export interface FieldFlooring {
   id: string;
@@ -332,7 +332,7 @@ export interface FieldFlooring {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "field_amenities".
+ * via the `definition` "fieldAmenities".
  */
 export interface FieldAmenity {
   id: string;
@@ -364,15 +364,15 @@ export interface PayloadLockedDocument {
         value: string | Sport;
       } | null)
     | ({
-        relationTo: 'field_types';
+        relationTo: 'fieldTypes';
         value: string | FieldType;
       } | null)
     | ({
-        relationTo: 'field_flooring';
+        relationTo: 'fieldFloorings';
         value: string | FieldFlooring;
       } | null)
     | ({
-        relationTo: 'field_amenities';
+        relationTo: 'fieldAmenities';
         value: string | FieldAmenity;
       } | null)
     | ({
@@ -508,7 +508,7 @@ export interface SportsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "field_types_select".
+ * via the `definition` "fieldTypes_select".
  */
 export interface FieldTypesSelect<T extends boolean = true> {
   name?: T;
@@ -517,16 +517,16 @@ export interface FieldTypesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "field_flooring_select".
+ * via the `definition` "fieldFloorings_select".
  */
-export interface FieldFlooringSelect<T extends boolean = true> {
+export interface FieldFlooringsSelect<T extends boolean = true> {
   name?: T;
   updatedAt?: T;
   createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "field_amenities_select".
+ * via the `definition` "fieldAmenities_select".
  */
 export interface FieldAmenitiesSelect<T extends boolean = true> {
   name?: T;
@@ -559,9 +559,9 @@ export interface GamesSelect<T extends boolean = true> {
   endsAt?: T;
   price?: T;
   maxPlayers?: T;
+  stripeProductId?: T;
   sport?: T;
   field?: T;
-  stripeProductId?: T;
   registrations?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -758,6 +758,7 @@ export interface Quiz {
   questions: {
     key: string;
     title: string;
+    description?: string | null;
     options: {
       label: string;
       enabled?: boolean | null;
@@ -766,6 +767,22 @@ export interface Quiz {
     }[];
     id?: string | null;
   }[];
+  /**
+   * These are the results that will be shown to the user after they have answered the quiz
+   */
+  dummyGameResults?:
+    | {
+        name: string;
+        description: string;
+        startsAt: string;
+        endsAt: string;
+        price: number;
+        maxPlayers: number;
+        sport: string | Sport;
+        field: string | Field;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -966,6 +983,7 @@ export interface QuizSelect<T extends boolean = true> {
     | {
         key?: T;
         title?: T;
+        description?: T;
         options?:
           | T
           | {
@@ -974,6 +992,19 @@ export interface QuizSelect<T extends boolean = true> {
               value?: T;
               id?: T;
             };
+        id?: T;
+      };
+  dummyGameResults?:
+    | T
+    | {
+        name?: T;
+        description?: T;
+        startsAt?: T;
+        endsAt?: T;
+        price?: T;
+        maxPlayers?: T;
+        sport?: T;
+        field?: T;
         id?: T;
       };
   updatedAt?: T;

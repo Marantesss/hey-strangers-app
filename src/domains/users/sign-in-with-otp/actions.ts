@@ -74,7 +74,11 @@ export const createOTPAction = async (
   }
 
   try {
-    await sendWhatsappOtpMessage(data.phoneNumber, otp.code)
+    if (process.env.NODE_ENV === 'production') {
+      await sendWhatsappOtpMessage(data.phoneNumber, otp.code)
+    } else {
+      console.log(otp)
+    }
   } catch (error) {
     console.error(error)
     return {

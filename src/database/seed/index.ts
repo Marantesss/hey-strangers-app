@@ -4,7 +4,6 @@ import { seedUsers } from './users'
 import { seedFields } from './fields'
 import { seedGames } from './games'
 import { seedRegistrations } from './registrations'
-import { seedAdmins } from './admins'
 import { seedHome } from './home'
 import { seedFooter } from './footer'
 import { seedFieldAmenities } from './field-amenities'
@@ -12,8 +11,16 @@ import { seedFieldTypes } from './field-types'
 import { seedFieldFlooring } from './field-flooring'
 import { seedSports } from './sports'
 import { seedQuiz } from './quiz'
+import { seedAdmins } from './admins'
 
 const deleteAll = async (payload: Payload) => {
+  await payload.updateGlobal({
+    slug: 'quiz',
+    data: {
+      dummyGameResults: null,
+    },
+  })
+
   await payload.delete({
     collection: 'registrations',
     where: { id: { exists: true } },
@@ -34,35 +41,45 @@ const deleteAll = async (payload: Payload) => {
   //   where: { id: { exists: true } },
   // })
 
-  await payload.delete({
+  const deletedUsers = await payload.delete({
     collection: 'users',
     where: { id: { exists: true } },
+    depth: 0,
   })
 
+  for (const user of deletedUsers.docs) {
+    await payload.delete({
+      collection: 'media',
+      where: { id: { equals: user.profilePicture } },
+    })
+  }
+
   await payload.delete({
-    collection: 'field_flooring',
+    collection: 'fieldFloorings',
     where: { id: { exists: true } },
   })
 
   await payload.delete({
-    collection: 'field_types',
+    collection: 'fieldTypes',
     where: { id: { exists: true } },
   })
 
   await payload.delete({
-    collection: 'field_amenities',
+    collection: 'fieldAmenities',
     where: { id: { exists: true } },
   })
 
   await payload.delete({
     collection: 'sports',
     where: { id: { exists: true } },
+    depth: 0,
   })
+}
 
-  // await payload.delete({
-  //   collection: 'media',
-  //   where: { id: { exists: true } },
-  // })
+export const seedGlobals = async (payload: Payload) => {
+  await seedHome(payload)
+  await seedFooter(payload)
+  await seedQuiz(payload)
 }
 
 const seed = async () => {
@@ -71,11 +88,7 @@ const seed = async () => {
   const payload = await getPayload({ config })
 
   await deleteAll(payload)
-
-  // globals
-  await seedHome(payload)
-  await seedFooter(payload)
-  await seedQuiz(payload)
+  console.log('Deleted all data')
 
   // users
   // await seedAdmins(payload)
@@ -91,6 +104,9 @@ const seed = async () => {
   await seedFields(payload)
   await seedGames(payload)
   await seedRegistrations(payload)
+
+  // globals
+  await seedGlobals(payload)
 }
 
 seed()
@@ -99,6 +115,6 @@ seed()
     process.exit(0)
   })
   .catch((err) => {
-    console.error('Error seeding database', err)
+    console.error('Error seeding database', JSON.stringify(err, null, 2))
     process.exit(1)
   })

@@ -40,7 +40,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
     data: {
       name: user.name ?? '',
       email: user.email ?? '',
-      phone: user.phoneNumber ?? '',
+      phone: user.phoneNumber,
       city: user.city ?? '',
     },
   })

@@ -55,13 +55,13 @@ export const seedFieldFlooring = async (payload: Payload) => {
   try {
     for (const flooring of fieldFlooring) {
       const createdFieldFlooring = await payload.create({
-        collection: 'field_flooring',
+        collection: 'fieldFloorings',
         data: flooring.pt,
         locale: 'pt',
       })
 
       await payload.update({
-        collection: 'field_flooring',
+        collection: 'fieldFloorings',
         id: createdFieldFlooring.id,
         data: flooring.en,
         locale: 'en',

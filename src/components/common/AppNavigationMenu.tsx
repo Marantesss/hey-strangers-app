@@ -21,7 +21,7 @@ const AppNavigationMenu: React.FC = () => {
           <NavigationMenuLink
             active={pathname.includes('/app/agenda')}
             className={navigationMenuTriggerStyle()}
-            href={`${locale}/app/agenda`}
+            href={`/${locale}/app/agenda`}
           >
             Agenda
           </NavigationMenuLink>
@@ -30,7 +30,7 @@ const AppNavigationMenu: React.FC = () => {
           <NavigationMenuLink
             active={pathname.includes('/app/games')}
             className={navigationMenuTriggerStyle()}
-            href={`${locale}/app/games`}
+            href={`/${locale}/app/games`}
           >
             My Games
           </NavigationMenuLink>
@@ -39,7 +39,7 @@ const AppNavigationMenu: React.FC = () => {
           <NavigationMenuLink
             active={pathname.includes('/app/profile')}
             className={navigationMenuTriggerStyle()}
-            href={`${locale}/app/profile`}
+            href={`/${locale}/app/profile`}
           >
             My Profile
           </NavigationMenuLink>

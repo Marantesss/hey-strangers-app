@@ -1,9 +1,37 @@
 import { Payload } from 'payload'
-import { Quiz } from '@/payload-types'
-
-type QuizSeed = Omit<Quiz, 'createdAt' | 'id' | 'updatedAt'>
+import { Field, Sport } from '@/payload-types'
 
 export const seedQuiz = async (payload: Payload) => {
+  // Get all fields to reference them
+  const fields = await payload.find({
+    collection: 'fields',
+    limit: 100,
+    locale: 'en',
+  })
+  const fieldMap = fields.docs.reduce(
+    (acc, field) => {
+      acc[field.name] = field.id
+      return acc
+    },
+    {} as Record<Field['name'], Field['id']>,
+  )
+
+  // Get all sports to reference them
+  const sports = await payload.find({
+    collection: 'sports',
+    limit: 100,
+    locale: 'en',
+  })
+  const sportMap = sports.docs.reduce(
+    (acc, sport) => {
+      acc[sport.name] = sport.id
+      return acc
+    },
+    {} as Record<Sport['name'], Sport['id']>,
+  )
+
+  const hasFieldsOrSports = Object.keys(fieldMap).length > 0 && Object.keys(sportMap).length > 0
+
   const quizDataPT = {
     sports: [{ name: 'Futebol' }, { name: 'Padel' }, { name: 'Ténis' }, { name: 'Golfe' }],
     questions: [
@@ -20,6 +48,7 @@ export const seedQuiz = async (payload: Payload) => {
       {
         key: 'location',
         title: 'Onde você gostaria de jogar?',
+        description: '*Mais cidades em breve!',
         options: [
           { label: 'Lisboa', value: 'lisbon' },
           { label: 'Porto', value: 'porto' },
@@ -83,6 +112,80 @@ export const seedQuiz = async (payload: Payload) => {
         ],
       },
     ],
+    dummyGameResults: !hasFieldsOrSports
+      ? null
+      : [
+          // Soccer Games
+          {
+            name: 'Jogo de Futebol da Manhã',
+            description: 'Jogo casual de futebol para todos os níveis',
+            startsAt: new Date(Date.now() + 24 * 60 * 60 * 1000 + 9 * 60 * 60 * 1000).toISOString(), // tomorrow + 9h
+            endsAt: new Date(Date.now() + 24 * 60 * 60 * 1000 + 11 * 60 * 60 * 1000).toISOString(), // tomorrow + 11h
+            price: 25.0,
+            maxPlayers: 14,
+            sport: sportMap['Soccer'],
+            field: fieldMap['Parque das Nações Football Field'],
+          },
+          {
+            name: 'Liga de Futebol da Tarde',
+            description: 'Jogo de futebol competitivo',
+            startsAt: new Date(
+              Date.now() + 24 * 60 * 60 * 1000 + 18 * 60 * 60 * 1000,
+            ).toISOString(),
+            endsAt: new Date(Date.now() + 24 * 60 * 60 * 1000 + 20 * 60 * 60 * 1000).toISOString(),
+            price: 30.0,
+            maxPlayers: 14,
+            sport: sportMap['Soccer'],
+            field: fieldMap['Parque das Nações Football Field'],
+          },
+          // Tennis Games
+          {
+            name: 'Jogo de Ténis Individual',
+            description: 'Jogo amigável de ténis',
+            startsAt: new Date(
+              Date.now() + 24 * 60 * 60 * 1000 + 10 * 60 * 60 * 1000,
+            ).toISOString(),
+            endsAt: new Date(Date.now() + 24 * 60 * 60 * 1000 + 11 * 60 * 60 * 1000).toISOString(),
+            price: 20.0,
+            maxPlayers: 2,
+            sport: sportMap['Tennis'],
+            field: fieldMap['Lisbon Tennis Club'],
+          },
+          {
+            name: 'Torneio de Ténis em Pares',
+            description: 'Torneio amador de pares',
+            startsAt: new Date(Date.now() + 72 * 60 * 60 * 1000 + 9 * 60 * 60 * 1000).toISOString(),
+            endsAt: new Date(Date.now() + 72 * 60 * 60 * 1000 + 13 * 60 * 60 * 1000).toISOString(),
+            price: 40.0,
+            maxPlayers: 8,
+            sport: sportMap['Tennis'],
+            field: fieldMap['Lisbon Tennis Club'],
+          },
+          // Padel Games
+          {
+            name: 'Sessão de Padel da Manhã',
+            description: 'Sessão de Padel para iniciantes',
+            startsAt: new Date(Date.now() + 48 * 60 * 60 * 1000 + 8 * 60 * 60 * 1000).toISOString(),
+            endsAt: new Date(Date.now() + 48 * 60 * 60 * 1000 + 9 * 60 * 60 * 1000).toISOString(),
+            price: 15.0,
+            maxPlayers: 4,
+            sport: sportMap['Padel'],
+            field: fieldMap['Padel Belém'],
+          },
+          // Basketball Games
+          {
+            name: 'Torneio de Basquetebol de Rua',
+            description: 'Torneio de basquetebol 3x3',
+            startsAt: new Date(
+              Date.now() + 96 * 60 * 60 * 1000 + 16 * 60 * 60 * 1000,
+            ).toISOString(),
+            endsAt: new Date(Date.now() + 96 * 60 * 60 * 1000 + 20 * 60 * 60 * 1000).toISOString(),
+            price: 10.0,
+            maxPlayers: 24,
+            sport: sportMap['Basketball'],
+            field: fieldMap['Sporting Pavilion'],
+          },
+        ],
   }
 
   const quizPT = await payload.updateGlobal({
@@ -104,6 +207,7 @@ export const seedQuiz = async (payload: Payload) => {
       {
         id: quizPT.questions[0].id!,
         title: 'Choose your sport to get started!',
+        description: '*More cities coming soon!',
         options: [
           { id: quizPT.questions[0].options[0].id!, label: 'Soccer' },
           { id: quizPT.questions[0].options[1].id!, label: 'Padel' },
@@ -201,6 +305,44 @@ export const seedQuiz = async (payload: Payload) => {
         ],
       },
     ],
+    dummyGameResults: !hasFieldsOrSports
+      ? null
+      : [
+          // Soccer Games
+          {
+            id: quizPT.dummyGameResults![0].id!,
+            name: 'Morning Soccer Game',
+            description: 'Casual soccer game for all levels',
+          },
+          {
+            id: quizPT.dummyGameResults![1].id!,
+            name: 'Afternoon Soccer League',
+            description: 'Competitive soccer league',
+          },
+          // Tennis Games
+          {
+            id: quizPT.dummyGameResults![2].id!,
+            name: 'Tennis Singles Match',
+            description: 'Friendly tennis match',
+          },
+          {
+            id: quizPT.dummyGameResults![3].id!,
+            name: 'Tennis Doubles Tournament',
+            description: 'Amateur doubles tournament',
+          },
+          // Padel Games
+          {
+            id: quizPT.dummyGameResults![4].id!,
+            name: 'Morning Padel Session',
+            description: 'Beginner-friendly Padel session',
+          },
+          // Basketball Games
+          {
+            id: quizPT.dummyGameResults![5].id!,
+            name: 'Street Basketball Tournament',
+            description: '3v3 basketball tournament',
+          },
+        ],
   }
 
   await payload.updateGlobal({

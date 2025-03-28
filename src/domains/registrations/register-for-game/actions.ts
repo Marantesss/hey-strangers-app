@@ -3,7 +3,7 @@
 import { getGameById } from '@/domains/games/get-game-by-id/get-game-by-id.service'
 import stripe from '@/lib/stripe'
 import { z } from 'zod'
-import { getRegistrationsByGameId } from '../get-registration/get-registration.service'
+import { getRegistrationsByGameId } from '../get-registrations-by-game/get-registrations-by-game-id.service'
 import { getMe } from '@/domains/users/me/me.service'
 import { redirect } from 'next/navigation'
 import { registerForGame } from './register-for-game.service'

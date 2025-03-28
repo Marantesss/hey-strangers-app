@@ -140,8 +140,8 @@ const RegisterForGameSheetForm: React.FC = () => {
               <div className="text-[#454745]">
                 {game?.description} -{' '}
                 {game &&
-                  game.field.flooringHumanized.charAt(0).toUpperCase() +
-                    game.field.flooringHumanized.slice(1)}
+                  game.field.flooring.name.charAt(0).toUpperCase() +
+                    game.field.flooring.name.slice(1)}
               </div>
             </div>
           </>

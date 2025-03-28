@@ -1,10 +1,8 @@
 import { cn } from '@/lib/utils'
 import { NextPage } from 'next'
 
-import { getMe } from '@/domains/users/me/me.service'
-import { getGamesWhereUserIsRegistered } from '@/domains/games/shared/GameService'
-import GameCard from '@/domains/games/shared/components/GameCard'
 import { Link } from '@/i18n/navigation'
+import GamesClientPage from './page.client'
 
 interface PageProps {
   searchParams: Promise<{
@@ -15,13 +13,6 @@ interface PageProps {
 
 const GamesPage: NextPage<PageProps> = async ({ searchParams }) => {
   const { timeFrame = 'past', registeredGame } = await searchParams
-
-  const user = await getMe()
-  const games = await getGamesWhereUserIsRegistered(
-    user!.id,
-    { timeFrame },
-    { expand: { field: true } },
-  )
 
   const selectedStyle = 'bg-[#E3FFCD] text-primary'
   const defaultStyle = 'bg-[#F9F9FB] text-[#454745]'
@@ -49,11 +40,7 @@ const GamesPage: NextPage<PageProps> = async ({ searchParams }) => {
         </Link>
       </div>
 
-      <div className="max-w-lg mx-auto space-y-4">
-        {games.map((game) => (
-          <GameCard highlight={game.id === registeredGame} simple key={game.id} game={game} />
-        ))}
-      </div>
+      <GamesClientPage timeFrame={timeFrame} registeredGame={registeredGame} />
     </main>
   )
 }

@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Card,
   CardContent,
@@ -10,8 +12,8 @@ import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { GameModel } from '../models/Game.model'
 import RegisterForGameButton from '@/domains/registrations/register-for-game/components/RegisterForGameButton'
-import { getRegistrationsByGameId } from '@/domains/registrations/get-registration/get-registration.service'
 import { cn } from '@/lib/utils'
+import useRegistrationsByGameQuery from '@/domains/registrations/get-registrations-by-game/get-registration-by-game.query'
 
 export interface GameCardProps {
   game: GameModel
@@ -22,7 +24,7 @@ export interface GameCardProps {
   highlight?: boolean
 }
 
-const GameCard: React.FC<GameCardProps> = async ({
+const GameCard: React.FC<GameCardProps> = ({
   game,
   disabled = false,
   topPick = false,
@@ -30,7 +32,7 @@ const GameCard: React.FC<GameCardProps> = async ({
   hidePrice = false,
   highlight = false,
 }) => {
-  const registrations = simple ? [] : await getRegistrationsByGameId(game.id)
+  const { data: registrations } = useRegistrationsByGameQuery(simple ? undefined : game.id)
 
   const gameDay = game.startsAt.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -91,7 +93,7 @@ const GameCard: React.FC<GameCardProps> = async ({
                 <div>
                   <h4 className="font-bold">Registered Players</h4>
                   <ul className="text-subtle-foreground list-disc list-inside text-sm">
-                    {registrations.map((registration) => (
+                    {registrations?.map((registration) => (
                       <li className="ml-2" key={registration.id}>
                         {registration.user.privateName}
                       </li>

@@ -2,6 +2,9 @@ import { CollectionConfig } from 'payload'
 
 export const Sports: CollectionConfig = {
   slug: 'sports',
+  admin: {
+    useAsTitle: 'name',
+  },
   fields: [
     {
       name: 'name',

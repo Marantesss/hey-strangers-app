@@ -24,10 +24,12 @@ export const Games: CollectionConfig = {
       name: 'name',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'description',
       type: 'textarea',
+      localized: true,
     },
     {
       name: 'startsAt',
@@ -62,6 +64,16 @@ export const Games: CollectionConfig = {
       min: 1,
     },
     {
+      name: 'stripeProductId',
+      type: 'text',
+      required: false,
+      unique: true,
+      admin: {
+        readOnly: true,
+      },
+    },
+    // --- relations and joins
+    {
       name: 'sport',
       type: 'relationship',
       relationTo: 'sports',
@@ -73,16 +85,6 @@ export const Games: CollectionConfig = {
       relationTo: 'fields',
       required: true,
     },
-    {
-      name: 'stripeProductId',
-      type: 'text',
-      required: false,
-      unique: true,
-      admin: {
-        readOnly: true,
-      },
-    },
-    // --- relations and joins
     {
       name: 'registrations',
       type: 'join',

@@ -1,7 +1,10 @@
 import { CollectionConfig } from 'payload'
 
 export const FieldTypes: CollectionConfig = {
-  slug: 'field_types',
+  slug: 'fieldTypes',
+  admin: {
+    useAsTitle: 'name',
+  },
   fields: [
     {
       name: 'name',

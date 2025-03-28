@@ -1,40 +1,36 @@
 import { Payload } from 'payload'
-import { Sport } from '@payload-types'
-import { SeedEntry } from './types'
-
-type SportSeed = Omit<Sport, 'createdAt' | 'id' | 'sizes' | 'updatedAt'>
 
 export const seedSports = async (payload: Payload) => {
   const sports = [
     {
       pt: { name: 'Futebol', emoji: '⚽' },
-      en: { name: 'Soccer', emoji: '⚽' },
+      en: { name: 'Soccer' },
     },
     {
       pt: { name: 'Padel', emoji: '🎾' },
-      en: { name: 'Padel', emoji: '🎾' },
+      en: { name: 'Padel' },
     },
     {
       pt: { name: 'Golfe', emoji: '⛳' },
-      en: { name: 'Golf', emoji: '⛳' },
+      en: { name: 'Golf' },
     },
     {
       pt: { name: 'Ténis', emoji: '🎾' },
-      en: { name: 'Tennis', emoji: '🎾' },
+      en: { name: 'Tennis' },
     },
     {
       pt: { name: 'Basquetebol', emoji: '🏀' },
-      en: { name: 'Basketball', emoji: '🏀' },
+      en: { name: 'Basketball' },
     },
     {
       pt: { name: 'Voleibol', emoji: '🏐' },
-      en: { name: 'Volleyball', emoji: '🏐' },
+      en: { name: 'Volleyball' },
     },
     {
       pt: { name: 'Polidesportivo', emoji: '⭐' },
-      en: { name: 'Multi-purpose', emoji: '⭐' },
+      en: { name: 'Multi-purpose' },
     },
-  ] satisfies SeedEntry<SportSeed>[]
+  ]
 
   try {
     for (const sport of sports) {

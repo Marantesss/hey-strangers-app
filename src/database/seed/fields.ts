@@ -21,7 +21,7 @@ export const seedFields = async (payload: Payload) => {
 
   // get field types
   const fieldTypes = await payload.find({
-    collection: 'field_types',
+    collection: 'fieldTypes',
     limit: 100,
     locale: 'en',
   })
@@ -35,7 +35,7 @@ export const seedFields = async (payload: Payload) => {
 
   // get field flooring
   const fieldFlooring = await payload.find({
-    collection: 'field_flooring',
+    collection: 'fieldFloorings',
     limit: 100,
     locale: 'en',
   })
@@ -49,7 +49,7 @@ export const seedFields = async (payload: Payload) => {
 
   // get field amenities
   const fieldAmenities = await payload.find({
-    collection: 'field_amenities',
+    collection: 'fieldAmenities',
     limit: 100,
     locale: 'en',
   })
@@ -76,19 +76,7 @@ export const seedFields = async (payload: Payload) => {
           fieldAmenityMap['Lighting'],
         ],
       },
-      en: {
-        name: 'Parque das Nações Football Field',
-        address: 'Rua do Parque das Nações 123, Lisboa',
-        type: fieldTypeMap['Outdoor'],
-        flooring: fieldFlooringMap['Natural grass'],
-        sport: sportMap['Soccer'],
-        amenities: [
-          fieldAmenityMap['Parking'],
-          fieldAmenityMap['Restrooms'],
-          fieldAmenityMap['Changing rooms'],
-          fieldAmenityMap['Lighting'],
-        ],
-      },
+      en: { name: 'Parque das Nações Football Field' },
     },
     {
       pt: {
@@ -106,21 +94,7 @@ export const seedFields = async (payload: Payload) => {
           fieldAmenityMap['Cafe'],
         ],
       },
-      en: {
-        name: 'Benfica Indoor Arena',
-        address: 'Avenida Lusíada 456, Lisboa',
-        type: fieldTypeMap['Indoor'],
-        flooring: fieldFlooringMap['Artificial turf'],
-        sport: sportMap['Soccer'],
-        amenities: [
-          fieldAmenityMap['Parking'],
-          fieldAmenityMap['Restrooms'],
-          fieldAmenityMap['Changing rooms'],
-          fieldAmenityMap['Showers'],
-          fieldAmenityMap['Lockers'],
-          fieldAmenityMap['Cafe'],
-        ],
-      },
+      en: { name: 'Benfica Indoor Arena' },
     },
     {
       pt: {
@@ -136,19 +110,7 @@ export const seedFields = async (payload: Payload) => {
           fieldAmenityMap['Lighting'],
         ],
       },
-      en: {
-        name: 'Porto Sports Complex',
-        address: 'Rua do Dragão 789, Porto',
-        type: fieldTypeMap['Hybrid'],
-        flooring: fieldFlooringMap['Hybrid turf'],
-        sport: sportMap['Soccer'],
-        amenities: [
-          fieldAmenityMap['Parking'],
-          fieldAmenityMap['Restrooms'],
-          fieldAmenityMap['Changing rooms'],
-          fieldAmenityMap['Lighting'],
-        ],
-      },
+      en: { name: 'Porto Sports Complex' },
     },
 
     // Tennis courts
@@ -166,19 +128,7 @@ export const seedFields = async (payload: Payload) => {
           fieldAmenityMap['Water fountain'],
         ],
       },
-      en: {
-        name: 'Lisbon Tennis Club',
-        address: 'Avenida da Liberdade 321, Lisboa',
-        type: fieldTypeMap['Indoor'],
-        flooring: fieldFlooringMap['Hard court'],
-        sport: sportMap['Tennis'],
-        amenities: [
-          fieldAmenityMap['Parking'],
-          fieldAmenityMap['Restrooms'],
-          fieldAmenityMap['Equipment rental'],
-          fieldAmenityMap['Water fountain'],
-        ],
-      },
+      en: { name: 'Lisbon Tennis Club' },
     },
 
     // Padel courts
@@ -197,20 +147,7 @@ export const seedFields = async (payload: Payload) => {
           fieldAmenityMap['Seating area'],
         ],
       },
-      en: {
-        name: 'Padel Belém',
-        address: 'Rua de Belém 987, Lisboa',
-        type: fieldTypeMap['Outdoor'],
-        flooring: fieldFlooringMap['Artificial turf'],
-        sport: sportMap['Padel'],
-        amenities: [
-          fieldAmenityMap['Parking'],
-          fieldAmenityMap['Restrooms'],
-          fieldAmenityMap['Changing rooms'],
-          fieldAmenityMap['Lighting'],
-          fieldAmenityMap['Seating area'],
-        ],
-      },
+      en: { name: 'Padel Belém' },
     },
     {
       pt: {
@@ -220,13 +157,7 @@ export const seedFields = async (payload: Payload) => {
         flooring: fieldFlooringMap['Artificial turf'],
         sport: sportMap['Padel'],
       },
-      en: {
-        name: 'Porto Padel Club',
-        address: 'Rua Santa Catarina 147, Porto',
-        type: fieldTypeMap['Indoor'],
-        flooring: fieldFlooringMap['Artificial turf'],
-        sport: sportMap['Padel'],
-      },
+      en: { name: 'Porto Padel Club' },
     },
 
     // Basketball courts
@@ -244,19 +175,7 @@ export const seedFields = async (payload: Payload) => {
           fieldAmenityMap['Lighting'],
         ],
       },
-      en: {
-        name: 'Sporting Pavilion',
-        address: 'Rua do Sporting 258, Lisboa',
-        type: fieldTypeMap['Indoor'],
-        flooring: fieldFlooringMap['Wood'],
-        sport: sportMap['Basketball'],
-        amenities: [
-          fieldAmenityMap['Restrooms'],
-          fieldAmenityMap['Water fountain'],
-          fieldAmenityMap['Scoreboard'],
-          fieldAmenityMap['Lighting'],
-        ],
-      },
+      en: { name: 'Sporting Pavilion' },
     },
     {
       pt: {
@@ -266,13 +185,7 @@ export const seedFields = async (payload: Payload) => {
         flooring: fieldFlooringMap['Concrete'],
         sport: sportMap['Basketball'],
       },
-      en: {
-        name: 'Ribeira Basketball Court',
-        address: 'Rua da Ribeira 369, Porto',
-        type: fieldTypeMap['Outdoor'],
-        flooring: fieldFlooringMap['Concrete'],
-        sport: sportMap['Basketball'],
-      },
+      en: { name: 'Ribeira Basketball Court' },
     },
 
     // Multi-purpose facilities
@@ -299,28 +212,7 @@ export const seedFields = async (payload: Payload) => {
           fieldAmenityMap['Scoreboard'],
         ],
       },
-      en: {
-        name: 'Municipal Sports Center',
-        address: 'Avenida de Lisboa 741, Lisboa',
-        type: fieldTypeMap['Indoor'],
-        flooring: fieldFlooringMap['Polyurethane'],
-        sport: sportMap['Multi-purpose'],
-        amenities: [
-          fieldAmenityMap['Parking'],
-          fieldAmenityMap['Restrooms'],
-          fieldAmenityMap['Changing rooms'],
-          fieldAmenityMap['Showers'],
-          fieldAmenityMap['Equipment rental'],
-          fieldAmenityMap['Lockers'],
-          fieldAmenityMap['Water fountain'],
-          fieldAmenityMap['Cafe'],
-          fieldAmenityMap['Seating area'],
-          fieldAmenityMap['First aid station'],
-          fieldAmenityMap['WiFi'],
-          fieldAmenityMap['Lighting'],
-          fieldAmenityMap['Scoreboard'],
-        ],
-      },
+      en: { name: 'Municipal Sports Center' },
     },
     {
       pt: {
@@ -345,28 +237,7 @@ export const seedFields = async (payload: Payload) => {
           fieldAmenityMap['Scoreboard'],
         ],
       },
-      en: {
-        name: 'Porto Sports Park',
-        address: 'Rua do Porto 852, Porto',
-        type: fieldTypeMap['Outdoor'],
-        flooring: fieldFlooringMap['Artificial turf'],
-        sport: sportMap['Multi-purpose'],
-        amenities: [
-          fieldAmenityMap['Parking'],
-          fieldAmenityMap['Restrooms'],
-          fieldAmenityMap['Changing rooms'],
-          fieldAmenityMap['Showers'],
-          fieldAmenityMap['Equipment rental'],
-          fieldAmenityMap['Lockers'],
-          fieldAmenityMap['Water fountain'],
-          fieldAmenityMap['Cafe'],
-          fieldAmenityMap['Seating area'],
-          fieldAmenityMap['First aid station'],
-          fieldAmenityMap['WiFi'],
-          fieldAmenityMap['Lighting'],
-          fieldAmenityMap['Scoreboard'],
-        ],
-      },
+      en: { name: 'Porto Sports Park' },
     },
 
     // Volleyball courts
@@ -393,28 +264,7 @@ export const seedFields = async (payload: Payload) => {
           fieldAmenityMap['Scoreboard'],
         ],
       },
-      en: {
-        name: 'Cascais Volleyball Arena',
-        address: 'Avenida Marginal 963, Lisboa',
-        type: fieldTypeMap['Outdoor'],
-        flooring: fieldFlooringMap['Sand'],
-        sport: sportMap['Volleyball'],
-        amenities: [
-          fieldAmenityMap['Parking'],
-          fieldAmenityMap['Restrooms'],
-          fieldAmenityMap['Changing rooms'],
-          fieldAmenityMap['Showers'],
-          fieldAmenityMap['Equipment rental'],
-          fieldAmenityMap['Lockers'],
-          fieldAmenityMap['Water fountain'],
-          fieldAmenityMap['Cafe'],
-          fieldAmenityMap['Seating area'],
-          fieldAmenityMap['First aid station'],
-          fieldAmenityMap['WiFi'],
-          fieldAmenityMap['Lighting'],
-          fieldAmenityMap['Scoreboard'],
-        ],
-      },
+      en: { name: 'Cascais Volleyball Arena' },
     },
     {
       pt: {
@@ -439,30 +289,9 @@ export const seedFields = async (payload: Payload) => {
           fieldAmenityMap['Scoreboard'],
         ],
       },
-      en: {
-        name: 'Porto Volleyball Center',
-        address: 'Rua dos Clérigos 159, Porto',
-        type: fieldTypeMap['Indoor'],
-        flooring: fieldFlooringMap['Wood'],
-        sport: sportMap['Volleyball'],
-        amenities: [
-          fieldAmenityMap['Parking'],
-          fieldAmenityMap['Restrooms'],
-          fieldAmenityMap['Changing rooms'],
-          fieldAmenityMap['Showers'],
-          fieldAmenityMap['Equipment rental'],
-          fieldAmenityMap['Lockers'],
-          fieldAmenityMap['Water fountain'],
-          fieldAmenityMap['Cafe'],
-          fieldAmenityMap['Seating area'],
-          fieldAmenityMap['First aid station'],
-          fieldAmenityMap['WiFi'],
-          fieldAmenityMap['Lighting'],
-          fieldAmenityMap['Scoreboard'],
-        ],
-      },
+      en: { name: 'Porto Volleyball Center' },
     },
-  ] satisfies SeedEntry<FieldSeed>[]
+  ]
 
   try {
     for (const field of fields) {

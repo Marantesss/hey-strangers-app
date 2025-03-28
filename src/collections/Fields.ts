@@ -18,22 +18,24 @@ export const Fields: CollectionConfig = {
       name: 'name',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'address',
       type: 'text',
       required: true,
     },
+    // --- relations and joins
     {
       name: 'type',
       type: 'relationship',
-      relationTo: 'field_types',
+      relationTo: 'fieldTypes',
       required: true,
     },
     {
       name: 'flooring',
       type: 'relationship',
-      relationTo: 'field_flooring',
+      relationTo: 'fieldFloorings',
       required: true,
     },
     {
@@ -45,10 +47,9 @@ export const Fields: CollectionConfig = {
     {
       name: 'amenities',
       type: 'relationship',
-      relationTo: 'field_amenities',
+      relationTo: 'fieldAmenities',
       hasMany: true,
     },
-    // --- relations and joins
     {
       name: 'games',
       type: 'join',

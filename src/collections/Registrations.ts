@@ -36,12 +36,14 @@ export const Registrations: CollectionConfig = {
       type: 'relationship',
       relationTo: 'games',
       required: true,
+      hasMany: false,
     },
     {
       name: 'user',
       type: 'relationship',
       relationTo: 'users',
       required: true,
+      hasMany: false,
     },
   ],
 }
