@@ -8,7 +8,7 @@ export const seedFooter = async (payload: Payload) => {
     links: [
       {
         label: 'Contacte-nos',
-        url: '/contact',
+        url: '/contact-us',
       },
       {
         label: 'Dicas de Segurança & Regras',
@@ -16,15 +16,15 @@ export const seedFooter = async (payload: Payload) => {
       },
       {
         label: 'Diretrizes da Comunidade',
-        url: '/community',
+        url: '/community-guidelines',
       },
       {
         label: 'Termos & Condições',
-        url: '/terms',
+        url: '/terms-of-service',
       },
       {
         label: 'Política de Privacidade',
-        url: '/privacy',
+        url: '/privacy-policy',
       },
     ],
     socialLinks: [

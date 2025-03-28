@@ -20,7 +20,7 @@ import {
   Media,
   Sports,
 } from './collections'
-import { Home, Footer, Quiz } from './globals'
+import { Home, Footer, Quiz, Pages } from './globals'
 import { seedHome } from './database/seed/home'
 import { seedFooter } from './database/seed/footer'
 import { seedQuiz } from './database/seed/quiz'
@@ -49,7 +49,7 @@ export default buildConfig({
     Games,
     Registrations,
   ],
-  globals: [Home, Footer, Quiz],
+  globals: [Home, Footer, Quiz, Pages],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

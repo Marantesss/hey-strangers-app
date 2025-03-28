@@ -62,7 +62,7 @@ export default async function Footer({ locale }: FooterProps) {
   }
 
   return (
-    <footer className="bg-[#0B0F12] text-white py-8">
+    <footer className="bg-[#0B0F12] text-white py-8 w-full">
       <div className="container flex md:flex-row md:justify-between flex-col gap-8">
         <ul className="flex flex-wrap gap-6 justify-center">
           {footer.links.map((link) => (

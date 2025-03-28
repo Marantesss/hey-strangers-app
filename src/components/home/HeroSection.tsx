@@ -14,6 +14,7 @@ import Countdown from '../common/Countdown'
 import LocaleSwitcher from '../common/LocaleSwitcher'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
+import Header from './Header'
 
 interface HeroSectionProps {
   hero: Home['hero']
@@ -26,18 +27,7 @@ export default async function HeroSection({ hero }: HeroSectionProps) {
   return (
     <section className="bg-[#F5F7F9]">
       <div className="min-h-screen container py-8 flex flex-col items-center justify-between gap-8">
-        <nav className="flex items-center justify-between w-full">
-          <Logo />
-          <div className="flex items-center gap-4">
-            <LocaleSwitcher />
-            <Button asChild variant="ghost">
-              <Link href="/sign-up">{t('register')}</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/app">{t('my-space')}</Link>
-            </Button>
-          </div>
-        </nav>
+        <Header />
 
         {/* Center Section */}
         <div className="text-center space-y-8">
