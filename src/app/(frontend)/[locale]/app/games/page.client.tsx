@@ -3,6 +3,7 @@
 import useGamesQuery from '@/domains/games/get-games/use-games.query'
 import GameCard from '@/domains/games/shared/components/GameCard'
 import GameCardSkeleton from '@/domains/games/shared/components/GameCardSkeleton'
+import useSession from '@/domains/users/session/use-session'
 
 type GamesClientPageProps = {
   timeFrame?: 'past' | 'future'
@@ -10,8 +11,11 @@ type GamesClientPageProps = {
 }
 
 const GamesClientPage: React.FC<GamesClientPageProps> = ({ timeFrame, registeredGame }) => {
+  const { user } = useSession()
+
   const { data: games, isLoading } = useGamesQuery({
     options: {
+      userId: user?.id,
       timeFrame,
     },
     expand: { field: true },

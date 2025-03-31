@@ -108,7 +108,7 @@ export class GameModel {
   }
 
   public isUserRegistered(userId: string): boolean {
-    return this._registrationsIds?.some((id) => id === userId) ?? false
+    return this._registrations?.some((_) => _.isUserRegistered(userId)) ?? false
   }
 
   // Factory method

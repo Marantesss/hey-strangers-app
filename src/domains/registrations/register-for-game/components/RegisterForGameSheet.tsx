@@ -23,6 +23,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import { Elements, useStripe } from '@stripe/react-stripe-js'
 import useCreatePaymentIntentMutation from '@/domains/games/create-payment-intent/create-payment-intent.mutation'
 import { toast } from 'sonner'
+import { useLocale } from 'next-intl'
 
 const BOOKING_FEE = 1
 
@@ -30,6 +31,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL!
 
 const RegisterForGameSheetForm: React.FC = () => {
+  const locale = useLocale()
   const { game, toggleOpen } = useRegisterFormGame()
   const { data: paymentMethods, isLoading: isPaymentMethodsLoading } = usePaymentMethodsQuery()
 
@@ -82,7 +84,7 @@ const RegisterForGameSheetForm: React.FC = () => {
     const { error } = await stripe.confirmPayment({
       clientSecret: paymentIntentResponse.clientSecret!,
       confirmParams: {
-        return_url: `${APP_URL}/app/games/${game!.id}/confirm-payment`,
+        return_url: `${APP_URL}/${locale}/app/games/${game!.id}/confirm-payment`,
       },
     })
 

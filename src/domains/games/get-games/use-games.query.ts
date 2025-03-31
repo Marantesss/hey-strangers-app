@@ -10,6 +10,7 @@ export const USE_GAME_QUERY_KEY = 'games'
 
 type UseGamesQueryProps = {
   options: {
+    userId?: string
     cityName?: string
     sportId?: string
     timeFrame?: 'future' | 'past' | 'all'
@@ -30,6 +31,13 @@ const useGamesQuery = ({ options, expand }: UseGamesQueryProps) => {
       const { docs } = await api.find('games', {
         query: {
           where: {
+            ...(options.userId
+              ? {
+                  'registrations.user': {
+                    equals: options.userId,
+                  },
+                }
+              : {}),
             ...(options.cityName
               ? {
                   'field.address': {

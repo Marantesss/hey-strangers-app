@@ -33,6 +33,10 @@ export class RegistrationModel {
     return this._user
   }
 
+  public isUserRegistered(userId: string): boolean {
+    return this._userId === userId
+  }
+
   static from(data: Registration): RegistrationModel {
     return new RegistrationModel(data)
   }

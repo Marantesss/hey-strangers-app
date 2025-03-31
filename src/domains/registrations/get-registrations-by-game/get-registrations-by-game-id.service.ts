@@ -4,23 +4,20 @@ import { getPayload, TypedLocale } from 'payload'
 import config from '@payload-config'
 import { RegistrationModel } from '../shared/models/Registration.model'
 import { getLocale } from 'next-intl/server'
+import { Registration } from '@/payload-types'
 
 export async function getRegistrationsByGameId(gameId: string): Promise<RegistrationModel[]> {
   const locale = await getLocale()
   const payload = await getPayload({ config })
 
-  const query = {
-    collection: 'registrations' as const,
-    where: {
-      game: {
-        equals: gameId,
-      },
-    },
-    depth: 1,
+  const { registrations } = await payload.findByID({
+    collection: 'games',
+    id: gameId,
     locale: locale as TypedLocale,
-  }
+    depth: 1,
+  })
 
-  const { docs } = await payload.find(query)
-
-  return docs.map((registration) => RegistrationModel.from(registration))
+  return (
+    registrations?.map((registration) => RegistrationModel.from(registration as Registration)) ?? []
+  )
 }

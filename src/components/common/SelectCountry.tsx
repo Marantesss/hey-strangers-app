@@ -211,7 +211,7 @@ const countries = [
 const SelectCountry = ({ placeholder = 'Select a country', ...props }: SelectCountryProps) => {
   return (
     <Select {...props}>
-      <SelectTrigger>
+      <SelectTrigger className="rounded">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
