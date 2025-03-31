@@ -76,7 +76,6 @@ const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
         const newNumber = e.target.value
         setPhoneNumber(newNumber)
         const newValue = `${country?.code}${newNumber}`
-        console.log(newValue)
         onChange?.(newValue)
       },
       [country, onChange],
