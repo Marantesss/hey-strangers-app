@@ -58,5 +58,12 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const payload = await getPayload({ config })
   const home = await payload.findGlobal({ slug: 'home', locale })
 
-  return generateMetaForPage({ doc: home.seo ?? {} })
+  const metadata = await generateMetaForPage({ doc: home.seo ?? {} })
+
+  return {
+    ...metadata,
+    alternates: {
+      canonical: `/${locale}`,
+    },
+  }
 }

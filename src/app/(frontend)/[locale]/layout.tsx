@@ -9,16 +9,7 @@ import { routing } from '@/i18n/routing'
 
 import { NextIntlClientProvider } from 'next-intl'
 import { TypedLocale } from 'payload'
-
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : 'http://localhost:3000'
-
-export const metadata = {
-  metadataBase: new URL(defaultUrl),
-  title: 'Hey Strangers',
-  description: 'The fastest way to build apps with Next.js and Supabase',
-}
+import { Metadata } from 'next'
 
 const geistSans = Geist({
   display: 'swap',
@@ -49,6 +40,22 @@ export default async function RootLayout({ children, params }: LayoutProps) {
       </body>
     </html>
   )
+}
+
+const defaultUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : 'http://localhost:3000'
+
+export const metadata: Metadata = {
+  metadataBase: new URL(defaultUrl),
+  alternates: {
+    canonical: '/',
+    languages: {
+      en: '/en',
+      pt: '/pt',
+      'x-default': '/en',
+    },
+  },
 }
 
 export function generateStaticParams() {
