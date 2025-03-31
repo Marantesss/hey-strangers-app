@@ -10,15 +10,19 @@ import {
   useState,
 } from 'react'
 import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import { countryCodes } from '@/lib/phone-numbers'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Button } from '@/components/ui/button'
+import { Check, ChevronsUpDown } from 'lucide-react'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 
 export interface PhoneNumberInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
@@ -30,12 +34,17 @@ export interface PhoneNumberInputProps
 
 const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
   ({ className, name, disabled, value = '', defaultValue, onChange, ...props }, ref) => {
-    const [countryCode, setCountryCode] = useState('PT')
+    const [open, setOpen] = useState(false)
+    const [countryName, setCountryName] = useState('Portugal')
     const [phoneNumber, setPhoneNumber] = useState('')
 
+    const country = useMemo(
+      () => countryCodes.find(({ country }) => country === countryName),
+      [countryName],
+    )
     const _value = useMemo(
-      () => (!!countryCode && !!phoneNumber ? `${countryCode}${phoneNumber}` : ''),
-      [countryCode, phoneNumber],
+      () => (!!countryName && !!phoneNumber ? `${country?.code}${phoneNumber}` : ''),
+      [countryName, phoneNumber],
     )
 
     useEffect(() => {
@@ -47,16 +56,17 @@ const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
       if (!matchingCode) return
 
       // Set country code and remaining digits as phone number
-      setCountryCode(matchingCode.code)
+      setCountryName(matchingCode.country)
       setPhoneNumber(phoneStr.slice(matchingCode.code.length))
     }, [value, defaultValue])
 
     const handleCountryISOChange = useCallback(
-      (iso: string) => {
-        const country = countryCodes.find(({ iso: _iso }) => _iso === iso)!
-        setCountryCode(country.iso)
+      (name: string) => {
+        const country = countryCodes.find(({ country }) => country === name)!
+        setCountryName(country.country)
         const newValue = `${country.code}${phoneNumber}`
         onChange?.(newValue)
+        setOpen(false)
       },
       [phoneNumber, onChange],
     )
@@ -65,17 +75,53 @@ const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
       (e: ChangeEvent<HTMLInputElement>) => {
         const newNumber = e.target.value
         setPhoneNumber(newNumber)
-        const newValue = `${countryCode}${newNumber}`
+        const newValue = `${country?.code}${newNumber}`
         console.log(newValue)
         onChange?.(newValue)
       },
-      [countryCode, onChange],
+      [country, onChange],
     )
 
     return (
       <div className={cn('flex', className)}>
         <input ref={ref} type="hidden" name={name} value={_value} />
-        <Select disabled={disabled} value={countryCode} onValueChange={handleCountryISOChange}>
+
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger className="border-r-0 rounded-r-none rounded-l-sm bg-[#EFF0F3]" asChild>
+            <Button
+              variant="ghost"
+              role="combobox"
+              aria-expanded={open}
+              className="w-[200px] justify-between"
+            >
+              {country?.flag} ({country?.code})
+              <ChevronsUpDown className="opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0">
+            <Command>
+              <CommandInput placeholder="Search framework..." className="h-9" />
+              <CommandList>
+                <CommandEmpty>No country found.</CommandEmpty>
+                <CommandGroup>
+                  {countryCodes.map(({ flag, code, country }) => (
+                    <CommandItem key={country} value={country} onSelect={handleCountryISOChange}>
+                      {flag} ({code})
+                      <Check
+                        className={cn(
+                          'ml-auto',
+                          countryName === country ? 'opacity-100' : 'opacity-0',
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+
+        {/* <Select disabled={disabled} value={countryCode} onValueChange={handleCountryISOChange}>
           <SelectTrigger className="w-40 border-r-0 rounded-r-none rounded-l-sm">
             <SelectValue />
           </SelectTrigger>
@@ -86,7 +132,8 @@ const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
               </SelectItem>
             ))}
           </SelectContent>
-        </Select>
+        </Select> */}
+
         <Input
           type="tel"
           value={phoneNumber}
