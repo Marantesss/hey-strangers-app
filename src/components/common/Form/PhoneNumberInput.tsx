@@ -18,16 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
-
-const countryCodes = [
-  { code: '+351', flag: '🇵🇹', country: 'Portugal' },
-  { code: '+34', flag: '🇪🇸', country: 'Spain' },
-  { code: '+33', flag: '🇫🇷', country: 'France' },
-  { code: '+44', flag: '🇬🇧', country: 'United Kingdom' },
-  { code: '+49', flag: '🇩🇪', country: 'Germany' },
-  { code: '+39', flag: '🇮🇹', country: 'Italy' },
-  { code: '+31', flag: '🇳🇱', country: 'Netherlands' },
-] as const
+import { countryCodes } from '@/lib/phone-numbers'
 
 export interface PhoneNumberInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
@@ -39,7 +30,7 @@ export interface PhoneNumberInputProps
 
 const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
   ({ className, name, disabled, value = '', defaultValue, onChange, ...props }, ref) => {
-    const [countryCode, setCountryCode] = useState('+351')
+    const [countryCode, setCountryCode] = useState('PT')
     const [phoneNumber, setPhoneNumber] = useState('')
 
     const _value = useMemo(
@@ -60,10 +51,11 @@ const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
       setPhoneNumber(phoneStr.slice(matchingCode.code.length))
     }, [value, defaultValue])
 
-    const handleCountryCodeChange = useCallback(
-      (code: string) => {
-        setCountryCode(code)
-        const newValue = `${code}${phoneNumber}`
+    const handleCountryISOChange = useCallback(
+      (iso: string) => {
+        const country = countryCodes.find(({ iso: _iso }) => _iso === iso)!
+        setCountryCode(country.iso)
+        const newValue = `${country.code}${phoneNumber}`
         onChange?.(newValue)
       },
       [phoneNumber, onChange],
@@ -83,13 +75,13 @@ const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
     return (
       <div className={cn('flex', className)}>
         <input ref={ref} type="hidden" name={name} value={_value} />
-        <Select disabled={disabled} value={countryCode} onValueChange={handleCountryCodeChange}>
+        <Select disabled={disabled} value={countryCode} onValueChange={handleCountryISOChange}>
           <SelectTrigger className="w-40 border-r-0 rounded-r-none rounded-l-sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {countryCodes.map(({ code, flag }) => (
-              <SelectItem key={code} value={code}>
+            {countryCodes.map(({ iso, code, flag }) => (
+              <SelectItem key={iso} value={iso}>
                 {flag} ({code})
               </SelectItem>
             ))}
