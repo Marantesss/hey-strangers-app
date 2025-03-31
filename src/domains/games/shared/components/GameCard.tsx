@@ -86,8 +86,17 @@ const GameCard: React.FC<GameCardProps> = ({
           <div>
             <span className="font-bold">{gameStartTime}</span>• ({game.durationInMinutes}min.)
           </div>
-          <div className="text-[#454745]">
-            {game.description} - {fieldFlooring}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[#454745]">
+              {game.description} - {fieldFlooring}
+            </span>
+            <span className="block text-secondary bg-[#FFF5F0] p-1 font-medium rounded-lg">
+              {!game.isFull && (
+                <>
+                  Only <span className="font-bold">{game.availableSpots}</span> spots left
+                </>
+              )}
+            </span>
           </div>
         </div>
         {!simple && (

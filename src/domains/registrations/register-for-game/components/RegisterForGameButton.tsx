@@ -29,7 +29,7 @@ const RegisterForGameButton: React.FC<RegisterForGameButtonProps> = ({ game }) =
         'bg-[#E3FFCD] text-primary': isRegistered,
       })}
     >
-      {isRegistered ? 'Registered' : 'Register for game'}
+      {isRegistered ? 'Registered' : !game.isFull ? 'Register for game' : 'The game is full'}
     </Button>
   )
 }

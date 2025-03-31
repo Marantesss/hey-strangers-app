@@ -32,6 +32,8 @@ export class GameModel {
   private readonly _registrations?: RegistrationModel[]
   private readonly _registrationsIds?: string[]
 
+  private static readonly ARTIFICIAL_AVAILABLE_SPOTS_LIMIT = 6
+
   private constructor(data: PayloadGame, relations?: GameModelRelations) {
     this.id = data.id
     this.name = data.name
@@ -99,12 +101,19 @@ export class GameModel {
     return (this.endsAt.getTime() - this.startsAt.getTime()) / (1000 * 60)
   }
 
+  /**
+   * Artificial limit of because MARKETING!!!
+   */
   get availableSpots(): number {
-    return this.maxPlayers - (this._registrationsIds?.length ?? 0)
+    const actualAvailableSpots = this.maxPlayers - (this._registrationsIds?.length ?? 0)
+
+    return actualAvailableSpots > GameModel.ARTIFICIAL_AVAILABLE_SPOTS_LIMIT
+      ? GameModel.ARTIFICIAL_AVAILABLE_SPOTS_LIMIT
+      : Math.max(actualAvailableSpots, 0)
   }
 
   get isFull(): boolean {
-    return this.availableSpots <= 0
+    return this.availableSpots === 0
   }
 
   public isUserRegistered(userId: string): boolean {
