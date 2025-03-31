@@ -76,5 +76,5 @@ export const updateStripeCustomer: CollectionAfterChangeHook<User> = async ({
 
 export const deleteStripeCustomer: CollectionAfterDeleteHook<User> = async ({ doc }) => {
   if (!doc.stripeCustomerId) return
-  await stripe.customers.del(doc.stripeCustomerId)
+  const c = await stripe.customers.del(doc.stripeCustomerId)
 }

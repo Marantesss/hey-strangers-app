@@ -6,6 +6,7 @@ export const PaymentIntentParamsSchema = z.object({
 
 export const PaymentIntentBodySchema = z.object({
   playerCount: z.number().positive().default(1),
+  paymentMethod: z.enum(['card']),
   paymentMethodId: z
     .string()
     .transform((val) => (val === '' ? undefined : val))

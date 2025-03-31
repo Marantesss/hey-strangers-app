@@ -35,7 +35,7 @@ const RegisterForGameSheetForm: React.FC = () => {
   const { game, toggleOpen } = useRegisterFormGame()
   const { data: paymentMethods, isLoading: isPaymentMethodsLoading } = usePaymentMethodsQuery()
 
-  const { trigger, isMutating } = useCreatePaymentIntentMutation()
+  const { trigger } = useCreatePaymentIntentMutation()
 
   const stripe = useStripe()
 
@@ -44,7 +44,7 @@ const RegisterForGameSheetForm: React.FC = () => {
     defaultValues: {
       gameId: game?.id ?? '',
       playerCount: 1,
-      paymentMethod: 'credit-card',
+      paymentMethod: 'card',
       paymentMethodId: '',
       newPaymentMethod: {
         name: '',
@@ -68,12 +68,15 @@ const RegisterForGameSheetForm: React.FC = () => {
       return
     }
 
+    const paymentIntentBody = {
+      playerCount: values.playerCount,
+      paymentMethod: values.paymentMethod,
+      paymentMethodId: values.paymentMethodId,
+    }
+
     const paymentIntentResponse = await trigger({
       id: game!.id,
-      body: {
-        playerCount: values.playerCount,
-        paymentMethodId: values.paymentMethodId,
-      },
+      body: paymentIntentBody,
     })
 
     if (paymentIntentResponse.error) {
@@ -97,9 +100,10 @@ const RegisterForGameSheetForm: React.FC = () => {
   }
 
   const totalSeatPrice = game ? game.price * form.watch('playerCount') : 0
-  const totalPrice = totalSeatPrice + BOOKING_FEE
+  const totalBookingFee = BOOKING_FEE * form.watch('playerCount')
+  const totalPrice = totalSeatPrice + totalBookingFee
 
-  const isCreditCard = form.watch('paymentMethod') === 'credit-card'
+  const isCreditCard = form.watch('paymentMethod') === 'card'
 
   const price = game?.price.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })
   const gameDay = game?.startsAt.toLocaleDateString('en-US', {
@@ -201,7 +205,7 @@ const RegisterForGameSheetForm: React.FC = () => {
                     value={field.value}
                     className="space-y-2"
                   >
-                    <FormItem
+                    {/* <FormItem
                       className={`flex items-center space-x-3 p-4 border rounded-xl space-y-0 ${field.value === 'apple-pay' ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
                     >
                       <FormControl>
@@ -243,14 +247,13 @@ const RegisterForGameSheetForm: React.FC = () => {
                         <span>Google Pay</span>
                         <PaymentMethodLogo issuer="google-pay" />
                       </FormLabel>
-                    </FormItem>
+                    </FormItem> */}
 
-                    <FormItem
+                    {/* <FormItem
                       className={`flex items-center space-x-3 p-4 border rounded-xl  space-y-0 ${field.value === 'paypal' ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
                     >
                       <FormControl>
                         <RadioGroupItem
-                          disabled
                           value="paypal"
                           id="paypal"
                           className={
@@ -265,23 +268,23 @@ const RegisterForGameSheetForm: React.FC = () => {
                         <span>PayPal</span>
                         <PaymentMethodLogo issuer="paypal" />
                       </FormLabel>
-                    </FormItem>
+                    </FormItem> */}
 
                     <FormItem
-                      className={`flex items-center space-x-3 p-4 border rounded-xl space-y-0 ${field.value === 'credit-card' ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
+                      className={`flex items-center space-x-3 p-4 border rounded-xl space-y-0 ${field.value === 'card' ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
                     >
                       <FormControl>
                         <RadioGroupItem
-                          value="credit-card"
-                          id="credit-card"
+                          value="card"
+                          id="card"
                           defaultChecked
                           className={
-                            field.value === 'credit-card' ? 'border-[#1BA781] text-[#1BA781]' : ''
+                            field.value === 'card' ? 'border-[#1BA781] text-[#1BA781]' : ''
                           }
                         />
                       </FormControl>
                       <FormLabel
-                        htmlFor="credit-card"
+                        htmlFor="card"
                         className="flex items-center justify-between w-full p-0"
                       >
                         <span>Credit/Debit Card</span>
@@ -353,7 +356,7 @@ const RegisterForGameSheetForm: React.FC = () => {
             <div className="flex justify-between text-subtle-foreground">
               <span>Booking Fee</span>
               <span>
-                {BOOKING_FEE.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })}
+                {totalBookingFee.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })}
               </span>
             </div>
             <div className="flex justify-between text-lg font-semibold">

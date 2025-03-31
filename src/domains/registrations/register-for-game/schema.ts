@@ -11,7 +11,7 @@ export type RegisterForGamePaymentConfirmationValues = z.infer<
 export const RegisterForGameSchema = z.object({
   gameId: z.string(),
   playerCount: z.number().positive().default(1),
-  paymentMethod: z.enum(['credit-card', 'apple-pay', 'google-pay', 'paypal']),
+  paymentMethod: z.enum(['card']),
   // use an already existing payment method
   paymentMethodId: z.string().optional(),
   // create a new payment method

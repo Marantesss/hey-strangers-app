@@ -78,5 +78,16 @@ export const updateStripeProduct: CollectionBeforeChangeHook<Game> = async ({
 
 export const deleteStripeProduct: CollectionAfterDeleteHook<Game> = async ({ doc }) => {
   if (!doc.stripeProductId) return
+  // Archive all prices associated with the product first
+  const prices = await stripe.prices.list({
+    product: doc.stripeProductId,
+    active: true,
+  })
+
+  for (const price of prices.data) {
+    await stripe.prices.update(price.id, { active: false })
+  }
+
+  // Then delete the product itself
   await stripe.products.del(doc.stripeProductId)
 }

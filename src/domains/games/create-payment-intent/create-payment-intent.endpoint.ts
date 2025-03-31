@@ -29,11 +29,15 @@ const createPaymentIntentEndpoint: Endpoint = {
     }
 
     try {
+      // Convert to cents
+      const amount = (game.price + BOOKING_FEE) * body.playerCount * 100
+
       // Create a payment intent with Stripe
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: (game.price + BOOKING_FEE) * body.playerCount * 100, // Convert to cents
+        amount,
         currency: 'eur',
         payment_method: body.paymentMethodId,
+        payment_method_types: ['card'],
         customer: req.user.stripeCustomerId ?? undefined,
         metadata: {
           gameId: game.id,
