@@ -40,13 +40,25 @@ const Quiz: React.FC = () => {
     }
   }
 
+  const getFakeDate = (date: Date) => {
+    const newDate = new Date()
+    newDate.setHours(date.getHours(), date.getMinutes(), 0, 0)
+    if (newDate < new Date()) {
+      newDate.setDate(newDate.getDate() + 1)
+    }
+    return newDate
+  }
+
   const dummyGames = quiz.dummyGameResults
     ?.map((game) =>
       GameModel.from({
         ...game,
         id: game.id!,
+        startsAt: getFakeDate(new Date(game.startsAt)).toISOString(),
+        endsAt: getFakeDate(new Date(game.endsAt)).toISOString(),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        registrations: [],
       }),
     )
     .slice(0, 2)
