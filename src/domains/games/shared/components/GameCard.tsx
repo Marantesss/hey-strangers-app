@@ -45,24 +45,23 @@ const GameCard: React.FC<GameCardProps> = ({
   const fieldFlooring =
     game.field.flooring.name.charAt(0).toUpperCase() + game.field.flooring.name.slice(1)
 
-  const registeredPlayers = game.registrations?.reduce<{ name: string; count: number }[]>(
-    (acc, registration) => {
-      const existingUser = acc.find((entry) => entry.name === registration.user.privateName)
-      if (existingUser) {
-        existingUser.count += 1
-        return acc
-      }
+  const registeredPlayers = !simple
+    ? game.registrations.reduce<{ name: string; count: number }[]>((acc, registration) => {
+        const existingUser = acc.find((entry) => entry.name === registration.user.privateName)
+        if (existingUser) {
+          existingUser.count += 1
+          return acc
+        }
 
-      return [
-        ...acc,
-        {
-          name: registration.user.privateName,
-          count: 1,
-        },
-      ]
-    },
-    [],
-  )
+        return [
+          ...acc,
+          {
+            name: registration.user.privateName,
+            count: 1,
+          },
+        ]
+      }, [])
+    : []
 
   return (
     <Card disabled={disabled} className={cn({ 'shadow-lg shadow-[#1BA781]': highlight })}>

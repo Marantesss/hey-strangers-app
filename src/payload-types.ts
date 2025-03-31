@@ -54,6 +54,7 @@ export type SupportedTimezones =
   | 'Asia/Singapore'
   | 'Asia/Tokyo'
   | 'Asia/Seoul'
+  | 'Australia/Brisbane'
   | 'Australia/Sydney'
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
@@ -268,6 +269,9 @@ export interface Registration {
  */
 export interface Game {
   id: string;
+  /**
+   * The game's name will never be shown to the user, it is only used to identify the game on the back office
+   */
   name: string;
   description?: string | null;
   startsAt: string;
@@ -624,8 +628,8 @@ export interface Home {
     description: string;
     buttonLabel: string;
     partners: {
-      logo: string | Media;
       name: string;
+      logo: string | Media;
       id?: string | null;
     }[];
   };
@@ -725,6 +729,14 @@ export interface Home {
     title: string;
     buttonLabel: string;
   };
+  seo?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -753,17 +765,41 @@ export interface Footer {
  */
 export interface Quiz {
   id: string;
+  /**
+   * These are the sports that will be cycled through in the quiz
+   */
   sports: {
     name: string;
     id?: string | null;
   }[];
+  /**
+   * These are the questions that will be asked during the quiz
+   */
   questions: {
+    /**
+     * This key identifies the question and must be unique for each one
+     */
     key: string;
+    /**
+     * The title of the question
+     */
     title: string;
+    /**
+     * Shows a short note below the options
+     */
     description?: string | null;
     options: {
-      label: string;
+      /**
+       * If disabled, the option will not be shown as disabled
+       */
       enabled?: boolean | null;
+      /**
+       * The text that will be shown to the user
+       */
+      label: string;
+      /**
+       * This is the value that will be returned if the option is selected. For each question, this value must be unique.
+       */
       value: string;
       id?: string | null;
     }[];
@@ -774,6 +810,9 @@ export interface Quiz {
    */
   dummyGameResults?:
     | {
+        /**
+         * The game's name will never be shown to the user, it is only used to identify the game on the back office
+         */
         name: string;
         description: string;
         startsAt: string;
@@ -795,79 +834,119 @@ export interface Quiz {
 export interface Page {
   id: string;
   contactUs: {
-    root: {
-      type: string;
-      children: {
+    content: {
+      root: {
         type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
         version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
+      };
+      [k: string]: unknown;
     };
-    [k: string]: unknown;
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
   };
   safety: {
-    root: {
-      type: string;
-      children: {
+    content: {
+      root: {
         type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
         version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
+      };
+      [k: string]: unknown;
     };
-    [k: string]: unknown;
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
   };
   communityGuidelines: {
-    root: {
-      type: string;
-      children: {
+    content: {
+      root: {
         type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
         version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
+      };
+      [k: string]: unknown;
     };
-    [k: string]: unknown;
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
   };
   termsOfService: {
-    root: {
-      type: string;
-      children: {
+    content: {
+      root: {
         type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
         version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
+      };
+      [k: string]: unknown;
     };
-    [k: string]: unknown;
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
   };
   privacyPolicy: {
-    root: {
-      type: string;
-      children: {
+    content: {
+      root: {
         type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
         version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
+      };
+      [k: string]: unknown;
     };
-    [k: string]: unknown;
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -887,8 +966,8 @@ export interface HomeSelect<T extends boolean = true> {
         partners?:
           | T
           | {
-              logo?: T;
               name?: T;
+              logo?: T;
               id?: T;
             };
       };
@@ -1026,6 +1105,13 @@ export interface HomeSelect<T extends boolean = true> {
         title?: T;
         buttonLabel?: T;
       };
+  seo?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -1073,8 +1159,8 @@ export interface QuizSelect<T extends boolean = true> {
         options?:
           | T
           | {
-              label?: T;
               enabled?: T;
+              label?: T;
               value?: T;
               id?: T;
             };
@@ -1102,11 +1188,46 @@ export interface QuizSelect<T extends boolean = true> {
  * via the `definition` "pages_select".
  */
 export interface PagesSelect<T extends boolean = true> {
-  contactUs?: T;
-  safety?: T;
-  communityGuidelines?: T;
-  termsOfService?: T;
-  privacyPolicy?: T;
+  contactUs?:
+    | T
+    | {
+        content?: T;
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  safety?:
+    | T
+    | {
+        content?: T;
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  communityGuidelines?:
+    | T
+    | {
+        content?: T;
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  termsOfService?:
+    | T
+    | {
+        content?: T;
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  privacyPolicy?:
+    | T
+    | {
+        content?: T;
+        title?: T;
+        image?: T;
+        description?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

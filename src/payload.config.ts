@@ -1,6 +1,10 @@
 import { s3Storage } from '@payloadcms/storage-s3'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { seoPlugin } from '@payloadcms/plugin-seo'
+
+import { GenerateURL } from 'node_modules/@payloadcms/plugin-seo/dist/types'
+
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -25,11 +29,20 @@ import { seedHome } from './database/seed/home'
 import { seedFooter } from './database/seed/footer'
 import { seedQuiz } from './database/seed/quiz'
 import { seedPages } from './database/seed/pages'
+import { Home as HomeType, Page as PageType } from './payload-types'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const isDev = process.env.NODE_ENV === 'development'
+
+const generateURL: GenerateURL<HomeType | PageType> = ({ doc, globalSlug }) => {
+  if (globalSlug === 'pages') {
+    return process.env.NEXT_PUBLIC_APP_URL!
+  }
+
+  return process.env.NEXT_PUBLIC_APP_URL!
+}
 
 export default buildConfig({
   admin: {
@@ -57,6 +70,7 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: postgresAdapter({
+    push: isDev,
     idType: 'uuid',
     pool: {
       connectionString: process.env.DATABASE_URI || '',
@@ -84,6 +98,9 @@ export default buildConfig({
         region: process.env.S3_REGION || '',
         endpoint: process.env.S3_ENDPOINT || '',
       },
+    }),
+    seoPlugin({
+      generateURL,
     }),
   ],
   onInit: async (payload) => {

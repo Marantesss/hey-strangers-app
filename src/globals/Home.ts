@@ -1,150 +1,78 @@
+import {
+  MetaDescriptionField,
+  MetaImageField,
+  MetaTitleField,
+  OverviewField,
+  PreviewField,
+} from '@payloadcms/plugin-seo/fields'
 import type { GlobalConfig } from 'payload'
 
 export const Home: GlobalConfig = {
   slug: 'home',
   fields: [
-    // --- Hero Section
     {
-      name: 'hero',
-      type: 'group',
-      fields: [
+      type: 'tabs',
+      tabs: [
+        // --- Hero Section
         {
-          name: 'title',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'subtitle',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'description',
-          type: 'textarea',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'buttonLabel',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'partners',
-          type: 'array',
-          required: true,
+          label: 'Hero',
+          name: 'hero',
           fields: [
             {
-              name: 'logo',
-              type: 'upload',
-              relationTo: 'media',
-              required: true,
-            },
-            {
-              name: 'name',
-              type: 'text',
-              required: true,
-              localized: true,
-            },
-          ],
-        },
-      ],
-    },
-    // --- Next Games Section
-    {
-      name: 'nextGames',
-      type: 'group',
-      fields: [
-        {
-          name: 'title',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'games',
-          type: 'array',
-          required: true,
-          fields: [
-            {
-              name: 'emoji',
-              type: 'text',
-              required: true,
-            },
-            {
-              name: 'sport',
+              name: 'title',
               type: 'text',
               required: true,
               localized: true,
             },
             {
-              name: 'location',
+              name: 'subtitle',
               type: 'text',
               required: true,
+              localized: true,
             },
             {
               name: 'description',
+              type: 'textarea',
+              required: true,
+              localized: true,
+            },
+            {
+              name: 'buttonLabel',
               type: 'text',
               required: true,
               localized: true,
             },
             {
-              name: 'image',
-              type: 'upload',
-              relationTo: 'media',
+              name: 'partners',
+              type: 'array',
               required: true,
-            },
-            {
-              name: 'time',
-              type: 'date',
-              required: true,
-              admin: {
-                date: {
-                  displayFormat: 'HH:mm',
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'name',
+                      type: 'text',
+                      required: true,
+                      localized: true,
+                    },
+                    {
+                      name: 'logo',
+                      type: 'upload',
+                      relationTo: 'media',
+                      required: true,
+                    },
+                  ],
                 },
-              },
+              ],
             },
           ],
         },
-      ],
-    },
-    // --- How It Works Section
-    {
-      name: 'howItWorks',
-      type: 'group',
-      fields: [
+        // --- Next Games Section
         {
-          name: 'title',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'subtitle',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'buttonLabel',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'steps',
-          type: 'array',
-          required: true,
+          label: 'Next Games',
+          name: 'nextGames',
           fields: [
-            {
-              name: 'icon',
-              type: 'upload',
-              relationTo: 'media',
-              required: true,
-            },
             {
               name: 'title',
               type: 'text',
@@ -152,85 +80,136 @@ export const Home: GlobalConfig = {
               localized: true,
             },
             {
-              name: 'description',
-              type: 'textarea',
+              name: 'games',
+              type: 'array',
               required: true,
-              localized: true,
+              fields: [
+                {
+                  name: 'emoji',
+                  type: 'text',
+                  required: true,
+                },
+                {
+                  name: 'sport',
+                  type: 'text',
+                  required: true,
+                  localized: true,
+                },
+                {
+                  name: 'location',
+                  type: 'text',
+                  required: true,
+                },
+                {
+                  name: 'description',
+                  type: 'text',
+                  required: true,
+                  localized: true,
+                },
+                {
+                  name: 'image',
+                  type: 'upload',
+                  relationTo: 'media',
+                  required: true,
+                },
+                {
+                  name: 'time',
+                  type: 'date',
+                  required: true,
+                  admin: {
+                    date: {
+                      displayFormat: 'HH:mm',
+                    },
+                  },
+                },
+              ],
             },
           ],
         },
-      ],
-    },
-    // --- Stats Section
-    {
-      name: 'stats',
-      type: 'group',
-      fields: [
+        // --- How It Works Section
         {
-          name: 'title',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'statistics',
-          type: 'array',
-          required: true,
+          label: 'How It Works',
+          name: 'howItWorks',
           fields: [
             {
-              name: 'value',
-              type: 'number',
-              required: true,
-            },
-            {
-              name: 'label',
+              name: 'title',
               type: 'text',
               required: true,
               localized: true,
             },
             {
-              name: 'description',
+              name: 'subtitle',
               type: 'text',
               required: true,
               localized: true,
+            },
+            {
+              name: 'buttonLabel',
+              type: 'text',
+              required: true,
+              localized: true,
+            },
+            {
+              name: 'steps',
+              type: 'array',
+              required: true,
+              fields: [
+                {
+                  name: 'icon',
+                  type: 'upload',
+                  relationTo: 'media',
+                  required: true,
+                },
+                {
+                  name: 'title',
+                  type: 'text',
+                  required: true,
+                  localized: true,
+                },
+                {
+                  name: 'description',
+                  type: 'textarea',
+                  required: true,
+                  localized: true,
+                },
+              ],
             },
           ],
         },
+        // --- Stats Section
         {
-          name: 'image',
-          type: 'upload',
-          relationTo: 'media',
-          required: true,
-        },
-      ],
-    },
-    // --- Testimonials Section
-    {
-      name: 'testimonials',
-      type: 'group',
-      fields: [
-        {
-          name: 'title',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'reviews',
-          type: 'array',
-          required: true,
+          label: 'Statistics',
+          name: 'stats',
           fields: [
             {
-              name: 'quote',
-              type: 'textarea',
+              name: 'title',
+              type: 'text',
               required: true,
               localized: true,
             },
             {
-              name: 'author',
-              type: 'text',
+              name: 'statistics',
+              type: 'array',
               required: true,
-              localized: true,
+              fields: [
+                {
+                  name: 'value',
+                  type: 'number',
+                  required: true,
+                },
+                {
+                  name: 'label',
+                  type: 'text',
+                  required: true,
+                  localized: true,
+                },
+                {
+                  name: 'description',
+                  type: 'text',
+                  required: true,
+                  localized: true,
+                },
+              ],
             },
             {
               name: 'image',
@@ -240,91 +219,160 @@ export const Home: GlobalConfig = {
             },
           ],
         },
-      ],
-    },
-    // --- CTA Section
-    {
-      name: 'cta',
-      type: 'group',
-      fields: [
+        // --- Testimonials Section
         {
-          name: 'title',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'subtitle',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'buttonLabel',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'sports',
-          type: 'array',
-          required: true,
+          label: 'Testimonials',
+          name: 'testimonials',
           fields: [
             {
-              name: 'name',
+              name: 'title',
               type: 'text',
               required: true,
               localized: true,
             },
             {
-              name: 'image',
-              type: 'upload',
-              relationTo: 'media',
+              name: 'reviews',
+              type: 'array',
               required: true,
-            },
-            {
-              name: 'selected',
-              type: 'checkbox',
-              required: true,
+              fields: [
+                {
+                  name: 'quote',
+                  type: 'textarea',
+                  required: true,
+                  localized: true,
+                },
+                {
+                  name: 'author',
+                  type: 'text',
+                  required: true,
+                  localized: true,
+                },
+                {
+                  name: 'image',
+                  type: 'upload',
+                  relationTo: 'media',
+                  required: true,
+                },
+              ],
             },
           ],
         },
-      ],
-    },
-    // --- Strangers Section
-    {
-      name: 'strangers',
-      type: 'group',
-      fields: [
+        // --- CTA Section
         {
-          name: 'title',
-          type: 'text',
-          required: true,
-          localized: true,
+          label: 'CTA',
+          name: 'cta',
+          fields: [
+            {
+              name: 'title',
+              type: 'text',
+              required: true,
+              localized: true,
+            },
+            {
+              name: 'subtitle',
+              type: 'text',
+              required: true,
+              localized: true,
+            },
+            {
+              name: 'buttonLabel',
+              type: 'text',
+              required: true,
+              localized: true,
+            },
+            {
+              name: 'sports',
+              type: 'array',
+              required: true,
+              fields: [
+                {
+                  name: 'name',
+                  type: 'text',
+                  required: true,
+                  localized: true,
+                },
+                {
+                  name: 'image',
+                  type: 'upload',
+                  relationTo: 'media',
+                  required: true,
+                },
+                {
+                  name: 'selected',
+                  type: 'checkbox',
+                  required: true,
+                },
+              ],
+            },
+          ],
         },
+        // --- Strangers Section
         {
+          label: 'Strangers',
           name: 'strangers',
-          type: 'array',
-          required: true,
           fields: [
             {
-              name: 'name',
+              name: 'title',
               type: 'text',
-              required: true,
-            },
-            {
-              name: 'age',
-              type: 'number',
-              required: true,
-            },
-            {
-              name: 'bio',
-              type: 'textarea',
               required: true,
               localized: true,
             },
             {
-              name: 'sport',
+              name: 'strangers',
+              type: 'array',
+              required: true,
+              fields: [
+                {
+                  name: 'name',
+                  type: 'text',
+                  required: true,
+                },
+                {
+                  name: 'age',
+                  type: 'number',
+                  required: true,
+                },
+                {
+                  name: 'bio',
+                  type: 'textarea',
+                  required: true,
+                  localized: true,
+                },
+                {
+                  name: 'sport',
+                  type: 'text',
+                  required: true,
+                  localized: true,
+                },
+                {
+                  name: 'image',
+                  type: 'upload',
+                  relationTo: 'media',
+                  required: true,
+                },
+              ],
+            },
+          ],
+        },
+        // --- When & Where Section
+        {
+          label: 'When & Where',
+          name: 'whenAndWhere',
+          fields: [
+            {
+              name: 'title',
+              type: 'text',
+              required: true,
+              localized: true,
+            },
+            {
+              name: 'subtitle',
+              type: 'text',
+              required: true,
+              localized: true,
+            },
+            {
+              name: 'buttonLabel',
               type: 'text',
               required: true,
               localized: true,
@@ -335,49 +383,37 @@ export const Home: GlobalConfig = {
               relationTo: 'media',
               required: true,
             },
+            {
+              name: 'features',
+              type: 'array',
+              required: true,
+              fields: [
+                {
+                  name: 'emoji',
+                  type: 'text',
+                  required: true,
+                },
+                {
+                  name: 'title',
+                  type: 'text',
+                  required: true,
+                  localized: true,
+                },
+                {
+                  name: 'description',
+                  type: 'textarea',
+                  required: true,
+                  localized: true,
+                },
+              ],
+            },
           ],
         },
-      ],
-    },
-    // --- When & Where Section
-    {
-      name: 'whenAndWhere',
-      type: 'group',
-      fields: [
+        // --- Numbers Section
         {
-          name: 'title',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'subtitle',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'buttonLabel',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'image',
-          type: 'upload',
-          relationTo: 'media',
-          required: true,
-        },
-        {
-          name: 'features',
-          type: 'array',
-          required: true,
+          label: 'Numbers',
+          name: 'numbers',
           fields: [
-            {
-              name: 'emoji',
-              type: 'text',
-              required: true,
-            },
             {
               name: 'title',
               type: 'text',
@@ -385,94 +421,87 @@ export const Home: GlobalConfig = {
               localized: true,
             },
             {
-              name: 'description',
-              type: 'textarea',
+              name: 'numbers',
+              type: 'array',
               required: true,
-              localized: true,
+              fields: [
+                {
+                  name: 'value',
+                  type: 'number',
+                  required: true,
+                },
+                {
+                  name: 'label',
+                  type: 'text',
+                  required: true,
+                  localized: true,
+                },
+              ],
             },
           ],
         },
-      ],
-    },
-    // --- Numbers Section
-    {
-      name: 'numbers',
-      type: 'group',
-      fields: [
+        // --- FAQ Section
         {
-          name: 'title',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'numbers',
-          type: 'array',
-          required: true,
+          label: 'FAQ',
+          name: 'faq',
           fields: [
             {
-              name: 'value',
-              type: 'number',
+              name: 'title',
+              type: 'text',
               required: true,
+              localized: true,
             },
             {
-              name: 'label',
+              name: 'questions',
+              type: 'array',
+              required: true,
+              fields: [
+                {
+                  name: 'question',
+                  type: 'text',
+                  required: true,
+                  localized: true,
+                },
+                {
+                  name: 'answer',
+                  type: 'textarea',
+                  required: true,
+                  localized: true,
+                },
+              ],
+            },
+          ],
+        },
+        // CTA 2
+        {
+          label: 'CTA 2',
+          name: 'cta2',
+          fields: [
+            {
+              name: 'title',
+              type: 'text',
+              required: true,
+              localized: true,
+            },
+            {
+              name: 'buttonLabel',
               type: 'text',
               required: true,
               localized: true,
             },
           ],
         },
-      ],
-    },
-    // --- FAQ Section
-    {
-      name: 'faq',
-      type: 'group',
-      fields: [
+        // SEO
         {
-          name: 'title',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'questions',
-          type: 'array',
-          required: true,
+          label: 'SEO',
+          name: 'seo',
           fields: [
-            {
-              name: 'question',
-              type: 'text',
-              required: true,
-              localized: true,
-            },
-            {
-              name: 'answer',
-              type: 'textarea',
-              required: true,
-              localized: true,
-            },
+            OverviewField({}),
+            MetaTitleField({}),
+            MetaImageField({ relationTo: 'media' }),
+            MetaDescriptionField({}),
+            PreviewField({}),
           ],
-        },
-      ],
-    },
-    // CTA 2
-    {
-      name: 'cta2',
-      type: 'group',
-      fields: [
-        {
-          name: 'title',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'buttonLabel',
-          type: 'text',
-          required: true,
-          localized: true,
         },
       ],
     },

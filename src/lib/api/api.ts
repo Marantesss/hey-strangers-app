@@ -12,10 +12,10 @@ import {
   FindByIdResponse,
 } from './types'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL
+const API_URL = process.env.NEXT_PUBLIC_APP_URL
 
 if (!API_URL) {
-  throw new Error('NEXT_PUBLIC_API_URL environment variable is not set')
+  throw new Error('NEXT_PUBLIC_APP_URL environment variable is not set')
 }
 export class ApiError extends Error {
   res: unknown

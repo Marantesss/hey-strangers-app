@@ -1,13 +1,9 @@
 import { Payload } from 'payload'
 import { fileURLToPath } from 'url'
 import path from 'path'
-import { SeedEntry } from './types'
-import { Home } from '@/payload-types'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
-
-type HomeSeed = Omit<Home, 'createdAt' | 'id' | 'updatedAt'>
 
 export const seedHome = async (payload: Payload) => {
   const homeDataPT = {

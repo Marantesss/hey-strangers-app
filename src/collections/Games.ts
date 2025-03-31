@@ -5,7 +5,6 @@ import {
   deleteStripeProduct,
   updateStripeProduct,
 } from '@/domains/games/sync-stripe-product/sync-stripe-product.hooks'
-import { Registration } from '@/payload-types'
 import { CollectionConfig } from 'payload'
 
 export const Games: CollectionConfig = {
@@ -26,6 +25,10 @@ export const Games: CollectionConfig = {
       type: 'text',
       required: true,
       localized: true,
+      admin: {
+        description:
+          "The game's name will never be shown to the user, it is only used to identify the game on the back office",
+      },
     },
     {
       name: 'description',
@@ -33,36 +36,46 @@ export const Games: CollectionConfig = {
       localized: true,
     },
     {
-      name: 'startsAt',
-      type: 'date',
-      required: true,
-      admin: {
-        date: {
-          pickerAppearance: 'dayAndTime',
+      type: 'row',
+      fields: [
+        {
+          name: 'startsAt',
+          type: 'date',
+          required: true,
+          admin: {
+            date: {
+              pickerAppearance: 'dayAndTime',
+            },
+          },
         },
-      },
-    },
-    {
-      name: 'endsAt',
-      type: 'date',
-      required: true,
-      admin: {
-        date: {
-          pickerAppearance: 'dayAndTime',
+        {
+          name: 'endsAt',
+          type: 'date',
+          required: true,
+          admin: {
+            date: {
+              pickerAppearance: 'dayAndTime',
+            },
+          },
         },
-      },
+      ],
     },
     {
-      name: 'price',
-      type: 'number',
-      required: true,
-      min: 0,
-    },
-    {
-      name: 'maxPlayers',
-      type: 'number',
-      required: true,
-      min: 1,
+      type: 'row',
+      fields: [
+        {
+          name: 'price',
+          type: 'number',
+          required: true,
+          min: 0,
+        },
+        {
+          name: 'maxPlayers',
+          type: 'number',
+          required: true,
+          min: 1,
+        },
+      ],
     },
     {
       name: 'stripeProductId',
@@ -79,16 +92,21 @@ export const Games: CollectionConfig = {
     },
     // --- relations and joins
     {
-      name: 'sport',
-      type: 'relationship',
-      relationTo: 'sports',
-      required: true,
-    },
-    {
-      name: 'field',
-      type: 'relationship',
-      relationTo: 'fields',
-      required: true,
+      type: 'row',
+      fields: [
+        {
+          name: 'sport',
+          type: 'relationship',
+          relationTo: 'sports',
+          required: true,
+        },
+        {
+          name: 'field',
+          type: 'relationship',
+          relationTo: 'fields',
+          required: true,
+        },
+      ],
     },
     {
       name: 'registrations',

@@ -15,7 +15,7 @@ export const generateMetaForPage = async (args: { doc: AllPageTypes }): Promise<
     typeof doc?.image === 'object' &&
     doc.image !== null &&
     'url' in doc.image &&
-    `${process.env.NEXT_PUBLIC_SERVER_URL}${doc.image.url}`
+    `${process.env.NEXT_PUBLIC_APP_URL}${doc.image.url}`
 
   const title = doc?.title ? doc?.title + ' | Hey Strangers' : 'Hey Strangers'
 
@@ -39,12 +39,12 @@ export const generateMetaForPage = async (args: { doc: AllPageTypes }): Promise<
 
 const defaultOpenGraph: Metadata['openGraph'] = {
   type: 'website',
-  description: 'An open-source website built with Payload and Next.js.',
+  description: 'Hey Strangers is a platform for finding and joining sports groups.',
   images: [
     {
-      url: process.env.NEXT_PUBLIC_SERVER_URL
-        ? `${process.env.NEXT_PUBLIC_SERVER_URL}/website-template-OG.webp`
-        : '/website-template-OG.webp',
+      url: process.env.NEXT_PUBLIC_APP_URL
+        ? `${process.env.NEXT_PUBLIC_APP_URL}/default-og.png`
+        : '/default-og.png',
     },
   ],
   siteName: 'Hey Strangers',

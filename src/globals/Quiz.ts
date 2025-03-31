@@ -7,6 +7,9 @@ export const Quiz: GlobalConfig = {
       name: 'sports',
       type: 'array',
       required: true,
+      admin: {
+        description: 'These are the sports that will be cycled through in the quiz',
+      },
       fields: [
         {
           name: 'name',
@@ -20,22 +23,43 @@ export const Quiz: GlobalConfig = {
       name: 'questions',
       type: 'array',
       required: true,
+      admin: {
+        description: 'These are the questions that will be asked during the quiz',
+      },
       fields: [
         {
-          name: 'key',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'title',
-          type: 'text',
-          required: true,
-          localized: true,
-        },
-        {
-          name: 'description',
-          type: 'text',
-          localized: true,
+          type: 'row',
+          fields: [
+            {
+              name: 'key',
+              type: 'text',
+              required: true,
+              unique: true,
+              admin: {
+                width: '20%',
+                description: 'This key identifies the question and must be unique for each one',
+              },
+            },
+            {
+              name: 'title',
+              type: 'text',
+              required: true,
+              localized: true,
+              admin: {
+                width: '40%',
+                description: 'The title of the question',
+              },
+            },
+            {
+              name: 'description',
+              type: 'text',
+              localized: true,
+              admin: {
+                width: '40%',
+                description: 'Shows a short note below the options',
+              },
+            },
+          ],
         },
         {
           name: 'options',
@@ -43,20 +67,37 @@ export const Quiz: GlobalConfig = {
           required: true,
           fields: [
             {
-              name: 'label',
-              type: 'text',
-              required: true,
-              localized: true,
-            },
-            {
               name: 'enabled',
               type: 'checkbox',
               defaultValue: true,
+              admin: {
+                description: 'If disabled, the option will not be shown as disabled',
+              },
             },
             {
-              name: 'value',
-              type: 'text',
-              required: true,
+              type: 'row',
+              fields: [
+                {
+                  name: 'label',
+                  type: 'text',
+                  required: true,
+                  localized: true,
+                  admin: {
+                    width: '67%',
+                    description: 'The text that will be shown to the user',
+                  },
+                },
+                {
+                  name: 'value',
+                  type: 'text',
+                  required: true,
+                  admin: {
+                    width: '33%',
+                    description:
+                      'This is the value that will be returned if the option is selected. For each question, this value must be unique.',
+                  },
+                },
+              ],
             },
           ],
         },
@@ -75,6 +116,10 @@ export const Quiz: GlobalConfig = {
           type: 'text',
           required: true,
           localized: true,
+          admin: {
+            description:
+              "The game's name will never be shown to the user, it is only used to identify the game on the back office",
+          },
         },
         {
           name: 'description',
@@ -83,48 +128,77 @@ export const Quiz: GlobalConfig = {
           localized: true,
         },
         {
-          name: 'startsAt',
-          type: 'date',
-          required: true,
-          admin: {
-            date: {
-              pickerAppearance: 'timeOnly',
+          type: 'row',
+          fields: [
+            {
+              name: 'startsAt',
+              type: 'date',
+              required: true,
+              admin: {
+                width: '50%',
+                date: {
+                  pickerAppearance: 'timeOnly',
+                },
+              },
             },
-          },
-        },
-        {
-          name: 'endsAt',
-          type: 'date',
-          required: true,
-          admin: {
-            date: {
-              pickerAppearance: 'timeOnly',
+            {
+              name: 'endsAt',
+              type: 'date',
+              required: true,
+              admin: {
+                width: '50%',
+                date: {
+                  pickerAppearance: 'timeOnly',
+                },
+              },
             },
-          },
+          ],
         },
         {
-          name: 'price',
-          type: 'number',
-          required: true,
-          min: 0,
+          type: 'row',
+          fields: [
+            {
+              name: 'price',
+              type: 'number',
+              required: true,
+              min: 0,
+              admin: {
+                width: '50%',
+              },
+            },
+            {
+              name: 'maxPlayers',
+              type: 'number',
+              required: true,
+              min: 1,
+              admin: {
+                width: '50%',
+              },
+            },
+          ],
         },
         {
-          name: 'maxPlayers',
-          type: 'number',
-          required: true,
-          min: 1,
-        },
-        {
-          name: 'sport',
-          type: 'relationship',
-          relationTo: 'sports',
-          required: true,
-        },
-        {
-          name: 'field',
-          type: 'relationship',
-          relationTo: 'fields',
-          required: true,
+          type: 'row',
+          fields: [
+            {
+              name: 'sport',
+              type: 'relationship',
+              relationTo: 'sports',
+              required: true,
+              admin: {
+                width: '50%',
+              },
+            },
+            {
+              name: 'field',
+              type: 'relationship',
+              relationTo: 'fields',
+              required: true,
+              admin: {
+                width: '50%',
+              },
+            },
+          ],
         },
       ],
     },

@@ -18,6 +18,9 @@ export const Footer: GlobalConfig = {
           name: 'url',
           type: 'text',
           required: true,
+          admin: {
+            readOnly: true,
+          },
         },
       ],
     },

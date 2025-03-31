@@ -13,6 +13,8 @@ import NumbersSection from '@/components/home/NumbersSection'
 import FAQSection from '@/components/home/FAQSection'
 import CTA2Section from '@/components/home/CTA2Section'
 import Footer from '@/components/home/Footer'
+import { generateMetaForPage } from '@/lib/metadata'
+import { Metadata } from 'next'
 
 // Option 1: Force dynamic rendering
 // export const dynamic = 'force-dynamic'
@@ -48,4 +50,13 @@ export default async function HomePage({ params }: Args) {
       <Footer locale={locale} />
     </main>
   )
+}
+
+export async function generateMetadata({ params }: Args): Promise<Metadata> {
+  const { locale = 'en' } = await params
+
+  const payload = await getPayload({ config })
+  const home = await payload.findGlobal({ slug: 'home', locale })
+
+  return generateMetaForPage({ doc: home.seo ?? {} })
 }
