@@ -78,6 +78,7 @@ export interface Config {
     fields: Field;
     games: Game;
     registrations: Registration;
+    invites: Invite;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -104,6 +105,7 @@ export interface Config {
     fields: FieldsSelect<false> | FieldsSelect<true>;
     games: GamesSelect<false> | GamesSelect<true>;
     registrations: RegistrationsSelect<false> | RegistrationsSelect<true>;
+    invites: InvitesSelect<false> | InvitesSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -348,6 +350,17 @@ export interface FieldAmenity {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invites".
+ */
+export interface Invite {
+  id: string;
+  user: string | User;
+  game: string | Game;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -392,6 +405,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'registrations';
         value: string | Registration;
+      } | null)
+    | ({
+        relationTo: 'invites';
+        value: string | Invite;
       } | null);
   globalSlug?: string | null;
   user:
@@ -581,6 +598,16 @@ export interface RegistrationsSelect<T extends boolean = true> {
   isMainRegistration?: T;
   game?: T;
   user?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invites_select".
+ */
+export interface InvitesSelect<T extends boolean = true> {
+  user?: T;
+  game?: T;
   updatedAt?: T;
   createdAt?: T;
 }

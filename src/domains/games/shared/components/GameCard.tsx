@@ -8,11 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { GameModel } from '../models/Game.model'
 import RegisterForGameButton from '@/domains/registrations/register-for-game/components/RegisterForGameButton'
 import { cn } from '@/lib/utils'
+import InviteForGameButton from '../../invite-for-game/InviteForGameButton'
 
 export interface GameCardProps {
   game: GameModel
@@ -141,9 +141,7 @@ const GameCard: React.FC<GameCardProps> = ({
       {!simple && (
         <CardFooter className="flex-col gap-2">
           <RegisterForGameButton game={game} />
-          <Button variant="ghost" className="w-full">
-            Invite friends
-          </Button>
+          <InviteForGameButton game={game} />
         </CardFooter>
       )}
     </Card>

@@ -10,7 +10,7 @@ type CreatePaymentIntentArgs = {
 const useCreatePaymentIntentMutation = () => {
   return useSWRMutation<PaymentIntentResponse, Error, string, CreatePaymentIntentArgs>(
     '/payment-intent',
-    (url, { arg }) => api.post<PaymentIntentResponse>(`/games/${arg.id}/payment-intent`, arg.body),
+    (url, { arg }) => api.post<PaymentIntentResponse>(`games/${arg.id}/payment-intent`, arg.body),
   )
 }
 

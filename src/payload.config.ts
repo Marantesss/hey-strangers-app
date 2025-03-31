@@ -23,6 +23,7 @@ import {
   Admins,
   Media,
   Sports,
+  Invites,
 } from './collections'
 import { Home, Footer, Quiz, Pages } from './globals'
 import { seedHome } from './database/seed/home'
@@ -62,6 +63,7 @@ export default buildConfig({
     Fields,
     Games,
     Registrations,
+    Invites,
   ],
   globals: [Home, Footer, Quiz, Pages],
   editor: lexicalEditor(),

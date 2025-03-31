@@ -64,6 +64,14 @@ export class UserModel {
     return `${firstName} ${lastInitial}.`
   }
 
+  get slugifiedName(): string {
+    if (!this.name) {
+      throw new Error('Name is required')
+    }
+
+    return this.name.toLowerCase().replace(/\s+/g, '-')
+  }
+
   // Factory method
   static from(data: User): UserModel {
     return new UserModel(data)

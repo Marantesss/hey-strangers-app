@@ -1,5 +1,6 @@
 import { hasRole, isAuthenticated } from '@/access'
 import createPaymentIntentEndpoint from '@/domains/games/create-payment-intent/create-payment-intent.endpoint'
+import inviteForGameEndpoint from '@/domains/games/invite-for-game/invite-for-game.endpoint'
 import {
   createStripeProduct,
   deleteStripeProduct,
@@ -119,5 +120,5 @@ export const Games: CollectionConfig = {
     beforeChange: [createStripeProduct, updateStripeProduct],
     afterDelete: [deleteStripeProduct],
   },
-  endpoints: [createPaymentIntentEndpoint],
+  endpoints: [createPaymentIntentEndpoint, inviteForGameEndpoint],
 }
