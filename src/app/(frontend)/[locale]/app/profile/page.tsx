@@ -5,6 +5,7 @@ import PaymentCard from '@/domains/users/get-payment-methods/components/PaymentC
 import { getPaymentMethods } from '@/domains/users/get-payment-methods/get-payment-methods.service'
 import { getMe } from '@/domains/users/me/me.service'
 import { NextPage } from 'next'
+import { getTranslations } from 'next-intl/server'
 
 type ProfilePageProps = {
   searchParams: Promise<{
@@ -16,6 +17,7 @@ type ProfilePageProps = {
 const ProfilePage: NextPage<ProfilePageProps> = async () => {
   const user = await getMe()
   const paymentMethods = await getPaymentMethods(user!.id)
+  const t = await getTranslations('profile')
 
   const hasPaymentMethods = paymentMethods.length > 0
 
@@ -23,7 +25,7 @@ const ProfilePage: NextPage<ProfilePageProps> = async () => {
     <main className="my-8 space-y-8 max-w-lg mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle>Basic Information</CardTitle>
+          <CardTitle>{t('basic-information')}</CardTitle>
         </CardHeader>
         <CardContent>
           <ProfileForm user={user!} />
@@ -32,7 +34,7 @@ const ProfilePage: NextPage<ProfilePageProps> = async () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Payment Information</CardTitle>
+          <CardTitle>{t('payment-information')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
@@ -43,7 +45,7 @@ const ProfilePage: NextPage<ProfilePageProps> = async () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center text-sm text-gray-500">No payment methods added yet!</div>
+              <div className="text-center text-sm text-gray-500">{t('no-payment-methods')}</div>
             )}
             <hr className="border-t border-gray-200" />
 

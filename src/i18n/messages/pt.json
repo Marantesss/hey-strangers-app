@@ -97,6 +97,55 @@
     "upcoming": "Jogos futuros",
     "no-games-found": "Não encontramos jogos"
   },
+  "profile": {
+    "basic-information": "Informação básica",
+    "payment-information": "Informação de pagamento",
+    "no-payment-methods": "Não tem métodos de pagamento adicionados ainda!",
+    "form": {
+      "profile-picture": {
+        "upload-button": "Carregar foto",
+        "file-size-error": "O tamanho do ficheiro deve ser inferior a 2MB"
+      },
+      "name": {
+        "label": "Nome",
+        "placeholder": "Nome"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Email"
+      },
+      "phone": {
+        "label": "Telemóvel",
+        "placeholder": "Telemóvel"
+      },
+      "city": {
+        "label": "Cidade",
+        "placeholder": "Selecionar cidade"
+      },
+      "submit": {
+        "label": "Atualizar perfil",
+        "loading": "A atualizar..."
+      }
+    },
+    "payment-form": {
+      "add-card": "Adicionar novo cartão",
+      "billed-to": {
+        "label": "Faturado para",
+        "placeholder": "Nome"
+      },
+      "country": {
+        "label": "País",
+        "placeholder": "País"
+      },
+      "zip-code": {
+        "placeholder": "Código postal"
+      },
+      "submit": {
+        "label": "Guardar cartão",
+        "loading": "A guardar..."
+      }
+    }
+  },
   "components": {
     "app-navbar": {
       "sign-out": "Sair",

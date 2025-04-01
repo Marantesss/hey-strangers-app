@@ -11,6 +11,7 @@ import { createPaymentMethodAction, CreatePaymentMethodActionState } from '../ac
 import SelectCountry from '@/components/common/SelectCountry'
 import { UserModel } from '../../shared/models/User.model'
 import useSession from '../../session/use-session'
+import { useTranslations } from 'next-intl'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
@@ -21,6 +22,7 @@ interface PaymentMethodFormProps {
 }
 
 function PaymentMethodForm({ user, onSuccess, onError }: PaymentMethodFormProps) {
+  const t = useTranslations('profile.payment-form')
   const stripe = useStripe()
   const elements = useElements()
   const [formData, setFormData] = useState({
@@ -70,30 +72,24 @@ function PaymentMethodForm({ user, onSuccess, onError }: PaymentMethodFormProps)
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-xl font-semibold">Add new card</h2>
+      <h2 className="text-xl font-semibold">{t('add-card')}</h2>
 
       <div className="space-y-2">
-        <Label>Billed to</Label>
+        <Label>{t('billed-to.label')}</Label>
         <Input
           disabled={isCreatePaymentMethodPending}
-          placeholder="Name"
+          placeholder={t('billed-to.placeholder')}
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           required
         />
-      </div>
-
-      <div className="space-y-2">
-        <Label>Card Details</Label>
-        <div className="p-3 border rounded-md">
+        <div className="p-3 rounded-md bg-[#EFF0F3]">
           <CardElement
             options={{
               style: {
                 base: {
-                  fontSize: '16px',
-                  color: '#32325d',
                   '::placeholder': {
-                    color: '#aab7c4',
+                    color: '#737373',
                   },
                 },
               },
@@ -103,21 +99,18 @@ function PaymentMethodForm({ user, onSuccess, onError }: PaymentMethodFormProps)
       </div>
 
       <div className="space-y-2">
-        <Label>Country</Label>
+        <Label>{t('country.label')}</Label>
         <SelectCountry
           disabled={isCreatePaymentMethodPending}
-          placeholder="Country"
+          placeholder={t('country.placeholder')}
           value={formData.country}
           onValueChange={(value) => setFormData({ ...formData, country: value })}
           required
         />
-      </div>
 
-      <div className="space-y-2">
-        <Label>Zip Code</Label>
         <Input
           disabled={isCreatePaymentMethodPending}
-          placeholder="Zip Code"
+          placeholder={t('zip-code.placeholder')}
           value={formData.zipCode}
           onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
           required
@@ -125,7 +118,7 @@ function PaymentMethodForm({ user, onSuccess, onError }: PaymentMethodFormProps)
       </div>
 
       <Button type="submit" className="w-full" disabled={isCreatePaymentMethodPending}>
-        {isCreatePaymentMethodPending ? 'Saving...' : 'Save card'}
+        {isCreatePaymentMethodPending ? t('submit.loading') : t('submit.label')}
       </Button>
     </form>
   )
@@ -134,6 +127,7 @@ function PaymentMethodForm({ user, onSuccess, onError }: PaymentMethodFormProps)
 const PaymentInformationForm: React.FC = () => {
   const [showAddCard, setShowAddCard] = useState(false)
   const { user } = useSession()
+  const t = useTranslations('profile.payment-form')
 
   if (!user) return null
 
@@ -141,7 +135,7 @@ const PaymentInformationForm: React.FC = () => {
     <div>
       {!showAddCard ? (
         <Button variant="outline" className="w-full mt-4" onClick={() => setShowAddCard(true)}>
-          Add new card
+          {t('add-card')}
         </Button>
       ) : (
         <Elements stripe={stripePromise}>

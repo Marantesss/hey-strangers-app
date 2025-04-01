@@ -97,6 +97,55 @@
     "upcoming": "Upcoming Games",
     "no-games-found": "We couldn't find any games"
   },
+  "profile": {
+    "basic-information": "Basic Information",
+    "payment-information": "Payment Information",
+    "no-payment-methods": "No payment methods added yet!",
+    "form": {
+      "profile-picture": {
+        "upload-button": "Upload photo",
+        "file-size-error": "File size must be less than 2MB"
+      },
+      "name": {
+        "label": "Full Name",
+        "placeholder": "Full Name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Email"
+      },
+      "phone": {
+        "label": "Phone number",
+        "placeholder": "Phone number"
+      },
+      "city": {
+        "label": "City",
+        "placeholder": "Select city"
+      },
+      "submit": {
+        "label": "Update Profile",
+        "loading": "Updating..."
+      }
+    },
+    "payment-form": {
+      "add-card": "Add new card",
+      "billed-to": {
+        "label": "Billed to",
+        "placeholder": "Name"
+      },
+      "country": {
+        "label": "Country",
+        "placeholder": "Country"
+      },
+      "zip-code": {
+        "placeholder": "Zip Code"
+      },
+      "submit": {
+        "label": "Save card",
+        "loading": "Saving..."
+      }
+    }
+  },
   "components": {
     "app-navbar": {
       "sign-out": "Sign out",

@@ -16,6 +16,7 @@ import { User } from '@/payload-types'
 import { updateProfileAction, UpdateProfileActionState } from '../actions'
 import { toast } from 'sonner'
 import PhoneNumberInput from '@/components/common/Form/PhoneNumberInput'
+import { useTranslations } from 'next-intl'
 
 const SELECTABLE_CITIES = [
   {
@@ -44,6 +45,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
       city: user.city ?? '',
     },
   })
+  const t = useTranslations('profile.form')
 
   const [profilePicture, setProfilePicture] = useState<string | undefined>(() => {
     if (typeof user.profilePicture === 'object') {
@@ -72,7 +74,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
               const file = e.target.files?.[0]
               if (file) {
                 if (file.size > 2 * 1024 * 1024) {
-                  toast.error('File size must be less than 2MB')
+                  toast.error(t('profile-picture.file-size-error'))
                   return
                 }
                 const reader = new FileReader()
@@ -91,18 +93,18 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
               document.getElementById('profilePicture')?.click()
             }}
           >
-            Upload Photo
+            {t('profile-picture.upload-button')}
           </Button>
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="name">Full Name</Label>
+        <Label htmlFor="name">{t('name.label')}</Label>
         <Input
           id="name"
           name="name"
           type="text"
-          placeholder="Full Name"
+          placeholder={t('name.placeholder')}
           defaultValue={updateProfileResponse.data?.name ?? ''}
           disabled={updateProfilePending}
         />
@@ -112,12 +114,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t('email.label')}</Label>
         <Input
           id="email"
           name="email"
           type="email"
-          placeholder="Email"
+          placeholder={t('email.placeholder')}
           defaultValue={updateProfileResponse.data?.email ?? ''}
           disabled={updateProfilePending}
         />
@@ -127,11 +129,11 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="phone">Phone number</Label>
+        <Label htmlFor="phone">{t('phone.label')}</Label>
         <PhoneNumberInput
           id="phone"
           name="phone"
-          placeholder="Phone number"
+          placeholder={t('phone.placeholder')}
           defaultValue={updateProfileResponse.data?.phone ?? ''}
           disabled={updateProfilePending}
         />
@@ -141,10 +143,10 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="city">City</Label>
+        <Label htmlFor="city">{t('city.label')}</Label>
         <Select name="city" defaultValue={updateProfileResponse.data?.city ?? ''}>
           <SelectTrigger className="rounded-sm">
-            <SelectValue placeholder="Select city" />
+            <SelectValue placeholder={t('city.placeholder')} />
           </SelectTrigger>
           <SelectContent>
             {SELECTABLE_CITIES.map((city) => (
@@ -160,7 +162,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
       </div>
 
       <Button type="submit" className="w-full" disabled={updateProfilePending}>
-        {updateProfilePending ? 'Updating...' : 'Update Profile'}
+        {updateProfilePending ? t('submit.loading') : t('submit.label')}
       </Button>
     </form>
   )
