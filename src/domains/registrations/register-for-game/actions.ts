@@ -19,6 +19,9 @@ interface CreatePaymentIntentResponse {
   error?: string
 }
 
+/**
+ * @deprecated
+ */
 export async function createPaymentIntent(
   previousState: CreatePaymentIntentResponse,
   formData: FormData,

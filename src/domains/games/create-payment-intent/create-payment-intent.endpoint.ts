@@ -19,6 +19,33 @@ const createPaymentIntentEndpoint: Endpoint = {
     const params = PaymentIntentParamsSchema.parse(req.routeParams)
     const body = PaymentIntentBodySchema.parse(req.data)
 
+    const shouldCreateNewCard = !!body.newPaymentMethod
+
+    let paymentMethodId: string
+    if (shouldCreateNewCard) {
+      // Create payment method using the card token
+      const paymentMethod = await stripe.paymentMethods.create({
+        type: 'card',
+        card: { token: body.newPaymentMethod!.token },
+        billing_details: {
+          name: body.newPaymentMethod!.name,
+          address: {
+            country: body.newPaymentMethod!.country,
+            postal_code: body.newPaymentMethod!.postalCode,
+          },
+        },
+      })
+
+      // Attach payment method to customer
+      await stripe.paymentMethods.attach(paymentMethod.id, {
+        customer: req.user.stripeCustomerId!,
+      })
+
+      paymentMethodId = paymentMethod.id
+    } else {
+      paymentMethodId = body.paymentMethodId!
+    }
+
     const game = await getGameById(params.id)
     const currentGameRegistrations = await getRegistrationsByGameId(game.id)
 
@@ -36,7 +63,7 @@ const createPaymentIntentEndpoint: Endpoint = {
       const paymentIntent = await stripe.paymentIntents.create({
         amount,
         currency: 'eur',
-        payment_method: body.paymentMethodId,
+        payment_method: paymentMethodId,
         payment_method_types: ['card'],
         customer: req.user.stripeCustomerId ?? undefined,
         metadata: {

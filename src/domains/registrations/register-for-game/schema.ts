@@ -8,7 +8,7 @@ export type RegisterForGamePaymentConfirmationValues = z.infer<
   typeof RegisterForGamePaymentConfirmationSchema
 >
 
-export const RegisterForGameSchema = z.object({
+export const RegisterForGameFormSchema = z.object({
   gameId: z.string(),
   playerCount: z.number().positive().default(1),
   paymentMethod: z.enum(['card']),
@@ -18,11 +18,10 @@ export const RegisterForGameSchema = z.object({
   newPaymentMethod: z
     .object({
       name: z.string(),
-      cardToken: z.string(),
       country: z.string(),
       postalCode: z.string(),
     })
     .optional(),
 })
 
-export type RegisterForGameValues = z.infer<typeof RegisterForGameSchema>
+export type RegisterForGameFormValues = z.infer<typeof RegisterForGameFormSchema>

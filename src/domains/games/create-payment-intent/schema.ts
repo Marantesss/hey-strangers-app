@@ -11,6 +11,14 @@ export const PaymentIntentBodySchema = z.object({
     .string()
     .transform((val) => (val === '' ? undefined : val))
     .optional(),
+  newPaymentMethod: z
+    .object({
+      name: z.string(),
+      country: z.string(),
+      postalCode: z.string(),
+      token: z.string(),
+    })
+    .optional(),
 })
 
 export type PaymentIntentValues = z.infer<typeof PaymentIntentBodySchema>

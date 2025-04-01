@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from '@/com
 import useRegisterFormGame from '../hooks/use-register-for-game'
 import { Button } from '@/components/ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { RegisterForGameSchema, RegisterForGameValues } from '../schema'
+import { RegisterForGameFormSchema, RegisterForGameFormValues } from '../schema'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import usePaymentMethodsQuery from '@/domains/users/get-payment-methods/use-get-payment-methods.query'
@@ -19,10 +19,14 @@ import PaymentMethodLogo from '@/components/common/PaymentMethodLogo'
 import { useForm } from 'react-hook-form'
 import { useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
-import { Elements, useStripe } from '@stripe/react-stripe-js'
+import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js'
 import useCreatePaymentIntentMutation from '@/domains/games/create-payment-intent/create-payment-intent.mutation'
 import { toast } from 'sonner'
 import { useFormatter, useLocale, useTranslations } from 'next-intl'
+import { Input } from '@/components/ui/input'
+import { PaymentIntentValues } from '@/domains/games/create-payment-intent/schema'
+import { cn } from '@/lib/utils'
+import SelectCountry from '@/components/common/Form/SelectCountry'
 
 const BOOKING_FEE = 1
 
@@ -39,10 +43,11 @@ const RegisterForGameSheetForm: React.FC = () => {
 
   const { trigger } = useCreatePaymentIntentMutation()
 
+  const elements = useElements()
   const stripe = useStripe()
 
-  const form = useForm<RegisterForGameValues>({
-    resolver: zodResolver(RegisterForGameSchema),
+  const form = useForm<RegisterForGameFormValues>({
+    resolver: zodResolver(RegisterForGameFormSchema),
     defaultValues: {
       gameId: game?.id ?? '',
       playerCount: 1,
@@ -50,7 +55,6 @@ const RegisterForGameSheetForm: React.FC = () => {
       paymentMethodId: '',
       newPaymentMethod: {
         name: '',
-        cardToken: '',
         country: '',
         postalCode: '',
       },
@@ -65,15 +69,34 @@ const RegisterForGameSheetForm: React.FC = () => {
     })
   }, [form, game])
 
-  const onSubmit = async (values: RegisterForGameValues) => {
-    if (!stripe) {
+  const onSubmit = async (values: RegisterForGameFormValues) => {
+    if (!stripe || !elements) {
       return
     }
 
-    const paymentIntentBody = {
+    const cardElement = elements.getElement(CardElement)
+    if (!cardElement) throw new Error('Card element not found')
+
+    const paymentIntentBody: PaymentIntentValues = {
       playerCount: values.playerCount,
       paymentMethod: values.paymentMethod,
-      paymentMethodId: values.paymentMethodId,
+      paymentMethodId: undefined,
+      newPaymentMethod: undefined,
+    }
+
+    const shouldCreateNewCard = values.paymentMethodId === 'new'
+    if (shouldCreateNewCard) {
+      const { token, error: tokenError } = await stripe.createToken(cardElement)
+      if (tokenError) throw tokenError
+
+      paymentIntentBody.newPaymentMethod = {
+        name: values.newPaymentMethod!.name,
+        country: values.newPaymentMethod!.country,
+        postalCode: values.newPaymentMethod!.postalCode,
+        token: token.id,
+      }
+    } else {
+      paymentIntentBody.paymentMethodId = values.paymentMethodId
     }
 
     const paymentIntentResponse = await trigger({
@@ -299,9 +322,9 @@ const RegisterForGameSheetForm: React.FC = () => {
                           value="card"
                           id="card"
                           defaultChecked
-                          className={
-                            field.value === 'card' ? 'border-[#1BA781] text-[#1BA781]' : ''
-                          }
+                          className={cn({
+                            'border-[#1BA781] text-[#1BA781]': field.value === 'card',
+                          })}
                         />
                       </FormControl>
                       <FormLabel
@@ -333,18 +356,20 @@ const RegisterForGameSheetForm: React.FC = () => {
                       <FormLabel>
                         {t('payment-method.card-option.select-from-saved-cards')}
                       </FormLabel>
-                      {paymentMethods?.data.map((card) => (
+                      {/* Saved cards */}
+                      {paymentMethods?.data.map((card, index) => (
                         <FormItem
                           key={card.id}
-                          className={`flex items-center space-x-3 p-4 border rounded-lg ${field.value === card.id ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
+                          className={`flex items-center space-x-3 p-4 border rounded-lg space-y-0 ${field.value === card.id ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
                         >
                           <FormControl>
                             <RadioGroupItem
+                              defaultChecked={index === 0}
                               value={card.id}
                               id={card.id}
-                              className={
-                                field.value === card.id ? 'border-[#1BA781] text-[#1BA781]' : ''
-                              }
+                              className={cn({
+                                'border-[#1BA781] text-[#1BA781]': field.value === card.id,
+                              })}
                             />
                           </FormControl>
                           <FormLabel
@@ -358,10 +383,89 @@ const RegisterForGameSheetForm: React.FC = () => {
                           </FormLabel>
                         </FormItem>
                       ))}
+                      {/* Add new card */}
+                      <FormItem
+                        className={`flex items-center space-y-0 space-x-3 p-4 border rounded-lg ${field.value === 'new' ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
+                      >
+                        <FormControl>
+                          <RadioGroupItem
+                            defaultChecked={!paymentMethods?.data.length}
+                            value="new"
+                            className={cn({
+                              'border-[#1BA781] text-[#1BA781]': field.value === 'new',
+                            })}
+                          />
+                        </FormControl>
+                        <FormLabel
+                          htmlFor="new"
+                          className="flex items-center justify-between w-full"
+                        >
+                          Add new card
+                          <PaymentMethodLogo issuer="💳" />
+                        </FormLabel>
+                      </FormItem>
                     </FormItem>
                   </RadioGroup>
                 )}
               />
+
+              {form.watch('paymentMethodId') === 'new' && (
+                <div className="space-y-2">
+                  <FormField
+                    control={form.control}
+                    name="newPaymentMethod.name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Billed to</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Cardholder name" {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="p-3 rounded-md bg-[#EFF0F3]">
+                    <CardElement
+                      options={{
+                        style: {
+                          base: {
+                            '::placeholder': {
+                              color: '#737373',
+                            },
+                          },
+                        },
+                      }}
+                    />
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="newPaymentMethod.country"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Country</FormLabel>
+                        <SelectCountry
+                          placeholder="Select country"
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="newPaymentMethod.postalCode"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input placeholder="Postal code" {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
             </>
           )}
 
