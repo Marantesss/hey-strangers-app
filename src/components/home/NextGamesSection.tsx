@@ -48,12 +48,17 @@ export default function NextGamesSection({ nextGames }: NextGamesSectionProps) {
         <div className="flex overflow-x-auto gap-8 px-4 snap-x no-scrollbar">
           {filteredGames.map((game) => {
             const timeDate = new Date(game.time)
-            const gameDay = timeDate.toLocaleDateString('en-US', {
+            const newDate = new Date()
+            newDate.setHours(timeDate.getHours(), timeDate.getMinutes(), 0, 0)
+            if (newDate < new Date()) {
+              newDate.setDate(newDate.getDate() + 1)
+            }
+            const gameDay = newDate.toLocaleDateString('en-US', {
               weekday: 'long',
               month: 'long',
               day: 'numeric',
             })
-            const gameStartTime = timeDate.toLocaleTimeString('en-US', {
+            const gameStartTime = newDate.toLocaleTimeString('en-US', {
               hour: '2-digit',
               minute: '2-digit',
             })
