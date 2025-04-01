@@ -27,6 +27,7 @@ import { Input } from '@/components/ui/input'
 import { PaymentIntentValues } from '@/domains/games/create-payment-intent/schema'
 import { cn } from '@/lib/utils'
 import SelectCountry from '@/components/common/Form/SelectCountry'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const BOOKING_FEE = 1
 
@@ -242,7 +243,10 @@ const RegisterForGameSheetForm: React.FC = () => {
               <FormItem>
                 <div className="text-lg font-semibold">{t('payment-method.label')}</div>
                 {isPaymentMethodsLoading ? (
-                  <div>Loading payment methods...</div>
+                  <div className="space-y-2">
+                    <Skeleton className="h-16 w-full" />
+                    <Skeleton className="h-16 w-full" />
+                  </div>
                 ) : (
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -347,65 +351,74 @@ const RegisterForGameSheetForm: React.FC = () => {
                 control={form.control}
                 name="paymentMethodId"
                 render={({ field }) => (
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    className="space-y-2"
-                  >
-                    <FormItem>
-                      <FormLabel>
-                        {t('payment-method.card-option.select-from-saved-cards')}
-                      </FormLabel>
-                      {/* Saved cards */}
-                      {paymentMethods?.data.map((card, index) => (
-                        <FormItem
-                          key={card.id}
-                          className={`flex items-center space-x-3 p-4 border rounded-lg space-y-0 ${field.value === card.id ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
-                        >
-                          <FormControl>
-                            <RadioGroupItem
-                              defaultChecked={index === 0}
-                              value={card.id}
-                              id={card.id}
-                              className={cn({
-                                'border-[#1BA781] text-[#1BA781]': field.value === card.id,
-                              })}
-                            />
-                          </FormControl>
-                          <FormLabel
-                            htmlFor={card.id}
-                            className="flex items-center justify-between w-full"
-                          >
-                            <span className="text-muted-foreground">
-                              •••• •••• •••• {card.card?.last4}
-                            </span>
-                            <PaymentMethodLogo issuer={card.card?.brand ?? 'CARD'} />
-                          </FormLabel>
-                        </FormItem>
-                      ))}
-                      {/* Add new card */}
-                      <FormItem
-                        className={`flex items-center space-y-0 space-x-3 p-4 border rounded-lg ${field.value === 'new' ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
+                  <FormItem>
+                    {isPaymentMethodsLoading ? (
+                      <div className="space-y-2">
+                        <Skeleton className="h-16 w-full" />
+                        <Skeleton className="h-16 w-full" />
+                      </div>
+                    ) : (
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        className="space-y-2"
                       >
-                        <FormControl>
-                          <RadioGroupItem
-                            defaultChecked={!paymentMethods?.data.length}
-                            value="new"
-                            className={cn({
-                              'border-[#1BA781] text-[#1BA781]': field.value === 'new',
-                            })}
-                          />
-                        </FormControl>
-                        <FormLabel
-                          htmlFor="new"
-                          className="flex items-center justify-between w-full"
-                        >
-                          Add new card
-                          <PaymentMethodLogo issuer="💳" />
-                        </FormLabel>
-                      </FormItem>
-                    </FormItem>
-                  </RadioGroup>
+                        <FormItem>
+                          <FormLabel>
+                            {t('payment-method.card-option.select-from-saved-cards')}
+                          </FormLabel>
+                          {/* Saved cards */}
+                          {paymentMethods?.data.map((card, index) => (
+                            <FormItem
+                              key={card.id}
+                              className={`flex items-center space-x-3 p-4 border rounded-lg space-y-0 ${field.value === card.id ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
+                            >
+                              <FormControl>
+                                <RadioGroupItem
+                                  defaultChecked={index === 0}
+                                  value={card.id}
+                                  id={card.id}
+                                  className={cn({
+                                    'border-[#1BA781] text-[#1BA781]': field.value === card.id,
+                                  })}
+                                />
+                              </FormControl>
+                              <FormLabel
+                                htmlFor={card.id}
+                                className="flex items-center justify-between w-full"
+                              >
+                                <span className="text-muted-foreground">
+                                  •••• •••• •••• {card.card?.last4}
+                                </span>
+                                <PaymentMethodLogo issuer={card.card?.brand ?? 'CARD'} />
+                              </FormLabel>
+                            </FormItem>
+                          ))}
+                          {/* Add new card */}
+                          <FormItem
+                            className={`flex items-center space-y-0 space-x-3 p-4 border rounded-lg ${field.value === 'new' ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
+                          >
+                            <FormControl>
+                              <RadioGroupItem
+                                defaultChecked={!paymentMethods?.data.length}
+                                value="new"
+                                className={cn({
+                                  'border-[#1BA781] text-[#1BA781]': field.value === 'new',
+                                })}
+                              />
+                            </FormControl>
+                            <FormLabel
+                              htmlFor="new"
+                              className="flex items-center justify-between w-full"
+                            >
+                              Add new card
+                              <PaymentMethodLogo issuer="💳" />
+                            </FormLabel>
+                          </FormItem>
+                        </FormItem>
+                      </RadioGroup>
+                    )}
+                  </FormItem>
                 )}
               />
 

@@ -53,7 +53,9 @@ function PaymentMethodForm({ user, onSuccess, onError }: PaymentMethodFormProps)
       if (!cardElement) throw new Error('Card element not found')
 
       const { token, error } = await stripe.createToken(cardElement)
-      if (error) throw error
+      if (error) {
+        return onError?.(error.message || 'Failed to add card')
+      }
 
       const formDataToSend = new FormData()
       formDataToSend.append('userId', user.id)

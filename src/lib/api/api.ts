@@ -100,7 +100,7 @@ async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T
 
   const json = await response.json()
 
-  if (!response.ok) {
+  if (response.status === 500) {
     throw new ApiError('Request failed', json)
   }
 

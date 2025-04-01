@@ -1,6 +1,5 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import Stripe from 'stripe'
 import { toast } from 'sonner'
 import PaymentMethodLogo from '@/components/common/PaymentMethodLogo'
@@ -18,9 +17,9 @@ const PaymentCard: React.FC<PaymentCardProps> = ({ paymentMethod }) => {
         <span>•••• •••• •••• {paymentMethod.card!.last4}</span>
       </div>
       <div className="space-x-2">
-        <Button size="sm" disabled variant="ghost" className="text-green-600 hover:text-green-700">
+        {/* <Button size="sm" disabled variant="ghost" className="text-green-600 hover:text-green-700">
           EDIT
-        </Button>
+        </Button> */}
         <DeletePaymentMethodButton
           paymentMethod={paymentMethod}
           onSuccess={() => {

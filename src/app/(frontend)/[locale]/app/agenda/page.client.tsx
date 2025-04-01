@@ -25,17 +25,19 @@ const AgendaClientPage: React.FC<AgendaClientPageProps> = ({ city, sport }) => {
 
   return (
     <div className="max-w-lg mx-auto space-y-4">
-      {isLoading && (
+      {isLoading ? (
         <>
           <GameCardSkeleton />
           <GameCardSkeleton />
           <GameCardSkeleton />
         </>
-      )}
-      {hasGames && games?.map((game) => <GameCard key={game.id} game={game} />)}
-      {!hasGames && (
-        <div className="text-center text-sm text-muted-foreground">{t('no-games-found')}</div>
-      )}
+      ) : (
+        hasGames ? (
+          games?.map((game) => <GameCard key={game.id} game={game} />)
+        ) : (
+          <div className="text-center text-sm text-muted-foreground">{t('no-games-found')}</div>
+        )
+    )}
     </div>
   )
 }
