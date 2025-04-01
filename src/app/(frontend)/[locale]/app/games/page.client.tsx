@@ -4,6 +4,7 @@ import useGamesQuery from '@/domains/games/get-games/use-games.query'
 import GameCard from '@/domains/games/shared/components/GameCard'
 import GameCardSkeleton from '@/domains/games/shared/components/GameCardSkeleton'
 import useSession from '@/domains/users/session/use-session'
+import { useTranslations } from 'next-intl'
 
 type GamesClientPageProps = {
   timeFrame?: 'past' | 'future'
@@ -12,6 +13,7 @@ type GamesClientPageProps = {
 
 const GamesClientPage: React.FC<GamesClientPageProps> = ({ timeFrame, registeredGame }) => {
   const { user } = useSession()
+  const t = useTranslations('games')
 
   const { data: games, isLoading } = useGamesQuery({
     options: {
@@ -36,7 +38,9 @@ const GamesClientPage: React.FC<GamesClientPageProps> = ({ timeFrame, registered
         games!.map((game) => (
           <GameCard highlight={game.id === registeredGame} key={game.id} game={game} />
         ))}
-      {!hasGames && <div className="text-center text-sm text-muted-foreground">No games found</div>}
+      {!hasGames && (
+        <div className="text-center text-sm text-muted-foreground">{t('no-games-found')}</div>
+      )}
     </div>
   )
 }

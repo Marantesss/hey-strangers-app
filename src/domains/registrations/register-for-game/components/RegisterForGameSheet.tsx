@@ -1,7 +1,6 @@
 'use client'
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet'
-import useGameQuery from '@/domains/games/get-game-by-id/use-game.query'
 import useRegisterFormGame from '../hooks/use-register-for-game'
 import { Button } from '@/components/ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -23,7 +22,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import { Elements, useStripe } from '@stripe/react-stripe-js'
 import useCreatePaymentIntentMutation from '@/domains/games/create-payment-intent/create-payment-intent.mutation'
 import { toast } from 'sonner'
-import { useLocale } from 'next-intl'
+import { useFormatter, useLocale, useTranslations } from 'next-intl'
 
 const BOOKING_FEE = 1
 
@@ -32,6 +31,9 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL!
 
 const RegisterForGameSheetForm: React.FC = () => {
   const locale = useLocale()
+  const t = useTranslations('components.register-for-game-sheet')
+  const format = useFormatter()
+
   const { game, toggleOpen } = useRegisterFormGame()
   const { data: paymentMethods, isLoading: isPaymentMethodsLoading } = usePaymentMethodsQuery()
 
@@ -99,19 +101,38 @@ const RegisterForGameSheetForm: React.FC = () => {
     toast.success('Payment successful')
   }
 
+  const isCreditCard = form.watch('paymentMethod') === 'card'
+
   const totalSeatPrice = game ? game.price * form.watch('playerCount') : 0
   const totalBookingFee = BOOKING_FEE * form.watch('playerCount')
   const totalPrice = totalSeatPrice + totalBookingFee
 
-  const isCreditCard = form.watch('paymentMethod') === 'card'
+  const totalSeatPriceString = format.number(totalSeatPrice, {
+    style: 'currency',
+    currency: 'EUR',
+  })
 
-  const price = game?.price.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })
-  const gameDay = game?.startsAt.toLocaleDateString('en-US', {
+  const totalBookingFeeString = format.number(totalBookingFee, {
+    style: 'currency',
+    currency: 'EUR',
+  })
+
+  const totalPriceString = format.number(totalPrice, {
+    style: 'currency',
+    currency: 'EUR',
+  })
+
+  const gamePriceString = format.number(game?.price ?? 0, {
+    style: 'currency',
+    currency: 'EUR',
+  })
+
+  const gameDayString = format.dateTime(game?.startsAt ?? new Date(), {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
   })
-  const gameStartTime = game?.startsAt.toLocaleTimeString('en-US', {
+  const gameStartTimeString = format.dateTime(game?.startsAt ?? new Date(), {
     hour: '2-digit',
     minute: '2-digit',
   })
@@ -119,11 +140,11 @@ const RegisterForGameSheetForm: React.FC = () => {
   return (
     <Form {...form}>
       <SheetHeader>
-        <SheetTitle>Payment</SheetTitle>
+        <SheetTitle>{t('title')}</SheetTitle>
       </SheetHeader>
 
       <div className="mt-6 space-y-6 grow overflow-y-auto">
-        <div className="text-lg font-semibold">Booking Details</div>
+        <div className="text-lg font-semibold">{t('booking-details')}</div>
         {!game ? (
           <div>Loading...</div>
         ) : (
@@ -131,15 +152,15 @@ const RegisterForGameSheetForm: React.FC = () => {
             <div className="flex items-start">
               <div className="grow space-y-1">
                 <div className="text-lg font-semibold">
-                  {game.sport.emoji} {gameDay}
+                  {game.sport.emoji} {gameDayString}
                 </div>
                 <div className="text-muted-foreground">{game.field.name}</div>
               </div>
-              <div className="text-lg font-semibold">{price}</div>
+              <div className="text-lg font-semibold">{gamePriceString}</div>
             </div>
             <div>
               <div>
-                <span className="font-bold">{gameStartTime}</span>• ({game.durationInMinutes}
+                <span className="font-bold">{gameStartTimeString}</span>• ({game.durationInMinutes}
                 min.)
               </div>
               <div className="text-[#454745]">
@@ -159,14 +180,14 @@ const RegisterForGameSheetForm: React.FC = () => {
             name="playerCount"
             render={({ field }) => (
               <FormItem>
-                <FormLabel htmlFor="playerCount">Take friends with me</FormLabel>
+                <FormLabel htmlFor="playerCount">{t('player-count.label')}</FormLabel>
                 <Select
                   onValueChange={(value) => field.onChange(Number(value))}
                   defaultValue={field.value.toString()}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a number of players" />
+                      <SelectValue placeholder={t('player-count.placeholder')} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -175,11 +196,11 @@ const RegisterForGameSheetForm: React.FC = () => {
                       .map((_, index) =>
                         index === 0 ? (
                           <SelectItem key={index} value="1">
-                            Just me
+                            {t('player-count.just-me')}
                           </SelectItem>
                         ) : (
                           <SelectItem key={index} value={`${index + 1}`}>
-                            Me + {index} friends
+                            {t('player-count.me-and-friends', { count: index })}
                           </SelectItem>
                         ),
                       )}
@@ -196,7 +217,7 @@ const RegisterForGameSheetForm: React.FC = () => {
             name="paymentMethod"
             render={({ field }) => (
               <FormItem>
-                <div className="text-lg font-semibold">Select payment method</div>
+                <div className="text-lg font-semibold">{t('payment-method.label')}</div>
                 {isPaymentMethodsLoading ? (
                   <div>Loading payment methods...</div>
                 ) : (
@@ -287,7 +308,7 @@ const RegisterForGameSheetForm: React.FC = () => {
                         htmlFor="card"
                         className="flex items-center justify-between w-full p-0"
                       >
-                        <span>Credit/Debit Card</span>
+                        <span>{t('payment-method.card')}</span>
                         <PaymentMethodLogo issuer="visa" />
                       </FormLabel>
                     </FormItem>
@@ -309,7 +330,9 @@ const RegisterForGameSheetForm: React.FC = () => {
                     className="space-y-2"
                   >
                     <FormItem>
-                      <FormLabel>Select one of your saved cards</FormLabel>
+                      <FormLabel>
+                        {t('payment-method.card-option.select-from-saved-cards')}
+                      </FormLabel>
                       {paymentMethods?.data.map((card) => (
                         <FormItem
                           key={card.id}
@@ -345,25 +368,19 @@ const RegisterForGameSheetForm: React.FC = () => {
           <hr className="border-t border-gray-200" />
 
           <div className="space-y-2">
-            <div className="text-lg font-semibold">Summary</div>
+            <div className="text-lg font-semibold">{t('summary.label')}</div>
 
             <div className="flex justify-between text-subtle-foreground">
-              <span>Total</span>
-              <span>
-                {totalSeatPrice.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })}
-              </span>
+              <span>{t('summary.price')}</span>
+              <span>{totalSeatPriceString}</span>
             </div>
             <div className="flex justify-between text-subtle-foreground">
-              <span>Booking Fee</span>
-              <span>
-                {totalBookingFee.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })}
-              </span>
+              <span>{t('summary.booking-fee')}</span>
+              <span>{totalBookingFeeString}</span>
             </div>
             <div className="flex justify-between text-lg font-semibold">
-              <span>Total</span>
-              <span>
-                {totalPrice.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })}
-              </span>
+              <span>{t('summary.total')}</span>
+              <span>{totalPriceString}</span>
             </div>
           </div>
         </form>
@@ -377,7 +394,7 @@ const RegisterForGameSheetForm: React.FC = () => {
             form="form"
             disabled={form.formState.isSubmitting}
           >
-            Confirm Booking
+            {t('confirm-booking')}
           </Button>
           <Button
             disabled={form.formState.isSubmitting}
@@ -385,7 +402,7 @@ const RegisterForGameSheetForm: React.FC = () => {
             className="w-full"
             onClick={() => toggleOpen(false)}
           >
-            Cancel
+            {t('cancel')}
           </Button>
         </div>
       </SheetFooter>

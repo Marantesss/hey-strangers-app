@@ -3,6 +3,7 @@
 import useGamesQuery from '@/domains/games/get-games/use-games.query'
 import GameCard from '@/domains/games/shared/components/GameCard'
 import GameCardSkeleton from '@/domains/games/shared/components/GameCardSkeleton'
+import { useTranslations } from 'next-intl'
 
 type AgendaClientPageProps = {
   city?: string
@@ -10,6 +11,7 @@ type AgendaClientPageProps = {
 }
 
 const AgendaClientPage: React.FC<AgendaClientPageProps> = ({ city, sport }) => {
+  const t = useTranslations('agenda')
   const { data: games, isLoading } = useGamesQuery({
     options: {
       cityName: city,
@@ -31,7 +33,9 @@ const AgendaClientPage: React.FC<AgendaClientPageProps> = ({ city, sport }) => {
         </>
       )}
       {hasGames && games?.map((game) => <GameCard key={game.id} game={game} />)}
-      {!hasGames && <div className="text-center text-sm text-muted-foreground">No games found</div>}
+      {!hasGames && (
+        <div className="text-center text-sm text-muted-foreground">{t('no-games-found')}</div>
+      )}
     </div>
   )
 }

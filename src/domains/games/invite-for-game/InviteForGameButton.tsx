@@ -8,6 +8,7 @@ import useSession from '@/domains/users/session/use-session'
 import { Link as LinkIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import useInviteForGameMutation from './use-invite-for-game.query'
+import { useTranslations } from 'next-intl'
 
 interface InviteForGameButtonProps {
   game: GameModel
@@ -19,33 +20,33 @@ const inviteSubdomain = 'invite'
 const InviteForGameButton: React.FC<InviteForGameButtonProps> = ({ game }) => {
   const { user } = useSession()
   const { isMutating, trigger } = useInviteForGameMutation()
-
+  const t = useTranslations('components.game-card.invite-button')
   const isDisabled = game.isFull || !user
 
   const gameInviteLink = `${appUrl}/${user?.id}/${user?.slugifiedName}/${game.id}`
 
   const onShareWhatsAppClick = async () => {
-    toast.info('Creating invite link...')
+    toast.info(t('creating-invite-link'))
     await trigger({ id: game.id })
     window.open(`https://wa.me/?text=${encodeURIComponent(gameInviteLink)}`, '_blank')
   }
 
   const onCopyLinkClick = async () => {
-    toast.info('Creating invite link...')
+    toast.info(t('creating-invite-link'))
     await trigger({ id: game.id })
     navigator.clipboard.writeText(gameInviteLink)
-    toast.info('Invite link copied to clipboard')
+    toast.info(t('copied-to-clipboard'))
   }
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="ghost" disabled={isDisabled} className="w-full">
-          Invite friends
+          {t('invite')}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-fit p-6 rounded-2xl">
-        <h4 className="text-xl font-bold mb-4">Invite Friends</h4>
+        <h4 className="text-xl font-bold mb-4">{t('invite')}</h4>
         <div className="flex gap-2">
           <Button
             className="bg-[#D8D9E0] text-default"
@@ -53,11 +54,11 @@ const InviteForGameButton: React.FC<InviteForGameButtonProps> = ({ game }) => {
             disabled={isMutating}
           >
             <LinkIcon />
-            Copy link
+            {t('copy-link')}
           </Button>
           <Button disabled={isMutating} onClick={onShareWhatsAppClick}>
             <SocialIcon icon="whatsapp" />
-            Share via WhatsApp
+            {t('share-via-whatsapp')}
           </Button>
         </div>
       </PopoverContent>

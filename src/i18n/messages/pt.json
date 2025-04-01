@@ -87,5 +87,79 @@
       "submit": "Verificar Código",
       "resend": "Reenviar código"
     }
+  },
+  "agenda": {
+    "title": "Agenda o teu próximo jogo",
+    "no-games-found": "Não encontramos jogos"
+  },
+  "games": {
+    "past": "Jogos passados",
+    "upcoming": "Jogos futuros",
+    "no-games-found": "Não encontramos jogos"
+  },
+  "components": {
+    "app-navbar": {
+      "sign-out": "Sair",
+      "register": "Registar",
+      "my-space": "O meu espaço"
+    },
+    "app-navigation-menu": {
+      "agenda": "Agenda",
+      "my-games": "Os meus jogos",
+      "my-profile": "O meu perfil"
+    },
+    "select-city": {
+      "placeholder": "Selecionar cidade",
+      "all": "Todas as cidades"
+    },
+    "select-sport": {
+      "placeholder": "Selecionar desporto",
+      "all": "Todos os desportos"
+    },
+    "game-card": {
+      "top-pick": "⭐ Top Pick",
+      "only-spots-left-prefix": "Apenas",
+      "only-spots-left-suffix": "lugares disponíveis",
+      "facility-information": "Informação do local",
+      "registered-players": "Jogadores registados",
+      "more-info": "Mais informação",
+      "register-button": {
+        "registered": "Registado",
+        "register-for-game": "Registar para o jogo",
+        "the-game-is-full": "O jogo está cheio"
+      },
+      "invite-button": {
+        "invite": "Convidar amigos",
+        "copy-link": "Copiar link",
+        "share-via-whatsapp": "Partilhar via WhatsApp",
+        "copied-to-clipboard": "Link copiado para o clipboard",
+        "creating-invite-link": "A criar link de convite..."
+      }
+    },
+    "register-for-game-sheet": {
+      "title": "Pagamento",
+      "booking-details": "Detalhes da reserva",
+      "player-count": {
+        "label": "Leve amigos consigo",
+        "placeholder": "Selecionar um número de jogadores",
+        "just-me": "Apenas eu",
+        "me-and-friends": "Eu + {count} amigos"
+      },
+      "payment-method": {
+        "label": "Selecionar método de pagamento",
+        "card": "Cartão de crédito/débito",
+        "card-option": {
+          "select-from-saved-cards": "Selecionar um dos teus cartões guardados"
+        }
+      },
+      "summary": {
+        "label": "Resumo",
+        "total": "Total",
+        "price": "Preço",
+        "booking-fee": "Taxa de reserva"
+      },
+      "confirm-booking": "Confirmar reserva",
+      "cancel": "Cancelar"
+    }
   }
 }

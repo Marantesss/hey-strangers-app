@@ -8,11 +8,12 @@ import {
   NavigationMenuItem,
   navigationMenuTriggerStyle,
 } from '../ui/navigation-menu'
-import { useLocale } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 
 const AppNavigationMenu: React.FC = () => {
   const pathname = usePathname()
   const locale = useLocale()
+  const t = useTranslations('components.app-navigation-menu')
 
   return (
     <NavigationMenu>
@@ -23,7 +24,7 @@ const AppNavigationMenu: React.FC = () => {
             className={navigationMenuTriggerStyle()}
             href={`/${locale}/app/agenda`}
           >
-            Agenda
+            {t('agenda')}
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
@@ -32,7 +33,7 @@ const AppNavigationMenu: React.FC = () => {
             className={navigationMenuTriggerStyle()}
             href={`/${locale}/app/games`}
           >
-            My Games
+            {t('my-games')}
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
@@ -41,7 +42,7 @@ const AppNavigationMenu: React.FC = () => {
             className={navigationMenuTriggerStyle()}
             href={`/${locale}/app/profile`}
           >
-            My Profile
+            {t('my-profile')}
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>

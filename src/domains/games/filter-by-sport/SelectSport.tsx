@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import useSportsQuery from '@/domains/sports/get-sports/use-sports.query'
+import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useState } from 'react'
 
@@ -18,6 +19,7 @@ const SelectSport: React.FC = () => {
   const [currentSport, setCurrentSport] = useState<string | null>(
     searchParams.get('sport') ?? 'all',
   )
+  const t = useTranslations('components.select-sport')
 
   const onSelectSport = (id: string) => {
     setCurrentSport(id)
@@ -33,11 +35,11 @@ const SelectSport: React.FC = () => {
   return (
     <Select onValueChange={onSelectSport} value={currentSport ?? undefined}>
       <SelectTrigger>
-        <SelectValue placeholder="Select sport" />
+        <SelectValue placeholder={t('placeholder')} />
       </SelectTrigger>
       <SelectContent>
         <SelectItem defaultChecked value="all">
-          All Sports
+          {t('all')}
         </SelectItem>
         {sports?.map((sport) => (
           <SelectItem key={sport.id} value={sport.id}>

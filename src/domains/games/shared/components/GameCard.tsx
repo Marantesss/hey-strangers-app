@@ -13,6 +13,7 @@ import { GameModel } from '../models/Game.model'
 import RegisterForGameButton from '@/domains/registrations/register-for-game/components/RegisterForGameButton'
 import { cn } from '@/lib/utils'
 import InviteForGameButton from '../../invite-for-game/InviteForGameButton'
+import { useFormatter, useTranslations } from 'next-intl'
 
 export interface GameCardProps {
   game: GameModel
@@ -31,16 +32,23 @@ const GameCard: React.FC<GameCardProps> = ({
   hidePrice = false,
   highlight = false,
 }) => {
-  const gameDay = game.startsAt.toLocaleDateString('en-US', {
+  const t = useTranslations('components.game-card')
+  const format = useFormatter()
+
+  const gameDay = format.dateTime(game.startsAt, {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
   })
-  const gameStartTime = game.startsAt.toLocaleTimeString('en-US', {
+  const gameStartTime = format.dateTime(game.startsAt, {
     hour: '2-digit',
     minute: '2-digit',
   })
-  const price = game.price.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })
+  const price = format.number(game.price, {
+    style: 'currency',
+    currency: 'EUR',
+  })
+
   const fieldType = game.field.type.name.charAt(0).toUpperCase() + game.field.type.name.slice(1)
   const fieldFlooring =
     game.field.flooring.name.charAt(0).toUpperCase() + game.field.flooring.name.slice(1)
@@ -67,7 +75,9 @@ const GameCard: React.FC<GameCardProps> = ({
     <Card disabled={disabled} className={cn({ 'shadow-lg shadow-[#1BA781]': highlight })}>
       <CardHeader>
         {topPick && (
-          <CardDescription className="mb-2 font-bold text-foreground">⭐ Top Pick</CardDescription>
+          <CardDescription className="mb-2 font-bold text-foreground">
+            {t('top-pick')}
+          </CardDescription>
         )}
         <div className="flex items-start">
           <div className="grow space-y-1">
@@ -84,7 +94,7 @@ const GameCard: React.FC<GameCardProps> = ({
       <CardContent className="space-y-4">
         <div>
           <div>
-            <span className="font-bold">{gameStartTime}</span>• ({game.durationInMinutes}min.)
+            <span className="font-bold">{gameStartTime}</span> • ({game.durationInMinutes}min.)
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[#454745]">
@@ -93,7 +103,9 @@ const GameCard: React.FC<GameCardProps> = ({
             <span className="block text-secondary bg-[#FFF5F0] p-1 font-medium rounded-lg">
               {!game.isFull && (
                 <>
-                  Only <span className="font-bold">{game.availableSpots}</span> spots left
+                  {t('only-spots-left-prefix')}{' '}
+                  <span className="font-bold">{game.availableSpots}</span>{' '}
+                  {t('only-spots-left-suffix')}
                 </>
               )}
             </span>
@@ -104,7 +116,7 @@ const GameCard: React.FC<GameCardProps> = ({
             <Collapsible className="mt-4">
               <CollapsibleContent className="space-y-4 my-2">
                 <div>
-                  <h4 className="font-bold">Facility information</h4>
+                  <h4 className="font-bold">{t('facility-information')}</h4>
                   <ul className="text-subtle-foreground list-disc list-inside text-sm">
                     {game.field.amenities.map((amenity) => (
                       <li className="ml-2" key={amenity.id}>
@@ -115,7 +127,7 @@ const GameCard: React.FC<GameCardProps> = ({
                 </div>
 
                 <div>
-                  <h4 className="font-bold">Registered Players</h4>
+                  <h4 className="font-bold">{t('registered-players')}</h4>
                   <ul className="text-subtle-foreground list-disc list-inside text-sm">
                     {registeredPlayers.map(({ name, count }) => (
                       <li className="ml-2" key={name}>
@@ -126,7 +138,7 @@ const GameCard: React.FC<GameCardProps> = ({
                 </div>
               </CollapsibleContent>
               <CollapsibleTrigger className="text-secondary font-bold">
-                More info
+                {t('more-info')}
               </CollapsibleTrigger>
             </Collapsible>
           </>

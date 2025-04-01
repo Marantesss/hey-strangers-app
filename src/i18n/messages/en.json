@@ -87,5 +87,79 @@
       "submit": "Verify Code",
       "resend": "Resend code"
     }
+  },
+  "agenda": {
+    "title": "Book your next game",
+    "no-games-found": "We couldn't find any games"
+  },
+  "games": {
+    "past": "Past Games",
+    "upcoming": "Upcoming Games",
+    "no-games-found": "We couldn't find any games"
+  },
+  "components": {
+    "app-navbar": {
+      "sign-out": "Sign out",
+      "register": "Register",
+      "my-space": "My Space"
+    },
+    "app-navigation-menu": {
+      "agenda": "Agenda",
+      "my-games": "My Games",
+      "my-profile": "My Profile"
+    },
+    "select-city": {
+      "placeholder": "Select city",
+      "all": "All Cities"
+    },
+    "select-sport": {
+      "placeholder": "Select sport",
+      "all": "All Sports"
+    },
+    "game-card": {
+      "top-pick": "⭐ Top Pick",
+      "only-spots-left-prefix": "Only",
+      "only-spots-left-suffix": "spots left",
+      "facility-information": "Facility information",
+      "registered-players": "Registered Players",
+      "more-info": "More info",
+      "register-button": {
+        "registered": "Registered",
+        "register-for-game": "Register for game",
+        "the-game-is-full": "The game is full"
+      },
+      "invite-button": {
+        "invite": "Invite friends",
+        "copy-link": "Copy link",
+        "share-via-whatsapp": "Share via WhatsApp",
+        "copied-to-clipboard": "Link copied to clipboard",
+        "creating-invite-link": "Creating invite link..."
+      }
+    },
+    "register-for-game-sheet": {
+      "title": "Payment",
+      "booking-details": "Booking Details",
+      "player-count": {
+        "label": "Take friends with me",
+        "placeholder": "Select a number of players",
+        "just-me": "Just me",
+        "me-and-friends": "Me + {count} friends"
+      },
+      "payment-method": {
+        "label": "Select payment method",
+        "card": "Credit/Debit Card",
+        "card-option": {
+          "select-from-saved-cards": "Select one of your saved cards"
+        }
+      },
+      "summary": {
+        "label": "Summary",
+        "total": "Total",
+        "price": "Price",
+        "booking-fee": "Booking Fee"
+      },
+      "confirm-booking": "Confirm Booking",
+      "cancel": "Cancel"
+    }
   }
 }

@@ -3,6 +3,7 @@ import { NextPage } from 'next'
 
 import { Link } from '@/i18n/navigation'
 import GamesClientPage from './page.client'
+import { getTranslations } from 'next-intl/server'
 
 interface PageProps {
   searchParams: Promise<{
@@ -17,6 +18,8 @@ const GamesPage: NextPage<PageProps> = async ({ searchParams }) => {
   const selectedStyle = 'bg-[#E3FFCD] text-primary'
   const defaultStyle = 'bg-[#F9F9FB] text-[#454745]'
 
+  const t = await getTranslations('games')
+
   return (
     <main className="space-y-8 my-8">
       <div className="flex justify-center gap-4">
@@ -27,7 +30,7 @@ const GamesPage: NextPage<PageProps> = async ({ searchParams }) => {
             timeFrame === 'past' ? selectedStyle : defaultStyle,
           )}
         >
-          Past Games
+          {t('past')}
         </Link>
         <Link
           href="/app/games?timeFrame=future"
@@ -36,7 +39,7 @@ const GamesPage: NextPage<PageProps> = async ({ searchParams }) => {
             timeFrame === 'future' ? selectedStyle : defaultStyle,
           )}
         >
-          Upcoming Games
+          {t('upcoming')}
         </Link>
       </div>
 
