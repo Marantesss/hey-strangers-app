@@ -1,6 +1,6 @@
 import './globals.css'
 
-import { Geist } from 'next/font/google'
+import { DM_Sans } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import { Toaster } from '@/components/ui/sonner'
 import { notFound } from 'next/navigation'
@@ -11,7 +11,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { TypedLocale } from 'payload'
 import { Metadata } from 'next'
 
-const geistSans = Geist({
+const dmSans = DM_Sans({
   display: 'swap',
   subsets: ['latin'],
 })
@@ -29,7 +29,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
   }
 
   return (
-    <html lang={locale} className={geistSans.className} suppressHydrationWarning>
+    <html lang={locale} className={dmSans.className} suppressHydrationWarning>
       <body className="bg-background text-foreground">
         <NextIntlClientProvider>
           <ThemeProvider attribute="class" defaultTheme="light">
