@@ -53,6 +53,7 @@ const Quiz: React.FC = () => {
     ?.map((game) =>
       GameModel.from({
         ...game,
+        bookingFee: 0,
         id: game.id!,
         startsAt: getFakeDate(new Date(game.startsAt)).toISOString(),
         endsAt: getFakeDate(new Date(game.endsAt)).toISOString(),

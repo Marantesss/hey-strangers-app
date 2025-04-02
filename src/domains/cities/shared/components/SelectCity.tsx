@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/select'
 import useCitiesQuery from '@/domains/cities/get-cities/use-cities.query'
 import { SelectProps } from '@radix-ui/react-select'
+import { CityModel } from '../models/City.model'
 
 interface SelectCityProps extends SelectProps {
   placeholder?: string
@@ -17,18 +18,29 @@ interface SelectCityProps extends SelectProps {
     value: string
   }[]
   className?: string
+  onCityChange?: (city: CityModel) => void
 }
 
 const SelectCity: React.FC<SelectCityProps> = ({
   placeholder,
   extraOptions,
   className,
+  onValueChange,
+  onCityChange,
   ...selectProps
 }) => {
   const { data: cities } = useCitiesQuery()
 
+  const _onValueChange = (value: string) => {
+    const city = cities!.find((city) => city.id === value)
+    if (city) {
+      onCityChange?.(city)
+    }
+    onValueChange?.(value)
+  }
+
   return (
-    <Select {...selectProps}>
+    <Select {...selectProps} onValueChange={_onValueChange}>
       <SelectTrigger className={className}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
