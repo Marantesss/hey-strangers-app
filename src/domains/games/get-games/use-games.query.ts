@@ -3,7 +3,6 @@
 import api from '@/lib/api'
 import useSWR from 'swr'
 import { GameModel } from '../shared/models/Game.model'
-import { TypedLocale } from 'payload'
 import { useLocale } from 'next-intl'
 
 export const USE_GAME_QUERY_KEY = 'games'
@@ -68,7 +67,7 @@ const useGamesQuery = ({ options, expand }: UseGamesQueryProps) => {
           },
           sort: '-createdAt',
           depth: expand?.field ? 2 : 1,
-          locale: locale as TypedLocale,
+          locale: locale,
         },
       })
 

@@ -37,8 +37,10 @@ const RegisterForGameSheetForm: React.FC = () => {
   const t = useTranslations('components.register-for-game-sheet')
   const format = useFormatter()
 
-  const { game, toggleOpen } = useRegisterFormGame()
-  const { data: paymentMethods, isLoading: isPaymentMethodsLoading } = usePaymentMethodsQuery()
+  const { game, toggleOpen, inviterId } = useRegisterFormGame()
+  const { data: paymentMethods, isLoading: isPaymentMethodsLoading } = usePaymentMethodsQuery({
+    enabled: !inviterId,
+  })
 
   const { trigger } = useCreatePaymentIntentMutation()
 
@@ -51,10 +53,10 @@ const RegisterForGameSheetForm: React.FC = () => {
       gameId: game?.id ?? '',
       playerCount: 1,
       paymentMethod: 'card',
-      paymentMethodId: '',
+      paymentMethodId: inviterId ? 'new' : '',
       newPaymentMethod: {
         name: '',
-        country: '',
+        country: 'PT',
         postalCode: '',
       },
     },
@@ -74,6 +76,7 @@ const RegisterForGameSheetForm: React.FC = () => {
     }
 
     const paymentIntentBody: PaymentIntentValues = {
+      ...(inviterId ? { inviterId } : {}),
       playerCount: values.playerCount,
       paymentMethod: values.paymentMethod,
     }
@@ -108,7 +111,9 @@ const RegisterForGameSheetForm: React.FC = () => {
     const { error } = await stripe.confirmPayment({
       clientSecret: paymentIntentResponse.clientSecret!,
       confirmParams: {
-        return_url: `${APP_URL}/${locale}/app/games/${game!.id}/confirm-payment`,
+        return_url: `${APP_URL}/${locale}/app/games/${game!.id}/confirm-payment${
+          !!inviterId ? `?is_guest=true` : ''
+        }`,
       },
     })
 
@@ -194,40 +199,42 @@ const RegisterForGameSheetForm: React.FC = () => {
         <hr className="border-t border-gray-200" />
 
         <form id="form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="playerCount"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="playerCount">{t('player-count.label')}</FormLabel>
-                <Select
-                  onValueChange={(value) => field.onChange(Number(value))}
-                  defaultValue={field.value.toString()}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder={t('player-count.placeholder')} />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {Array(game?.availableSpots ?? 0)
-                      .fill(null)
-                      .map((_, index) =>
-                        index === 0 ? (
-                          <SelectItem key={index} value="1">
-                            {t('player-count.just-me')}
-                          </SelectItem>
-                        ) : (
-                          <SelectItem key={index} value={`${index + 1}`}>
-                            {t('player-count.me-and-friends', { count: index })}
-                          </SelectItem>
-                        ),
-                      )}
-                  </SelectContent>
-                </Select>
-              </FormItem>
-            )}
-          />
+          {!inviterId && (
+            <FormField
+              control={form.control}
+              name="playerCount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="playerCount">{t('player-count.label')}</FormLabel>
+                  <Select
+                    onValueChange={(value) => field.onChange(Number(value))}
+                    defaultValue={field.value.toString()}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t('player-count.placeholder')} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {Array(game?.availableSpots ?? 0)
+                        .fill(null)
+                        .map((_, index) =>
+                          index === 0 ? (
+                            <SelectItem key={index} value="1">
+                              {t('player-count.just-me')}
+                            </SelectItem>
+                          ) : (
+                            <SelectItem key={index} value={`${index + 1}`}>
+                              {t('player-count.me-and-friends', { count: index })}
+                            </SelectItem>
+                          ),
+                        )}
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+          )}
 
           <hr className="border-t border-gray-200" />
 
@@ -342,80 +349,82 @@ const RegisterForGameSheetForm: React.FC = () => {
 
           {isCreditCard && (
             <>
-              <FormField
-                control={form.control}
-                name="paymentMethodId"
-                render={({ field }) => (
-                  <FormItem>
-                    {isPaymentMethodsLoading ? (
-                      <div className="space-y-2">
-                        <Skeleton className="h-16 w-full" />
-                        <Skeleton className="h-16 w-full" />
-                      </div>
-                    ) : (
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        className="space-y-2"
-                      >
-                        <FormItem>
-                          <FormLabel>
-                            {t('payment-method.card-option.select-from-saved-cards')}
-                          </FormLabel>
-                          {/* Saved cards */}
-                          {paymentMethods?.data.map((card, index) => (
+              {!inviterId && (
+                <FormField
+                  control={form.control}
+                  name="paymentMethodId"
+                  render={({ field }) => (
+                    <FormItem>
+                      {isPaymentMethodsLoading ? (
+                        <div className="space-y-2">
+                          <Skeleton className="h-16 w-full" />
+                          <Skeleton className="h-16 w-full" />
+                        </div>
+                      ) : (
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          className="space-y-2"
+                        >
+                          <FormItem>
+                            <FormLabel>
+                              {t('payment-method.card-option.select-from-saved-cards')}
+                            </FormLabel>
+                            {/* Saved cards */}
+                            {paymentMethods?.data.map((card, index) => (
+                              <FormItem
+                                key={card.id}
+                                className={`flex items-center space-x-3 p-4 border rounded-lg space-y-0 ${field.value === card.id ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
+                              >
+                                <FormControl>
+                                  <RadioGroupItem
+                                    defaultChecked={index === 0}
+                                    value={card.id}
+                                    id={card.id}
+                                    className={cn({
+                                      'border-[#1BA781] text-[#1BA781]': field.value === card.id,
+                                    })}
+                                  />
+                                </FormControl>
+                                <FormLabel
+                                  htmlFor={card.id}
+                                  className="flex items-center justify-between w-full"
+                                >
+                                  <span className="text-muted-foreground">
+                                    •••• •••• •••• {card.card?.last4}
+                                  </span>
+                                  <PaymentMethodLogo issuer={card.card?.brand ?? 'CARD'} />
+                                </FormLabel>
+                              </FormItem>
+                            ))}
+                            {/* Add new card */}
                             <FormItem
-                              key={card.id}
-                              className={`flex items-center space-x-3 p-4 border rounded-lg space-y-0 ${field.value === card.id ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
+                              className={`flex items-center space-y-0 space-x-3 p-4 border rounded-lg ${field.value === 'new' ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
                             >
                               <FormControl>
                                 <RadioGroupItem
-                                  defaultChecked={index === 0}
-                                  value={card.id}
-                                  id={card.id}
+                                  defaultChecked={!paymentMethods?.data.length}
+                                  value="new"
                                   className={cn({
-                                    'border-[#1BA781] text-[#1BA781]': field.value === card.id,
+                                    'border-[#1BA781] text-[#1BA781]': field.value === 'new',
                                   })}
                                 />
                               </FormControl>
                               <FormLabel
-                                htmlFor={card.id}
+                                htmlFor="new"
                                 className="flex items-center justify-between w-full"
                               >
-                                <span className="text-muted-foreground">
-                                  •••• •••• •••• {card.card?.last4}
-                                </span>
-                                <PaymentMethodLogo issuer={card.card?.brand ?? 'CARD'} />
+                                {t('new-payment-method.label')}
+                                <PaymentMethodLogo issuer="💳" />
                               </FormLabel>
                             </FormItem>
-                          ))}
-                          {/* Add new card */}
-                          <FormItem
-                            className={`flex items-center space-y-0 space-x-3 p-4 border rounded-lg ${field.value === 'new' ? 'border-[#1BA781] bg-[#1BA781]/10' : 'hover:bg-gray-50'}`}
-                          >
-                            <FormControl>
-                              <RadioGroupItem
-                                defaultChecked={!paymentMethods?.data.length}
-                                value="new"
-                                className={cn({
-                                  'border-[#1BA781] text-[#1BA781]': field.value === 'new',
-                                })}
-                              />
-                            </FormControl>
-                            <FormLabel
-                              htmlFor="new"
-                              className="flex items-center justify-between w-full"
-                            >
-                              {t('new-payment-method.label')}
-                              <PaymentMethodLogo issuer="💳" />
-                            </FormLabel>
                           </FormItem>
-                        </FormItem>
-                      </RadioGroup>
-                    )}
-                  </FormItem>
-                )}
-              />
+                        </RadioGroup>
+                      )}
+                    </FormItem>
+                  )}
+                />
+              )}
 
               {form.watch('paymentMethodId') === 'new' && (
                 <div className="space-y-2">
@@ -455,11 +464,7 @@ const RegisterForGameSheetForm: React.FC = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{t('new-payment-method.country.label')}</FormLabel>
-                        <SelectCountry
-                          placeholder={t('new-payment-method.country.placeholder')}
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        />
+                        <SelectCountry value={field.value} onValueChange={field.onChange} />
                       </FormItem>
                     )}
                   />

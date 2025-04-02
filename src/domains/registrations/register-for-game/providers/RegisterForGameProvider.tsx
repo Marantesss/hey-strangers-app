@@ -1,10 +1,17 @@
 'use client'
 
 import { useCallback, useMemo, useState, type PropsWithChildren } from 'react'
-
 import RegisterForGameContext from '../contexts/register-for-game.context'
 import { GameModel } from '@/domains/games/shared/models/Game.model'
-const RegisterForGameProvider: React.FC<PropsWithChildren> = ({ children }) => {
+
+interface RegisterForGameProviderProps extends PropsWithChildren {
+  inviterId?: string | null
+}
+
+const RegisterForGameProvider: React.FC<RegisterForGameProviderProps> = ({
+  inviterId = null,
+  children,
+}) => {
   const [game, setGame] = useState<GameModel | null>(null)
   const [isOpen, setIsOpen] = useState(false)
 
@@ -13,8 +20,8 @@ const RegisterForGameProvider: React.FC<PropsWithChildren> = ({ children }) => {
   }, [])
 
   const context = useMemo(
-    () => ({ game, isOpen, toggleOpen, setGame }),
-    [game, isOpen, toggleOpen, setGame],
+    () => ({ game, isOpen, toggleOpen, setGame, inviterId }),
+    [game, isOpen, toggleOpen, setGame, inviterId],
   )
 
   return (

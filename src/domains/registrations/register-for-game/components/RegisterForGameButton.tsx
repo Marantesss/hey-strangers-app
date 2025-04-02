@@ -13,12 +13,12 @@ interface RegisterForGameButtonProps {
 
 const RegisterForGameButton: React.FC<RegisterForGameButtonProps> = ({ game }) => {
   const { user } = useSession()
-  const { toggleOpen, setGame } = useRegisterFormGame()
+  const { toggleOpen, setGame, inviterId } = useRegisterFormGame()
   const t = useTranslations('components.game-card.register-button')
 
-  const isRegistered = user ? game.isUserRegistered(user?.id) : false
+  const isRegistered = user ? game.isUserRegistered(user?.id) : inviterId ? false : true
 
-  const isDisabled = game.isFull || !user || isRegistered
+  const isDisabled = game.isFull || (!user && !inviterId) || isRegistered
 
   return (
     <Button

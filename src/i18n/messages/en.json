@@ -149,6 +149,12 @@
       }
     }
   },
+  "invite": {
+    "title": "Book your next game",
+    "no-game-found": "We couldn't find any game",
+    "success": "Registration successful",
+    "error": "Registration failed! Please try again."
+  },
   "components": {
     "app-navbar": {
       "sign-out": "Sign out",

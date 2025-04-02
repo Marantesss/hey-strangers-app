@@ -214,10 +214,10 @@ const countries = [
 interface SelectCountryProps {
   disabled?: boolean
   value?: string
-  onChange?: (value: string) => void
+  onValueChange?: (value: string) => void
 }
 
-const SelectCountry = ({ disabled, value, onChange }: SelectCountryProps) => {
+const SelectCountry = ({ disabled, value, onValueChange }: SelectCountryProps) => {
   const [open, setOpen] = useState(false)
   const [internalValue, setInternalValue] = useState(value ?? 'PT')
   const t = useTranslations('components.select-country')
@@ -236,10 +236,10 @@ const SelectCountry = ({ disabled, value, onChange }: SelectCountryProps) => {
       const country = countries.find(({ name: countryName }) => countryName === name)
       if (!country) return
 
-      onChange?.(country.code)
+      onValueChange?.(country.code)
       setOpen(false)
     },
-    [onChange],
+    [onValueChange],
   )
 
   return (

@@ -3,21 +3,41 @@ import { getGameById } from '../get-game-by-id/get-game-by-id.service'
 import { getRegistrationsByGameId } from '@/domains/registrations/get-registrations-by-game/get-registrations-by-game-id.service'
 import stripe from '@/lib/stripe'
 import { PaymentIntentParamsSchema, PaymentIntentBodySchema } from './schema'
+import { getUserById } from '@/domains/users/get-user/get-user.service'
+import { User } from '@/payload-types'
 
 const createPaymentIntentEndpoint: Endpoint = {
   path: '/:id/payment-intent',
   method: 'post',
   handler: async (req) => {
-    if (!req.user || req.user.collection !== 'users') {
+    await addDataAndFileToRequest(req)
+    const { data: params, error: paramsError } = PaymentIntentParamsSchema.safeParse(
+      req.routeParams,
+    )
+    const { data: body, error: bodyError } = PaymentIntentBodySchema.safeParse(req.data)
+
+    if (paramsError || bodyError) {
+      return Response.json({ error: 'Invalid request' }, { status: 400 })
+    }
+
+    const isUserOrGuest = (req.user && req.user.collection === 'users') || !!body.inviterId
+
+    if (!isUserOrGuest) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    await addDataAndFileToRequest(req)
+    let userForReservation: User
+    if (body.inviterId) {
+      try {
+        userForReservation = await getUserById(body.inviterId)
+      } catch (error) {
+        return Response.json({ error: 'Invalid inviterId' }, { status: 400 })
+      }
+    } else {
+      userForReservation = req.user as User
+    }
 
     try {
-      const params = PaymentIntentParamsSchema.parse(req.routeParams)
-      const body = PaymentIntentBodySchema.parse(req.data)
-
       const shouldCreateNewCard = !!body.newPaymentMethod
 
       let paymentMethodId: string
@@ -35,10 +55,12 @@ const createPaymentIntentEndpoint: Endpoint = {
           },
         })
 
-        // Attach payment method to customer
-        await stripe.paymentMethods.attach(paymentMethod.id, {
-          customer: req.user.stripeCustomerId!,
-        })
+        if (!body.inviterId) {
+          // Attach payment method to customer
+          await stripe.paymentMethods.attach(paymentMethod.id, {
+            customer: userForReservation.stripeCustomerId!,
+          })
+        }
 
         paymentMethodId = paymentMethod.id
       } else {
@@ -63,11 +85,12 @@ const createPaymentIntentEndpoint: Endpoint = {
         currency: 'eur',
         payment_method: paymentMethodId,
         payment_method_types: ['card'],
-        customer: req.user.stripeCustomerId ?? undefined,
+        customer: userForReservation.stripeCustomerId ?? undefined,
         metadata: {
           gameId: game.id,
           playerCount: body.playerCount.toString(),
-          userId: req.user.id,
+          userId: userForReservation.id,
+          isGuest: !!body.inviterId ? 'true' : 'false',
         },
       })
 

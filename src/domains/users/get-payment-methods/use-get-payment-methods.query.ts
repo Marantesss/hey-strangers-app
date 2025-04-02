@@ -8,9 +8,14 @@ type GetPaymentMethodsResponse = {
   data: Stripe.PaymentMethod[]
 }
 
-const usePaymentMethodsQuery = () =>
-  useSWR(USE_PAYMENT_METHODS_QUERY_KEY, () =>
-    api.get<GetPaymentMethodsResponse>('users/payment-methods'),
+interface UsePaymentMethodsQueryProps {
+  enabled?: boolean
+}
+
+const usePaymentMethodsQuery = ({ enabled }: UsePaymentMethodsQueryProps = {}) =>
+  useSWR(
+    () => (enabled ? USE_PAYMENT_METHODS_QUERY_KEY : null),
+    () => api.get<GetPaymentMethodsResponse>('users/payment-methods'),
   )
 
 export default usePaymentMethodsQuery

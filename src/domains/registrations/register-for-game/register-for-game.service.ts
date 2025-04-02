@@ -8,6 +8,7 @@ interface RegisterForGameArgs {
   userId: User['id']
   paymentIntentId: string
   playerCount: number
+  isGuest?: boolean
 }
 
 export async function registerForGame({
@@ -15,6 +16,7 @@ export async function registerForGame({
   userId,
   paymentIntentId,
   playerCount = 1,
+  isGuest = false,
 }: RegisterForGameArgs) {
   const payload = await getPayload({ config })
 
@@ -35,6 +37,7 @@ export async function registerForGame({
               user: userId,
               stripePaymentIntentId: paymentIntentId,
               isMainRegistration: index === 0,
+              isGuest,
             },
             req: { transactionID },
           }),

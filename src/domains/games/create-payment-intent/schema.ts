@@ -5,6 +5,7 @@ export const PaymentIntentParamsSchema = z.object({
 })
 
 export const PaymentIntentBodySchema = z.object({
+  inviterId: z.string().optional(),
   playerCount: z.number().positive().default(1),
   paymentMethod: z.enum(['card']),
   paymentMethodId: z

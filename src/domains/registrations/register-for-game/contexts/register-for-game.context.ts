@@ -6,6 +6,7 @@ interface IRegisterForGameContext {
   setGame: (game: GameModel) => void
   isOpen: boolean
   toggleOpen: (isOpen?: boolean) => void
+  inviterId: string | null
 }
 
 const RegisterForGameContext = createContext<IRegisterForGameContext>({
@@ -13,6 +14,7 @@ const RegisterForGameContext = createContext<IRegisterForGameContext>({
   setGame: () => {},
   isOpen: false,
   toggleOpen: () => {},
+  inviterId: null,
 })
 
 export default RegisterForGameContext

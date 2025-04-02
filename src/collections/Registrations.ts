@@ -36,6 +36,14 @@ export const Registrations: CollectionConfig = {
           'If true, the user was the one who registered for the game and made the reservation',
       },
     },
+    {
+      name: 'isGuest',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        description: 'If true, then the paying user was a guest and was invited by another user',
+      },
+    },
     // --- relations and joins
     {
       name: 'game',

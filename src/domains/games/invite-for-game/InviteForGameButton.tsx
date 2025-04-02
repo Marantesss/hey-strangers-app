@@ -15,7 +15,6 @@ interface InviteForGameButtonProps {
 }
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL!
-const inviteSubdomain = 'invite'
 
 const InviteForGameButton: React.FC<InviteForGameButtonProps> = ({ game }) => {
   const { user } = useSession()
@@ -23,7 +22,7 @@ const InviteForGameButton: React.FC<InviteForGameButtonProps> = ({ game }) => {
   const t = useTranslations('components.game-card.invite-button')
   const isDisabled = game.isFull || !user
 
-  const gameInviteLink = `${appUrl}/${user?.id}/${user?.slugifiedName}/${game.id}`
+  const gameInviteLink = `${appUrl}/invite/${user?.id}/${user?.slugifiedName}/${game.id}`
 
   const onShareWhatsAppClick = async () => {
     toast.info(t('creating-invite-link'))

@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
-      disallow: '*sign-up',
+      disallow: ['*sign-up', '*invite'],
     },
     sitemap: `${defaultUrl}/sitemap.xml`,
   }

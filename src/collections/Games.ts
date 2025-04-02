@@ -9,7 +9,7 @@ export const Games: CollectionConfig = {
     useAsTitle: 'name',
   },
   access: {
-    read: isAuthenticated(),
+    read: () => true,
     create: hasRole('admins'),
     update: hasRole('admins'),
     delete: hasRole('admins'),

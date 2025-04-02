@@ -8,6 +8,7 @@ export class RegistrationModel {
   readonly updatedAt: Date
   readonly stripePaymentIntentId: string
   readonly isMainRegistration: boolean
+  readonly isGuest: boolean
 
   // Relations
   private readonly _userId: string
@@ -17,6 +18,7 @@ export class RegistrationModel {
     this.id = data.id
     this.stripePaymentIntentId = data.stripePaymentIntentId
     this.isMainRegistration = !!data.isMainRegistration
+    this.isGuest = !!data.isGuest
 
     this.createdAt = new Date(data.createdAt)
     this.updatedAt = new Date(data.updatedAt)

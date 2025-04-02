@@ -268,6 +268,10 @@ export interface Registration {
    * If true, the user was the one who registered for the game and made the reservation
    */
   isMainRegistration?: boolean | null;
+  /**
+   * If true, then the paying user was a guest and was invited by another user
+   */
+  isGuest?: boolean | null;
   game?: {
     docs?: (string | Game)[];
     hasNextPage?: boolean;
@@ -614,6 +618,7 @@ export interface GamesSelect<T extends boolean = true> {
 export interface RegistrationsSelect<T extends boolean = true> {
   stripePaymentIntentId?: T;
   isMainRegistration?: T;
+  isGuest?: T;
   game?: T;
   user?: T;
   updatedAt?: T;

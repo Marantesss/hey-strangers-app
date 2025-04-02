@@ -2,6 +2,10 @@ import { z } from 'zod'
 
 export const RegisterForGamePaymentConfirmationSchema = z.object({
   paymentIntentId: z.string(),
+  isGuest: z
+    .enum(['true'])
+    .optional()
+    .transform((val) => val === 'true'),
 })
 
 export type RegisterForGamePaymentConfirmationValues = z.infer<
