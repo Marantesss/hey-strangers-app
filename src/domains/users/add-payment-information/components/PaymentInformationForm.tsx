@@ -105,7 +105,7 @@ function PaymentMethodForm({ user, onSuccess, onError }: PaymentMethodFormProps)
         <SelectCountry
           disabled={isCreatePaymentMethodPending}
           value={formData.country}
-          onChange={(value) => setFormData({ ...formData, country: value })}
+          onValueChange={(value) => setFormData({ ...formData, country: value })}
         />
 
         <Input
