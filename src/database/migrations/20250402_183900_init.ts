@@ -44,7 +44,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"phone_number" varchar NOT NULL,
   	"is_verified" boolean DEFAULT false,
   	"name" varchar,
-  	"city" varchar,
+  	"city_id" uuid,
   	"quiz_answers" jsonb NOT NULL,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
@@ -106,6 +106,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TABLE IF NOT EXISTS "fields" (
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"address" varchar NOT NULL,
+  	"city_id" uuid NOT NULL,
   	"type_id" uuid NOT NULL,
   	"flooring_id" uuid NOT NULL,
   	"sport_id" uuid NOT NULL,
@@ -132,9 +133,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"starts_at" timestamp(3) with time zone NOT NULL,
   	"ends_at" timestamp(3) with time zone NOT NULL,
+  	"booking_fee" numeric DEFAULT 1 NOT NULL,
   	"price" numeric NOT NULL,
   	"max_players" numeric NOT NULL,
-  	"stripe_product_id" varchar,
   	"sport_id" uuid NOT NULL,
   	"field_id" uuid NOT NULL,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
@@ -161,9 +162,31 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"stripe_payment_intent_id" varchar NOT NULL,
   	"is_main_registration" boolean DEFAULT true,
+  	"is_guest" boolean DEFAULT false,
   	"user_id" uuid NOT NULL,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+  );
+  
+  CREATE TABLE IF NOT EXISTS "invites" (
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  	"user_id" uuid NOT NULL,
+  	"game_id" uuid NOT NULL,
+  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+  );
+  
+  CREATE TABLE IF NOT EXISTS "cities" (
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+  );
+  
+  CREATE TABLE IF NOT EXISTS "cities_locales" (
+  	"name" varchar NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" uuid NOT NULL
   );
   
   CREATE TABLE IF NOT EXISTS "payload_locked_documents" (
@@ -187,7 +210,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"field_amenities_id" uuid,
   	"fields_id" uuid,
   	"games_id" uuid,
-  	"registrations_id" uuid
+  	"registrations_id" uuid,
+  	"invites_id" uuid,
+  	"cities_id" uuid
   );
   
   CREATE TABLE IF NOT EXISTS "payload_preferences" (
@@ -397,6 +422,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"faq_title" varchar NOT NULL,
   	"cta2_title" varchar NOT NULL,
   	"cta2_button_label" varchar NOT NULL,
+  	"seo_title" varchar,
+  	"seo_image_id" uuid,
+  	"seo_description" varchar,
   	"id" serial PRIMARY KEY NOT NULL,
   	"_locale" "_locales" NOT NULL,
   	"_parent_id" uuid NOT NULL
@@ -506,11 +534,26 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   );
   
   CREATE TABLE IF NOT EXISTS "pages_locales" (
-  	"contact_us" jsonb NOT NULL,
-  	"safety" jsonb NOT NULL,
-  	"community_guidelines" jsonb NOT NULL,
-  	"terms_of_service" jsonb NOT NULL,
-  	"privacy_policy" jsonb NOT NULL,
+  	"contact_us_content" jsonb NOT NULL,
+  	"contact_us_title" varchar,
+  	"contact_us_image_id" uuid,
+  	"contact_us_description" varchar,
+  	"safety_content" jsonb NOT NULL,
+  	"safety_title" varchar,
+  	"safety_image_id" uuid,
+  	"safety_description" varchar,
+  	"community_guidelines_content" jsonb NOT NULL,
+  	"community_guidelines_title" varchar,
+  	"community_guidelines_image_id" uuid,
+  	"community_guidelines_description" varchar,
+  	"terms_of_service_content" jsonb NOT NULL,
+  	"terms_of_service_title" varchar,
+  	"terms_of_service_image_id" uuid,
+  	"terms_of_service_description" varchar,
+  	"privacy_policy_content" jsonb NOT NULL,
+  	"privacy_policy_title" varchar,
+  	"privacy_policy_image_id" uuid,
+  	"privacy_policy_description" varchar,
   	"id" serial PRIMARY KEY NOT NULL,
   	"_locale" "_locales" NOT NULL,
   	"_parent_id" uuid NOT NULL
@@ -518,6 +561,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   DO $$ BEGIN
    ALTER TABLE "users" ADD CONSTRAINT "users_profile_picture_id_media_id_fk" FOREIGN KEY ("profile_picture_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "users" ADD CONSTRAINT "users_city_id_cities_id_fk" FOREIGN KEY ("city_id") REFERENCES "public"."cities"("id") ON DELETE set null ON UPDATE no action;
   EXCEPTION
    WHEN duplicate_object THEN null;
   END $$;
@@ -542,6 +591,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   DO $$ BEGIN
    ALTER TABLE "field_amenities_locales" ADD CONSTRAINT "field_amenities_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."field_amenities"("id") ON DELETE cascade ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "fields" ADD CONSTRAINT "fields_city_id_cities_id_fk" FOREIGN KEY ("city_id") REFERENCES "public"."cities"("id") ON DELETE set null ON UPDATE no action;
   EXCEPTION
    WHEN duplicate_object THEN null;
   END $$;
@@ -619,6 +674,24 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   END $$;
   
   DO $$ BEGIN
+   ALTER TABLE "invites" ADD CONSTRAINT "invites_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "invites" ADD CONSTRAINT "invites_game_id_games_id_fk" FOREIGN KEY ("game_id") REFERENCES "public"."games"("id") ON DELETE set null ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "cities_locales" ADD CONSTRAINT "cities_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."cities"("id") ON DELETE cascade ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
    ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."payload_locked_documents"("id") ON DELETE cascade ON UPDATE no action;
   EXCEPTION
    WHEN duplicate_object THEN null;
@@ -680,6 +753,18 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   DO $$ BEGIN
    ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_registrations_fk" FOREIGN KEY ("registrations_id") REFERENCES "public"."registrations"("id") ON DELETE cascade ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_invites_fk" FOREIGN KEY ("invites_id") REFERENCES "public"."invites"("id") ON DELETE cascade ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_cities_fk" FOREIGN KEY ("cities_id") REFERENCES "public"."cities"("id") ON DELETE cascade ON UPDATE no action;
   EXCEPTION
    WHEN duplicate_object THEN null;
   END $$;
@@ -871,6 +956,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   END $$;
   
   DO $$ BEGIN
+   ALTER TABLE "home_locales" ADD CONSTRAINT "home_locales_seo_image_id_media_id_fk" FOREIGN KEY ("seo_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
    ALTER TABLE "home_locales" ADD CONSTRAINT "home_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."home"("id") ON DELETE cascade ON UPDATE no action;
   EXCEPTION
    WHEN duplicate_object THEN null;
@@ -955,6 +1046,36 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   END $$;
   
   DO $$ BEGIN
+   ALTER TABLE "pages_locales" ADD CONSTRAINT "pages_locales_contact_us_image_id_media_id_fk" FOREIGN KEY ("contact_us_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "pages_locales" ADD CONSTRAINT "pages_locales_safety_image_id_media_id_fk" FOREIGN KEY ("safety_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "pages_locales" ADD CONSTRAINT "pages_locales_community_guidelines_image_id_media_id_fk" FOREIGN KEY ("community_guidelines_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "pages_locales" ADD CONSTRAINT "pages_locales_terms_of_service_image_id_media_id_fk" FOREIGN KEY ("terms_of_service_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
+   ALTER TABLE "pages_locales" ADD CONSTRAINT "pages_locales_privacy_policy_image_id_media_id_fk" FOREIGN KEY ("privacy_policy_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  
+  DO $$ BEGIN
    ALTER TABLE "pages_locales" ADD CONSTRAINT "pages_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
   EXCEPTION
    WHEN duplicate_object THEN null;
@@ -970,6 +1091,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE UNIQUE INDEX IF NOT EXISTS "users_stripe_customer_id_idx" ON "users" USING btree ("stripe_customer_id");
   CREATE INDEX IF NOT EXISTS "users_profile_picture_idx" ON "users" USING btree ("profile_picture_id");
   CREATE UNIQUE INDEX IF NOT EXISTS "users_phone_number_idx" ON "users" USING btree ("phone_number");
+  CREATE INDEX IF NOT EXISTS "users_city_idx" ON "users" USING btree ("city_id");
   CREATE INDEX IF NOT EXISTS "users_updated_at_idx" ON "users" USING btree ("updated_at");
   CREATE INDEX IF NOT EXISTS "users_created_at_idx" ON "users" USING btree ("created_at");
   CREATE INDEX IF NOT EXISTS "sports_updated_at_idx" ON "sports" USING btree ("updated_at");
@@ -984,6 +1106,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX IF NOT EXISTS "field_amenities_updated_at_idx" ON "field_amenities" USING btree ("updated_at");
   CREATE INDEX IF NOT EXISTS "field_amenities_created_at_idx" ON "field_amenities" USING btree ("created_at");
   CREATE UNIQUE INDEX IF NOT EXISTS "field_amenities_locales_locale_parent_id_unique" ON "field_amenities_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX IF NOT EXISTS "fields_city_idx" ON "fields" USING btree ("city_id");
   CREATE INDEX IF NOT EXISTS "fields_type_idx" ON "fields" USING btree ("type_id");
   CREATE INDEX IF NOT EXISTS "fields_flooring_idx" ON "fields" USING btree ("flooring_id");
   CREATE INDEX IF NOT EXISTS "fields_sport_idx" ON "fields" USING btree ("sport_id");
@@ -994,7 +1117,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX IF NOT EXISTS "fields_rels_parent_idx" ON "fields_rels" USING btree ("parent_id");
   CREATE INDEX IF NOT EXISTS "fields_rels_path_idx" ON "fields_rels" USING btree ("path");
   CREATE INDEX IF NOT EXISTS "fields_rels_field_amenities_id_idx" ON "fields_rels" USING btree ("field_amenities_id");
-  CREATE UNIQUE INDEX IF NOT EXISTS "games_stripe_product_id_idx" ON "games" USING btree ("stripe_product_id");
   CREATE INDEX IF NOT EXISTS "games_sport_idx" ON "games" USING btree ("sport_id");
   CREATE INDEX IF NOT EXISTS "games_field_idx" ON "games" USING btree ("field_id");
   CREATE INDEX IF NOT EXISTS "games_updated_at_idx" ON "games" USING btree ("updated_at");
@@ -1004,10 +1126,16 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX IF NOT EXISTS "games_rels_parent_idx" ON "games_rels" USING btree ("parent_id");
   CREATE INDEX IF NOT EXISTS "games_rels_path_idx" ON "games_rels" USING btree ("path");
   CREATE INDEX IF NOT EXISTS "games_rels_registrations_id_idx" ON "games_rels" USING btree ("registrations_id");
-  CREATE UNIQUE INDEX IF NOT EXISTS "registrations_stripe_payment_intent_id_idx" ON "registrations" USING btree ("stripe_payment_intent_id");
   CREATE INDEX IF NOT EXISTS "registrations_user_idx" ON "registrations" USING btree ("user_id");
   CREATE INDEX IF NOT EXISTS "registrations_updated_at_idx" ON "registrations" USING btree ("updated_at");
   CREATE INDEX IF NOT EXISTS "registrations_created_at_idx" ON "registrations" USING btree ("created_at");
+  CREATE INDEX IF NOT EXISTS "invites_user_idx" ON "invites" USING btree ("user_id");
+  CREATE INDEX IF NOT EXISTS "invites_game_idx" ON "invites" USING btree ("game_id");
+  CREATE INDEX IF NOT EXISTS "invites_updated_at_idx" ON "invites" USING btree ("updated_at");
+  CREATE INDEX IF NOT EXISTS "invites_created_at_idx" ON "invites" USING btree ("created_at");
+  CREATE INDEX IF NOT EXISTS "cities_updated_at_idx" ON "cities" USING btree ("updated_at");
+  CREATE INDEX IF NOT EXISTS "cities_created_at_idx" ON "cities" USING btree ("created_at");
+  CREATE UNIQUE INDEX IF NOT EXISTS "cities_locales_locale_parent_id_unique" ON "cities_locales" USING btree ("_locale","_parent_id");
   CREATE INDEX IF NOT EXISTS "payload_locked_documents_global_slug_idx" ON "payload_locked_documents" USING btree ("global_slug");
   CREATE INDEX IF NOT EXISTS "payload_locked_documents_updated_at_idx" ON "payload_locked_documents" USING btree ("updated_at");
   CREATE INDEX IF NOT EXISTS "payload_locked_documents_created_at_idx" ON "payload_locked_documents" USING btree ("created_at");
@@ -1024,6 +1152,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX IF NOT EXISTS "payload_locked_documents_rels_fields_id_idx" ON "payload_locked_documents_rels" USING btree ("fields_id");
   CREATE INDEX IF NOT EXISTS "payload_locked_documents_rels_games_id_idx" ON "payload_locked_documents_rels" USING btree ("games_id");
   CREATE INDEX IF NOT EXISTS "payload_locked_documents_rels_registrations_id_idx" ON "payload_locked_documents_rels" USING btree ("registrations_id");
+  CREATE INDEX IF NOT EXISTS "payload_locked_documents_rels_invites_id_idx" ON "payload_locked_documents_rels" USING btree ("invites_id");
+  CREATE INDEX IF NOT EXISTS "payload_locked_documents_rels_cities_id_idx" ON "payload_locked_documents_rels" USING btree ("cities_id");
   CREATE INDEX IF NOT EXISTS "payload_preferences_key_idx" ON "payload_preferences" USING btree ("key");
   CREATE INDEX IF NOT EXISTS "payload_preferences_updated_at_idx" ON "payload_preferences" USING btree ("updated_at");
   CREATE INDEX IF NOT EXISTS "payload_preferences_created_at_idx" ON "payload_preferences" USING btree ("created_at");
@@ -1072,6 +1202,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE UNIQUE INDEX IF NOT EXISTS "home_faq_questions_locales_locale_parent_id_unique" ON "home_faq_questions_locales" USING btree ("_locale","_parent_id");
   CREATE INDEX IF NOT EXISTS "home_stats_stats_image_idx" ON "home" USING btree ("stats_image_id");
   CREATE INDEX IF NOT EXISTS "home_when_and_where_when_and_where_image_idx" ON "home" USING btree ("when_and_where_image_id");
+  CREATE INDEX IF NOT EXISTS "home_seo_seo_image_idx" ON "home_locales" USING btree ("seo_image_id","_locale");
   CREATE UNIQUE INDEX IF NOT EXISTS "home_locales_locale_parent_id_unique" ON "home_locales" USING btree ("_locale","_parent_id");
   CREATE INDEX IF NOT EXISTS "footer_links_order_idx" ON "footer_links" USING btree ("_order");
   CREATE INDEX IF NOT EXISTS "footer_links_parent_id_idx" ON "footer_links" USING btree ("_parent_id");
@@ -1086,77 +1217,86 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE UNIQUE INDEX IF NOT EXISTS "quiz_questions_options_locales_locale_parent_id_unique" ON "quiz_questions_options_locales" USING btree ("_locale","_parent_id");
   CREATE INDEX IF NOT EXISTS "quiz_questions_order_idx" ON "quiz_questions" USING btree ("_order");
   CREATE INDEX IF NOT EXISTS "quiz_questions_parent_id_idx" ON "quiz_questions" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX IF NOT EXISTS "quiz_questions_key_idx" ON "quiz_questions" USING btree ("key");
   CREATE UNIQUE INDEX IF NOT EXISTS "quiz_questions_locales_locale_parent_id_unique" ON "quiz_questions_locales" USING btree ("_locale","_parent_id");
   CREATE INDEX IF NOT EXISTS "quiz_dummy_game_results_order_idx" ON "quiz_dummy_game_results" USING btree ("_order");
   CREATE INDEX IF NOT EXISTS "quiz_dummy_game_results_parent_id_idx" ON "quiz_dummy_game_results" USING btree ("_parent_id");
   CREATE INDEX IF NOT EXISTS "quiz_dummy_game_results_sport_idx" ON "quiz_dummy_game_results" USING btree ("sport_id");
   CREATE INDEX IF NOT EXISTS "quiz_dummy_game_results_field_idx" ON "quiz_dummy_game_results" USING btree ("field_id");
   CREATE UNIQUE INDEX IF NOT EXISTS "quiz_dummy_game_results_locales_locale_parent_id_unique" ON "quiz_dummy_game_results_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX IF NOT EXISTS "pages_contact_us_contact_us_image_idx" ON "pages_locales" USING btree ("contact_us_image_id","_locale");
+  CREATE INDEX IF NOT EXISTS "pages_safety_safety_image_idx" ON "pages_locales" USING btree ("safety_image_id","_locale");
+  CREATE INDEX IF NOT EXISTS "pages_community_guidelines_community_guidelines_image_idx" ON "pages_locales" USING btree ("community_guidelines_image_id","_locale");
+  CREATE INDEX IF NOT EXISTS "pages_terms_of_service_terms_of_service_image_idx" ON "pages_locales" USING btree ("terms_of_service_image_id","_locale");
+  CREATE INDEX IF NOT EXISTS "pages_privacy_policy_privacy_policy_image_idx" ON "pages_locales" USING btree ("privacy_policy_image_id","_locale");
   CREATE UNIQUE INDEX IF NOT EXISTS "pages_locales_locale_parent_id_unique" ON "pages_locales" USING btree ("_locale","_parent_id");`)
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
   await db.execute(sql`
-   DROP TABLE IF EXISTS "media" CASCADE;
-  DROP TABLE IF EXISTS "admins" CASCADE;
-  DROP TABLE IF EXISTS "users" CASCADE;
-  DROP TABLE IF EXISTS "sports" CASCADE;
-  DROP TABLE IF EXISTS "sports_locales" CASCADE;
-  DROP TABLE IF EXISTS "field_types" CASCADE;
-  DROP TABLE IF EXISTS "field_types_locales" CASCADE;
-  DROP TABLE IF EXISTS "field_floorings" CASCADE;
-  DROP TABLE IF EXISTS "field_floorings_locales" CASCADE;
-  DROP TABLE IF EXISTS "field_amenities" CASCADE;
-  DROP TABLE IF EXISTS "field_amenities_locales" CASCADE;
-  DROP TABLE IF EXISTS "fields" CASCADE;
-  DROP TABLE IF EXISTS "fields_locales" CASCADE;
-  DROP TABLE IF EXISTS "fields_rels" CASCADE;
-  DROP TABLE IF EXISTS "games" CASCADE;
-  DROP TABLE IF EXISTS "games_locales" CASCADE;
-  DROP TABLE IF EXISTS "games_rels" CASCADE;
-  DROP TABLE IF EXISTS "registrations" CASCADE;
-  -- DROP TABLE IF EXISTS "payload_locked_documents" CASCADE;
-  -- DROP TABLE IF EXISTS "payload_locked_documents_rels" CASCADE;
-  -- DROP TABLE IF EXISTS "payload_preferences" CASCADE;
-  -- DROP TABLE IF EXISTS "payload_preferences_rels" CASCADE;
-  -- DROP TABLE IF EXISTS "payload_migrations" CASCADE;
-  DROP TABLE IF EXISTS "home_hero_partners" CASCADE;
-  DROP TABLE IF EXISTS "home_hero_partners_locales" CASCADE;
-  DROP TABLE IF EXISTS "home_next_games_games" CASCADE;
-  DROP TABLE IF EXISTS "home_next_games_games_locales" CASCADE;
-  DROP TABLE IF EXISTS "home_how_it_works_steps" CASCADE;
-  DROP TABLE IF EXISTS "home_how_it_works_steps_locales" CASCADE;
-  DROP TABLE IF EXISTS "home_stats_statistics" CASCADE;
-  DROP TABLE IF EXISTS "home_stats_statistics_locales" CASCADE;
-  DROP TABLE IF EXISTS "home_testimonials_reviews" CASCADE;
-  DROP TABLE IF EXISTS "home_testimonials_reviews_locales" CASCADE;
-  DROP TABLE IF EXISTS "home_cta_sports" CASCADE;
-  DROP TABLE IF EXISTS "home_cta_sports_locales" CASCADE;
-  DROP TABLE IF EXISTS "home_strangers_strangers" CASCADE;
-  DROP TABLE IF EXISTS "home_strangers_strangers_locales" CASCADE;
-  DROP TABLE IF EXISTS "home_when_and_where_features" CASCADE;
-  DROP TABLE IF EXISTS "home_when_and_where_features_locales" CASCADE;
-  DROP TABLE IF EXISTS "home_numbers_numbers" CASCADE;
-  DROP TABLE IF EXISTS "home_numbers_numbers_locales" CASCADE;
-  DROP TABLE IF EXISTS "home_faq_questions" CASCADE;
-  DROP TABLE IF EXISTS "home_faq_questions_locales" CASCADE;
-  DROP TABLE IF EXISTS "home" CASCADE;
-  DROP TABLE IF EXISTS "home_locales" CASCADE;
-  DROP TABLE IF EXISTS "footer_links" CASCADE;
-  DROP TABLE IF EXISTS "footer_links_locales" CASCADE;
-  DROP TABLE IF EXISTS "footer_social_links" CASCADE;
-  DROP TABLE IF EXISTS "footer" CASCADE;
-  DROP TABLE IF EXISTS "quiz_sports" CASCADE;
-  DROP TABLE IF EXISTS "quiz_sports_locales" CASCADE;
-  DROP TABLE IF EXISTS "quiz_questions_options" CASCADE;
-  DROP TABLE IF EXISTS "quiz_questions_options_locales" CASCADE;
-  DROP TABLE IF EXISTS "quiz_questions" CASCADE;
-  DROP TABLE IF EXISTS "quiz_questions_locales" CASCADE;
-  DROP TABLE IF EXISTS "quiz_dummy_game_results" CASCADE;
-  DROP TABLE IF EXISTS "quiz_dummy_game_results_locales" CASCADE;
-  DROP TABLE IF EXISTS "quiz" CASCADE;
-  DROP TABLE IF EXISTS "pages" CASCADE;
-  DROP TABLE IF EXISTS "pages_locales" CASCADE;
-  DROP TYPE IF EXISTS "public"."_locales" CASCADE;
-  DROP TYPE IF EXISTS "public"."enum_footer_social_links_platform" CASCADE;`)
+   DROP TABLE "media" CASCADE;
+  DROP TABLE "admins" CASCADE;
+  DROP TABLE "users" CASCADE;
+  DROP TABLE "sports" CASCADE;
+  DROP TABLE "sports_locales" CASCADE;
+  DROP TABLE "field_types" CASCADE;
+  DROP TABLE "field_types_locales" CASCADE;
+  DROP TABLE "field_floorings" CASCADE;
+  DROP TABLE "field_floorings_locales" CASCADE;
+  DROP TABLE "field_amenities" CASCADE;
+  DROP TABLE "field_amenities_locales" CASCADE;
+  DROP TABLE "fields" CASCADE;
+  DROP TABLE "fields_locales" CASCADE;
+  DROP TABLE "fields_rels" CASCADE;
+  DROP TABLE "games" CASCADE;
+  DROP TABLE "games_locales" CASCADE;
+  DROP TABLE "games_rels" CASCADE;
+  DROP TABLE "registrations" CASCADE;
+  DROP TABLE "invites" CASCADE;
+  DROP TABLE "cities" CASCADE;
+  DROP TABLE "cities_locales" CASCADE;
+  DROP TABLE "payload_locked_documents" CASCADE;
+  DROP TABLE "payload_locked_documents_rels" CASCADE;
+  DROP TABLE "payload_preferences" CASCADE;
+  DROP TABLE "payload_preferences_rels" CASCADE;
+  DROP TABLE "payload_migrations" CASCADE;
+  DROP TABLE "home_hero_partners" CASCADE;
+  DROP TABLE "home_hero_partners_locales" CASCADE;
+  DROP TABLE "home_next_games_games" CASCADE;
+  DROP TABLE "home_next_games_games_locales" CASCADE;
+  DROP TABLE "home_how_it_works_steps" CASCADE;
+  DROP TABLE "home_how_it_works_steps_locales" CASCADE;
+  DROP TABLE "home_stats_statistics" CASCADE;
+  DROP TABLE "home_stats_statistics_locales" CASCADE;
+  DROP TABLE "home_testimonials_reviews" CASCADE;
+  DROP TABLE "home_testimonials_reviews_locales" CASCADE;
+  DROP TABLE "home_cta_sports" CASCADE;
+  DROP TABLE "home_cta_sports_locales" CASCADE;
+  DROP TABLE "home_strangers_strangers" CASCADE;
+  DROP TABLE "home_strangers_strangers_locales" CASCADE;
+  DROP TABLE "home_when_and_where_features" CASCADE;
+  DROP TABLE "home_when_and_where_features_locales" CASCADE;
+  DROP TABLE "home_numbers_numbers" CASCADE;
+  DROP TABLE "home_numbers_numbers_locales" CASCADE;
+  DROP TABLE "home_faq_questions" CASCADE;
+  DROP TABLE "home_faq_questions_locales" CASCADE;
+  DROP TABLE "home" CASCADE;
+  DROP TABLE "home_locales" CASCADE;
+  DROP TABLE "footer_links" CASCADE;
+  DROP TABLE "footer_links_locales" CASCADE;
+  DROP TABLE "footer_social_links" CASCADE;
+  DROP TABLE "footer" CASCADE;
+  DROP TABLE "quiz_sports" CASCADE;
+  DROP TABLE "quiz_sports_locales" CASCADE;
+  DROP TABLE "quiz_questions_options" CASCADE;
+  DROP TABLE "quiz_questions_options_locales" CASCADE;
+  DROP TABLE "quiz_questions" CASCADE;
+  DROP TABLE "quiz_questions_locales" CASCADE;
+  DROP TABLE "quiz_dummy_game_results" CASCADE;
+  DROP TABLE "quiz_dummy_game_results_locales" CASCADE;
+  DROP TABLE "quiz" CASCADE;
+  DROP TABLE "pages" CASCADE;
+  DROP TABLE "pages_locales" CASCADE;
+  DROP TYPE "public"."_locales";
+  DROP TYPE "public"."enum_footer_social_links_platform";`)
 }

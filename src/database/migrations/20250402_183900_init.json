@@ -1,5 +1,5 @@
 {
-  "id": "1c41554d-ff23-49ee-8c1f-051543d23dbd",
+  "id": "efa58838-cfeb-4770-a871-513fb3c357a4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1876,6 +1876,13 @@
           "primaryKey": false,
           "notNull": false,
           "default": true
+        },
+        "is_guest": {
+          "name": "is_guest",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "user_id": {
           "name": "user_id",
