@@ -3,7 +3,10 @@
     "register": "Register",
     "my-space": "My Space",
     "next-match-in": "Next match in",
-    "years-old": "{count, plural, =0 {years old} one {# year old} other {# years old}}"
+    "years-old": "{count, plural, =0 {years old} one {# year old} other {# years old}}",
+    "select-city": {
+      "placeholder": "Select your city"
+    }
   },
   "sign-up": {
     "quiz": {
@@ -177,6 +180,12 @@
       "phone-number": {
         "placeholder": "Phone Number"
       }
+    },
+    "countdown": {
+      "days": "{count, plural, =0 {0 days} one {# day} other {# days}}",
+      "hours": "{count, plural, =0 {0 hours} one {# hour} other {# hours}}",
+      "minutes": "{count, plural, =0 {0 minutes} one {# minute} other {# minutes}}",
+      "seconds": "{count, plural, =0 {0 seconds} one {# second} other {# seconds}}"
     },
     "game-card": {
       "top-pick": "⭐ Top Pick",

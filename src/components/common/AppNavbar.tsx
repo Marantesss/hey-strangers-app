@@ -6,13 +6,19 @@ import useSession from '@/domains/users/session/use-session'
 import { signOutAction } from '@/domains/users/sign-out/actions'
 import { Link } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
-import { useActionState } from 'react'
+import { startTransition, useActionState } from 'react'
 import LocaleSwitcher from './LocaleSwitcher'
 
 const AppNavbar = () => {
   const { user } = useSession()
   const [, formAction, isPending] = useActionState(signOutAction, null)
   const t = useTranslations('components.app-navbar')
+
+  const onSignOut = () => {
+    startTransition(() => {
+      formAction()
+    })
+  }
 
   return (
     <nav className="flex items-center justify-between py-8">
@@ -23,7 +29,7 @@ const AppNavbar = () => {
       <div className="flex items-center gap-4">
         <LocaleSwitcher />
         {user ? (
-          <Button variant="ghost" formAction={formAction} disabled={isPending}>
+          <Button variant="ghost" onClick={onSignOut} disabled={isPending}>
             {t('sign-out')}
           </Button>
         ) : (

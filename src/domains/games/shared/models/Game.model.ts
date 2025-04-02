@@ -107,8 +107,6 @@ export class GameModel {
   get availableSpots(): number {
     const actualAvailableSpots = this.maxPlayers - (this._registrationsIds?.length ?? 0)
 
-    debugger
-
     return actualAvailableSpots > GameModel.ARTIFICIAL_AVAILABLE_SPOTS_LIMIT
       ? GameModel.ARTIFICIAL_AVAILABLE_SPOTS_LIMIT
       : Math.max(actualAvailableSpots, 0)

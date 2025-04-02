@@ -1,20 +1,12 @@
 import Image from 'next/image'
 import { Home, Media } from '@/payload-types'
-import Logo from '../common/Logo'
 import { Button } from '../ui/button'
-import {
-  Select,
-  SelectItem,
-  SelectTrigger,
-  SelectContent,
-  SelectValue,
-} from '@/components/ui/select'
 import { getNextGame } from '@/domains/games/shared/GameService'
 import Countdown from '../common/Countdown'
-import LocaleSwitcher from '../common/LocaleSwitcher'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import Header from './Header'
+import HeroSectionClient from './HeroSection.client'
 
 interface HeroSectionProps {
   hero: Home['hero']
@@ -23,6 +15,10 @@ interface HeroSectionProps {
 export default async function HeroSection({ hero }: HeroSectionProps) {
   const t = await getTranslations('home')
   const nextGame = await getNextGame()
+
+  const onCitySelect = (cityId: string) => {
+    console.log(cityId)
+  }
 
   return (
     <section className="bg-[#F5F7F9]">
@@ -39,19 +35,11 @@ export default async function HeroSection({ hero }: HeroSectionProps) {
 
           <p className="max-w-lg">{hero.description}</p>
 
-          <Select>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a city" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="porto">Porto</SelectItem>
-              <SelectItem value="lisboa">Lisboa</SelectItem>
-            </SelectContent>
-          </Select>
+          <HeroSectionClient />
 
           {nextGame && (
             <p className="max-w-lg">
-              {t('next-match-in')} <Countdown className="font-bold" date={nextGame.startsAt} />
+              {t('next-match-in')}: <Countdown className="font-bold" date={nextGame.startsAt} />
             </p>
           )}
 

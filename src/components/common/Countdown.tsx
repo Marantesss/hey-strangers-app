@@ -1,12 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-
+import { useTranslations } from 'next-intl'
 interface CountdownProps extends React.HTMLAttributes<HTMLSpanElement> {
   date: Date
 }
 
 const Countdown: React.FC<CountdownProps> = ({ date, ...props }) => {
+  const t = useTranslations('components.countdown')
+
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -36,7 +38,8 @@ const Countdown: React.FC<CountdownProps> = ({ date, ...props }) => {
 
   return (
     <span {...props}>
-      {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
+      {t('days', { count: timeLeft.days })} {t('hours', { count: timeLeft.hours })}{' '}
+      {t('minutes', { count: timeLeft.minutes })} {t('seconds', { count: timeLeft.seconds })}
     </span>
   )
 }
