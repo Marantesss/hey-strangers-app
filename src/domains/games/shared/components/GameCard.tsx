@@ -22,6 +22,7 @@ export interface GameCardProps {
   simple?: boolean
   hidePrice?: boolean
   highlight?: boolean
+  hideAvailableSpots?: boolean
 }
 
 const GameCard: React.FC<GameCardProps> = ({
@@ -101,7 +102,7 @@ const GameCard: React.FC<GameCardProps> = ({
               {game.description} - {fieldFlooring}
             </span>
             <span className="block text-secondary bg-[#FFF5F0] p-1 font-medium rounded-lg">
-              {!game.isFull && (
+              {!game.isFull && !simple && (
                 <>
                   {t('only-spots-left-prefix')}{' '}
                   <span className="font-bold">{game.availableSpots}</span>{' '}
@@ -131,7 +132,7 @@ const GameCard: React.FC<GameCardProps> = ({
                   <ul className="text-subtle-foreground list-disc list-inside text-sm">
                     {registeredPlayers.map(({ name, count }) => (
                       <li className="ml-2" key={name}>
-                        {count > 1 ? `${name} + ${count - 1} friends` : name}
+                        {t('registered-player', { name, count })}
                       </li>
                     ))}
                   </ul>

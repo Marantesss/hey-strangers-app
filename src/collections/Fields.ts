@@ -27,6 +27,12 @@ export const Fields: CollectionConfig = {
     },
     // --- relations and joins
     {
+      name: 'city',
+      type: 'relationship',
+      relationTo: 'cities',
+      required: true,
+    },
+    {
       name: 'type',
       type: 'relationship',
       relationTo: 'fieldTypes',

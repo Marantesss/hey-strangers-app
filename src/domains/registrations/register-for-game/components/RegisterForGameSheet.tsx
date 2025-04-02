@@ -75,18 +75,15 @@ const RegisterForGameSheetForm: React.FC = () => {
       return
     }
 
-    const cardElement = elements.getElement(CardElement)
-    if (!cardElement) throw new Error('Card element not found')
-
     const paymentIntentBody: PaymentIntentValues = {
       playerCount: values.playerCount,
       paymentMethod: values.paymentMethod,
-      paymentMethodId: undefined,
-      newPaymentMethod: undefined,
     }
 
     const shouldCreateNewCard = values.paymentMethodId === 'new'
     if (shouldCreateNewCard) {
+      const cardElement = elements.getElement(CardElement)
+      if (!cardElement) throw new Error('Card element not found')
       const { token, error: tokenError } = await stripe.createToken(cardElement)
       if (tokenError) throw tokenError
 
@@ -411,7 +408,7 @@ const RegisterForGameSheetForm: React.FC = () => {
                               htmlFor="new"
                               className="flex items-center justify-between w-full"
                             >
-                              Add new card
+                              {t('new-payment-method.label')}
                               <PaymentMethodLogo issuer="💳" />
                             </FormLabel>
                           </FormItem>
@@ -429,9 +426,12 @@ const RegisterForGameSheetForm: React.FC = () => {
                     name="newPaymentMethod.name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Billed to</FormLabel>
+                        <FormLabel>{t('new-payment-method.billed-to.label')}</FormLabel>
                         <FormControl>
-                          <Input placeholder="Cardholder name" {...field} />
+                          <Input
+                            placeholder={t('new-payment-method.billed-to.placeholder')}
+                            {...field}
+                          />
                         </FormControl>
                       </FormItem>
                     )}
@@ -456,9 +456,9 @@ const RegisterForGameSheetForm: React.FC = () => {
                     name="newPaymentMethod.country"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Country</FormLabel>
+                        <FormLabel>{t('new-payment-method.country.label')}</FormLabel>
                         <SelectCountry
-                          placeholder="Select country"
+                          placeholder={t('new-payment-method.country.placeholder')}
                           value={field.value}
                           onValueChange={field.onChange}
                         />
@@ -472,7 +472,10 @@ const RegisterForGameSheetForm: React.FC = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Input placeholder="Postal code" {...field} />
+                          <Input
+                            placeholder={t('new-payment-method.zip-code.placeholder')}
+                            {...field}
+                          />
                         </FormControl>
                       </FormItem>
                     )}

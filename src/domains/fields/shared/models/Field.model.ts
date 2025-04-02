@@ -3,6 +3,7 @@ import { FieldAmenity, Field as PayloadField } from '@payload-types'
 import { FieldTypeModel } from './FieldType.model'
 import { FieldFlooringModel } from './FieldFlooring.model'
 import { FieldAmenityModel } from './FieldAmmenity.model'
+import { CityModel } from '@/domains/cities/shared/models/City.model'
 
 export class FieldModel {
   readonly id: string
@@ -15,6 +16,9 @@ export class FieldModel {
   // Relations
   private readonly _sportId: string
   private readonly _sport?: SportModel
+
+  private readonly _cityId: string
+  private readonly _city?: CityModel
 
   private readonly _typeId: string
   private readonly _type?: FieldTypeModel
@@ -35,6 +39,9 @@ export class FieldModel {
 
     this._sport = data.sport instanceof Object ? SportModel.from(data.sport) : undefined
     this._sportId = data.sport instanceof Object ? data.sport.id : data.sport
+
+    this._city = data.city instanceof Object ? CityModel.from(data.city) : undefined
+    this._cityId = data.city instanceof Object ? data.city.id : data.city
 
     this._type = data.type instanceof Object ? FieldTypeModel.from(data.type) : undefined
     this._typeId = data.type instanceof Object ? data.type.id : data.type
@@ -89,6 +96,7 @@ export class FieldModel {
       id: this.id,
       name: this.name,
       address: this.address,
+      city: this._city ? this._city.toSerializable() : this._cityId,
       type: this._type ? this._type.toSerializable() : this._typeId,
       flooring: this._flooring ? this._flooring.toSerializable() : this._flooringId,
       sport: this._sport ? this._sport.toSerializable() : this._sportId,

@@ -7,25 +7,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import useCitiesQuery from '@/domains/cities/get-cities/use-cities.query'
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useState } from 'react'
 
-// city names must be in portuguese for filtering to work
-const SELECTABLE_CITIES = [
-  {
-    id: 'lisboa',
-    name: 'Lisbon',
-  },
-  {
-    id: 'porto',
-    name: 'Porto',
-  },
-] as const
-
 const SelectCity: React.FC = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { data: cities } = useCitiesQuery()
+
   const [currentCity, setCurrentCity] = useState<string | null>(searchParams.get('city') ?? 'all')
   const t = useTranslations('components.select-city')
 
@@ -49,7 +40,7 @@ const SelectCity: React.FC = () => {
         <SelectItem defaultChecked value="all">
           {t('all')}
         </SelectItem>
-        {SELECTABLE_CITIES.map((city) => (
+        {cities?.map((city) => (
           <SelectItem key={city.id} value={city.id}>
             {city.name}
           </SelectItem>

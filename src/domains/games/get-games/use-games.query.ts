@@ -11,7 +11,7 @@ export const USE_GAME_QUERY_KEY = 'games'
 type UseGamesQueryProps = {
   options: {
     userId?: string
-    cityName?: string
+    cityId?: string
     sportId?: string
     timeFrame?: 'future' | 'past' | 'all'
   }
@@ -38,10 +38,10 @@ const useGamesQuery = ({ options, expand }: UseGamesQueryProps) => {
                   },
                 }
               : {}),
-            ...(options.cityName
+            ...(options.cityId
               ? {
-                  'field.address': {
-                    contains: options.cityName,
+                  'field.city': {
+                    equals: options.cityId,
                   },
                 }
               : {}),

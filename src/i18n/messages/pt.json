@@ -171,6 +171,7 @@
       "only-spots-left-suffix": "lugares disponíveis",
       "facility-information": "Informação do local",
       "registered-players": "Jogadores registados",
+      "registered-player": "{count, plural, =0 {{name}} =1 {{name} + {count} amigo} other {{name} + {count} amigos}}",
       "more-info": "Mais informação",
       "register-button": {
         "registered": "Registado",
@@ -199,6 +200,20 @@
         "card": "Cartão de crédito/débito",
         "card-option": {
           "select-from-saved-cards": "Selecionar um dos teus cartões guardados"
+        }
+      },
+      "new-payment-method": {
+        "label": "Adicionar novo cartão",
+        "billed-to": {
+          "label": "Faturado para",
+          "placeholder": "Nome"
+        },
+        "country": {
+          "label": "País",
+          "placeholder": "País"
+        },
+        "zip-code": {
+          "placeholder": "Código postal"
         }
       },
       "summary": {

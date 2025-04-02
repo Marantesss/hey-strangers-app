@@ -19,7 +19,6 @@ export const Registrations: CollectionConfig = {
       name: 'stripePaymentIntentId',
       type: 'text',
       required: true,
-      unique: true,
       access: {
         read: hasRole('admins'),
         update: () => false,

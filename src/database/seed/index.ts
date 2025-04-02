@@ -13,6 +13,7 @@ import { seedSports } from './sports'
 import { seedQuiz } from './quiz'
 import { seedAdmins } from './admins'
 import { seedPages } from './pages'
+import { seedCities } from './cities'
 
 const deleteAll = async (payload: Payload) => {
   await payload.updateGlobal({
@@ -75,6 +76,12 @@ const deleteAll = async (payload: Payload) => {
     where: { id: { exists: true } },
     depth: 0,
   })
+
+  await payload.delete({
+    collection: 'cities',
+    where: { id: { exists: true } },
+    depth: 0,
+  })
 }
 
 export const seedGlobals = async (payload: Payload) => {
@@ -98,6 +105,7 @@ const seed = async () => {
 
   // "helper" data
   await seedSports(payload)
+  await seedCities(payload)
   await seedFieldTypes(payload)
   await seedFieldFlooring(payload)
   await seedFieldAmenities(payload)

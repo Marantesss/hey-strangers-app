@@ -36,7 +36,7 @@ const GamesClientPage: React.FC<GamesClientPageProps> = ({ timeFrame, registered
       )}
       {hasGames &&
         games!.map((game) => (
-          <GameCard highlight={game.id === registeredGame} key={game.id} game={game} />
+          <GameCard highlight={game.id === registeredGame} key={game.id} game={game} simple />
         ))}
       {!hasGames && (
         <div className="text-center text-sm text-muted-foreground">{t('no-games-found')}</div>

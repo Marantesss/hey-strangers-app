@@ -1,5 +1,5 @@
 import { Payload } from 'payload'
-import { Field, FieldAmenity, FieldFlooring, FieldType, Sport } from '@payload-types'
+import { City, Field, FieldAmenity, FieldFlooring, FieldType, Sport } from '@payload-types'
 import { SeedEntry } from './types'
 
 type FieldSeed = Omit<Field, 'createdAt' | 'id' | 'sizes' | 'updatedAt'>
@@ -17,6 +17,20 @@ export const seedFields = async (payload: Payload) => {
       return acc
     },
     {} as Record<Sport['name'], Sport['id']>,
+  )
+
+  // get cities
+  const cities = await payload.find({
+    collection: 'cities',
+    limit: 100,
+    locale: 'en',
+  })
+  const cityMap = cities.docs.reduce(
+    (acc, city) => {
+      acc[city.name] = city.id
+      return acc
+    },
+    {} as Record<City['name'], City['id']>,
   )
 
   // get field types
@@ -65,7 +79,8 @@ export const seedFields = async (payload: Payload) => {
     {
       pt: {
         name: 'Campo de Futebol Parque das Nações',
-        address: 'Rua do Parque das Nações 123, Lisboa',
+        address: 'Rua do Parque das Nações 123',
+        city: cityMap['Lisbon'],
         type: fieldTypeMap['Outdoor'],
         flooring: fieldFlooringMap['Natural grass'],
         sport: sportMap['Soccer'],
@@ -81,7 +96,8 @@ export const seedFields = async (payload: Payload) => {
     {
       pt: {
         name: 'Arena Indoor Benfica',
-        address: 'Avenida Lusíada 456, Lisboa',
+        address: 'Avenida Lusíada 456',
+        city: cityMap['Lisbon'],
         type: fieldTypeMap['Indoor'],
         flooring: fieldFlooringMap['Artificial turf'],
         sport: sportMap['Soccer'],
@@ -99,7 +115,8 @@ export const seedFields = async (payload: Payload) => {
     {
       pt: {
         name: 'Complexo Desportivo do Porto',
-        address: 'Rua do Dragão 789, Porto',
+        address: 'Rua do Dragão 789',
+        city: cityMap['Porto'],
         type: fieldTypeMap['Hybrid'],
         flooring: fieldFlooringMap['Hybrid turf'],
         sport: sportMap['Soccer'],
@@ -117,7 +134,8 @@ export const seedFields = async (payload: Payload) => {
     {
       pt: {
         name: 'Clube de Ténis de Lisboa',
-        address: 'Avenida da Liberdade 321, Lisboa',
+        address: 'Avenida da Liberdade 321',
+        city: cityMap['Lisbon'],
         type: fieldTypeMap['Outdoor'],
         flooring: fieldFlooringMap['Hard court'],
         sport: sportMap['Tennis'],
@@ -135,7 +153,8 @@ export const seedFields = async (payload: Payload) => {
     {
       pt: {
         name: 'Padel Belém',
-        address: 'Rua de Belém 987, Lisboa',
+        address: 'Rua de Belém 987',
+        city: cityMap['Lisbon'],
         type: fieldTypeMap['Outdoor'],
         flooring: fieldFlooringMap['Artificial turf'],
         sport: sportMap['Padel'],
@@ -152,7 +171,8 @@ export const seedFields = async (payload: Payload) => {
     {
       pt: {
         name: 'Clube Padel Porto',
-        address: 'Rua Santa Catarina 147, Porto',
+        address: 'Rua Santa Catarina 147',
+        city: cityMap['Porto'],
         type: fieldTypeMap['Indoor'],
         flooring: fieldFlooringMap['Artificial turf'],
         sport: sportMap['Padel'],
@@ -164,7 +184,8 @@ export const seedFields = async (payload: Payload) => {
     {
       pt: {
         name: 'Pavilhão do Sporting',
-        address: 'Rua do Sporting 258, Lisboa',
+        address: 'Rua do Sporting 258',
+        city: cityMap['Lisbon'],
         type: fieldTypeMap['Indoor'],
         flooring: fieldFlooringMap['Wood'],
         sport: sportMap['Basketball'],
@@ -180,7 +201,8 @@ export const seedFields = async (payload: Payload) => {
     {
       pt: {
         name: 'Campo de Basquete Ribeira',
-        address: 'Rua da Ribeira 369, Porto',
+        address: 'Rua da Ribeira 369',
+        city: cityMap['Porto'],
         type: fieldTypeMap['Outdoor'],
         flooring: fieldFlooringMap['Concrete'],
         sport: sportMap['Basketball'],
@@ -192,7 +214,8 @@ export const seedFields = async (payload: Payload) => {
     {
       pt: {
         name: 'Centro Desportivo Municipal',
-        address: 'Avenida de Lisboa 741, Lisboa',
+        address: 'Avenida de Lisboa 741',
+        city: cityMap['Lisbon'],
         type: fieldTypeMap['Indoor'],
         flooring: fieldFlooringMap['Polyurethane'],
         sport: sportMap['Multi-purpose'],
@@ -217,7 +240,8 @@ export const seedFields = async (payload: Payload) => {
     {
       pt: {
         name: 'Parque Desportivo do Porto',
-        address: 'Rua do Porto 852, Porto',
+        address: 'Rua do Porto 852',
+        city: cityMap['Porto'],
         type: fieldTypeMap['Outdoor'],
         flooring: fieldFlooringMap['Artificial turf'],
         sport: sportMap['Multi-purpose'],
@@ -244,7 +268,8 @@ export const seedFields = async (payload: Payload) => {
     {
       pt: {
         name: 'Arena Voleibol Cascais',
-        address: 'Avenida Marginal 963, Lisboa',
+        address: 'Avenida Marginal 963',
+        city: cityMap['Lisbon'],
         type: fieldTypeMap['Outdoor'],
         flooring: fieldFlooringMap['Sand'],
         sport: sportMap['Volleyball'],
@@ -269,7 +294,8 @@ export const seedFields = async (payload: Payload) => {
     {
       pt: {
         name: 'Centro de Voleibol do Porto',
-        address: 'Rua dos Clérigos 159, Porto',
+        address: 'Rua dos Clérigos 159',
+        city: cityMap['Porto'],
         type: fieldTypeMap['Indoor'],
         flooring: fieldFlooringMap['Wood'],
         sport: sportMap['Volleyball'],

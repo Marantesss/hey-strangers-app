@@ -14,7 +14,7 @@ const AgendaClientPage: React.FC<AgendaClientPageProps> = ({ city, sport }) => {
   const t = useTranslations('agenda')
   const { data: games, isLoading } = useGamesQuery({
     options: {
-      cityName: city,
+      cityId: city,
       sportId: sport,
       timeFrame: 'future',
     },
@@ -31,13 +31,11 @@ const AgendaClientPage: React.FC<AgendaClientPageProps> = ({ city, sport }) => {
           <GameCardSkeleton />
           <GameCardSkeleton />
         </>
+      ) : hasGames ? (
+        games?.map((game) => <GameCard key={game.id} game={game} />)
       ) : (
-        hasGames ? (
-          games?.map((game) => <GameCard key={game.id} game={game} />)
-        ) : (
-          <div className="text-center text-sm text-muted-foreground">{t('no-games-found')}</div>
-        )
-    )}
+        <div className="text-center text-sm text-muted-foreground">{t('no-games-found')}</div>
+      )}
     </div>
   )
 }

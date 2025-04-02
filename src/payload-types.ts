@@ -79,6 +79,7 @@ export interface Config {
     games: Game;
     registrations: Registration;
     invites: Invite;
+    cities: City;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -106,6 +107,7 @@ export interface Config {
     games: GamesSelect<false> | GamesSelect<true>;
     registrations: RegistrationsSelect<false> | RegistrationsSelect<true>;
     invites: InvitesSelect<false> | InvitesSelect<true>;
+    cities: CitiesSelect<false> | CitiesSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -306,6 +308,7 @@ export interface Field {
   id: string;
   name: string;
   address: string;
+  city: string | City;
   type: string | FieldType;
   flooring: string | FieldFlooring;
   sport: string | Sport;
@@ -315,6 +318,16 @@ export interface Field {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cities".
+ */
+export interface City {
+  id: string;
+  name: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -409,6 +422,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'invites';
         value: string | Invite;
+      } | null)
+    | ({
+        relationTo: 'cities';
+        value: string | City;
       } | null);
   globalSlug?: string | null;
   user:
@@ -563,6 +580,7 @@ export interface FieldAmenitiesSelect<T extends boolean = true> {
 export interface FieldsSelect<T extends boolean = true> {
   name?: T;
   address?: T;
+  city?: T;
   type?: T;
   flooring?: T;
   sport?: T;
@@ -608,6 +626,15 @@ export interface RegistrationsSelect<T extends boolean = true> {
 export interface InvitesSelect<T extends boolean = true> {
   user?: T;
   game?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cities_select".
+ */
+export interface CitiesSelect<T extends boolean = true> {
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
 }

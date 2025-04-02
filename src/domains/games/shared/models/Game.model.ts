@@ -102,10 +102,12 @@ export class GameModel {
   }
 
   /**
-   * Artificial limit of because MARKETING!!!
+   * Artificial limit of spots because MARKETING!!!
    */
   get availableSpots(): number {
     const actualAvailableSpots = this.maxPlayers - (this._registrationsIds?.length ?? 0)
+
+    debugger
 
     return actualAvailableSpots > GameModel.ARTIFICIAL_AVAILABLE_SPOTS_LIMIT
       ? GameModel.ARTIFICIAL_AVAILABLE_SPOTS_LIMIT
@@ -113,7 +115,7 @@ export class GameModel {
   }
 
   get isFull(): boolean {
-    return this.availableSpots === 0
+    return this.availableSpots <= 0
   }
 
   public isUserRegistered(userId: string): boolean {
