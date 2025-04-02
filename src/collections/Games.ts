@@ -1,11 +1,6 @@
 import { hasRole, isAuthenticated } from '@/access'
 import createPaymentIntentEndpoint from '@/domains/games/create-payment-intent/create-payment-intent.endpoint'
 import inviteForGameEndpoint from '@/domains/games/invite-for-game/invite-for-game.endpoint'
-import {
-  createStripeProduct,
-  deleteStripeProduct,
-  updateStripeProduct,
-} from '@/domains/games/sync-stripe-product/sync-stripe-product.hooks'
 import { CollectionConfig } from 'payload'
 
 export const Games: CollectionConfig = {
@@ -65,6 +60,13 @@ export const Games: CollectionConfig = {
       type: 'row',
       fields: [
         {
+          name: 'bookingFee',
+          type: 'number',
+          required: true,
+          min: 0,
+          defaultValue: 1,
+        },
+        {
           name: 'price',
           type: 'number',
           required: true,
@@ -77,19 +79,6 @@ export const Games: CollectionConfig = {
           min: 1,
         },
       ],
-    },
-    {
-      name: 'stripeProductId',
-      type: 'text',
-      required: false,
-      unique: true,
-      admin: {
-        readOnly: true,
-      },
-      access: {
-        read: hasRole('admins'),
-        update: () => false,
-      },
     },
     // --- relations and joins
     {
@@ -116,9 +105,5 @@ export const Games: CollectionConfig = {
       hasMany: true,
     },
   ],
-  hooks: {
-    beforeChange: [createStripeProduct, updateStripeProduct],
-    afterDelete: [deleteStripeProduct],
-  },
   endpoints: [createPaymentIntentEndpoint, inviteForGameEndpoint],
 }

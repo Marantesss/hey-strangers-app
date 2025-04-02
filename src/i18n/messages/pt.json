@@ -165,6 +165,19 @@
       "placeholder": "Selecionar desporto",
       "all": "Todos os desportos"
     },
+    "select-country": {
+      "placeholder": "Selecionar país",
+      "no-country-found": "Nenhum país encontrado"
+    },
+    "phone-number-input": {
+      "country-code": {
+        "placeholder": "Pesquisar país",
+        "no-country-found": "Nenhum país encontrado"
+      },
+      "phone-number": {
+        "placeholder": "Telemóvel"
+      }
+    },
     "game-card": {
       "top-pick": "⭐ Top Pick",
       "only-spots-left-prefix": "Apenas",

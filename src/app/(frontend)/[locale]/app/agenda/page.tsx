@@ -1,5 +1,5 @@
-import SelectCity from '@/domains/games/filter-by-city/SelectCity'
-import SelectSport from '@/domains/games/filter-by-sport/SelectSport'
+import SelectCityFilter from '@/domains/games/filter-by-city/SelectCityFilter'
+import SelectSportFilter from '@/domains/games/filter-by-sport/SelectSportFilter'
 import RegisterForGameSheet from '@/domains/registrations/register-for-game/components/RegisterForGameSheet'
 import RegisterForGameProvider from '@/domains/registrations/register-for-game/providers/RegisterForGameProvider'
 import { NextPage } from 'next'
@@ -24,8 +24,8 @@ const AgendaPage: NextPage<AgendaPageProps> = async ({ searchParams }) => {
         <h1 className="text-5xl font-bold text-center">{t('title')}</h1>
 
         <div className="max-w-xs mx-auto space-y-4">
-          <SelectCity />
-          <SelectSport />
+          <SelectCityFilter />
+          <SelectSportFilter />
         </div>
 
         <AgendaClientPage city={city} sport={sport} />

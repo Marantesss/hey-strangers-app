@@ -15,9 +15,9 @@ export class GameModel {
   readonly description: string | null
   readonly startsAt: Date
   readonly endsAt: Date
+  readonly bookingFee: number
   readonly price: number
   readonly maxPlayers: number
-  readonly stripeProductId: string | null
 
   readonly createdAt: Date
   readonly updatedAt: Date
@@ -41,8 +41,8 @@ export class GameModel {
     this.startsAt = new Date(data.startsAt)
     this.endsAt = new Date(data.endsAt)
     this.price = data.price
+    this.bookingFee = data.bookingFee
     this.maxPlayers = data.maxPlayers
-    this.stripeProductId = data.stripeProductId ?? null
 
     this.createdAt = new Date(data.createdAt)
     this.updatedAt = new Date(data.updatedAt)
@@ -134,6 +134,7 @@ export class GameModel {
       description: this.description,
       startsAt: this.startsAt.toISOString(),
       endsAt: this.endsAt.toISOString(),
+      bookingFee: this.bookingFee,
       price: this.price,
       maxPlayers: this.maxPlayers,
       sport: this._sport ? this._sport.toSerializable() : this._sportId,

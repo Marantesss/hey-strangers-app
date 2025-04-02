@@ -1,48 +1,34 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useActionState, useMemo, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { User } from '@/payload-types'
 import { updateProfileAction, UpdateProfileActionState } from '../actions'
 import { toast } from 'sonner'
 import PhoneNumberInput from '@/components/common/Form/PhoneNumberInput'
 import { useTranslations } from 'next-intl'
-
-const SELECTABLE_CITIES = [
-  {
-    id: 'lisbon',
-    name: 'Lisbon',
-  },
-  {
-    id: 'porto',
-    name: 'Porto',
-  },
-] as const
+import SelectCity from '@/domains/cities/shared/components/SelectCity'
+import { UserModel } from '../../shared/models/User.model'
 
 interface ProfileFormProps {
   user: User
 }
 
 const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
+  const userModel = useMemo(() => UserModel.from(user), [user])
+
   const [updateProfileResponse, dispatchUpdateProfile, updateProfilePending] = useActionState<
     UpdateProfileActionState,
     FormData
   >(updateProfileAction, {
     data: {
-      name: user.name ?? '',
-      email: user.email ?? '',
-      phone: user.phoneNumber,
-      city: user.city ?? '',
+      name: userModel.name ?? '',
+      email: userModel.email ?? '',
+      phone: userModel.phoneNumber,
+      city: userModel.cityId ?? '',
     },
   })
   const t = useTranslations('profile.form')
@@ -144,18 +130,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
 
       <div className="space-y-2">
         <Label htmlFor="city">{t('city.label')}</Label>
-        <Select name="city" defaultValue={updateProfileResponse.data?.city ?? ''}>
-          <SelectTrigger className="rounded-sm">
-            <SelectValue placeholder={t('city.placeholder')} />
-          </SelectTrigger>
-          <SelectContent>
-            {SELECTABLE_CITIES.map((city) => (
-              <SelectItem key={city.id} value={city.id}>
-                {city.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <SelectCity
+          name="city"
+          defaultValue={updateProfileResponse.data?.city ?? ''}
+          placeholder={t('city.placeholder')}
+          className="rounded-sm"
+        />
         {updateProfileResponse.error?.city && (
           <p className="text-sm text-destructive">{updateProfileResponse.error.city}</p>
         )}

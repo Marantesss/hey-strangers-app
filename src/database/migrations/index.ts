@@ -1,5 +1,6 @@
-import * as migration_20250328_153030_init from './20250328_153030_init'
-import * as migration_20250331_113318_home_pages_seo from './20250331_113318_home_pages_seo'
+import * as migration_20250328_153030_init from './20250328_153030_init';
+import * as migration_20250331_113318_home_pages_seo from './20250331_113318_home_pages_seo';
+import * as migration_20250402_095838_invite_and_cities from './20250402_095838_invite_and_cities';
 
 export const migrations = [
   {
@@ -12,4 +13,9 @@ export const migrations = [
     down: migration_20250331_113318_home_pages_seo.down,
     name: '20250331_113318_home_pages_seo',
   },
-]
+  {
+    up: migration_20250402_095838_invite_and_cities.up,
+    down: migration_20250402_095838_invite_and_cities.down,
+    name: '20250402_095838_invite_and_cities'
+  },
+];

@@ -1,10 +1,9 @@
-import { RegistrationModel } from '@/domains/registrations/shared/models/Registration.model'
-import { Registration, User } from '@payload-types'
+import { CityModel } from '@/domains/cities/shared/models/City.model'
+import { User } from '@payload-types'
 
 export class UserModel {
   readonly id: string
   readonly name: string | null
-  readonly city: string | null
   readonly phoneNumber: string
   readonly email: string | null
   readonly isVerified: boolean
@@ -16,12 +15,12 @@ export class UserModel {
   readonly quizAnswers: User['quizAnswers']
 
   // Relations
-  private readonly _registrations?: RegistrationModel[]
+  readonly cityId: string | null
+  private readonly _city?: CityModel
 
   private constructor(data: User) {
     this.id = data.id
     this.name = data.name ?? null
-    this.city = data.city ?? null
     this.phoneNumber = data.phoneNumber
     this.email = data.email ?? null
     this.isVerified = data.isVerified ?? false
@@ -31,24 +30,15 @@ export class UserModel {
     this.createdAt = new Date(data.createdAt)
     this.updatedAt = new Date(data.updatedAt)
 
-    // Relations
-    const isRegistrationsExpanded =
-      data.registrations?.docs &&
-      data.registrations.docs.length > 0 &&
-      data.registrations.docs[0] instanceof Object
-    this._registrations = isRegistrationsExpanded
-      ? data.registrations!.docs!.map((registration) =>
-          RegistrationModel.from(registration as Registration),
-        )
-      : undefined
+    this._city = data.city instanceof Object ? CityModel.from(data.city) : undefined
+    this.cityId = data.city instanceof Object ? data.city.id : (data.city ?? null)
   }
 
-  get registrations(): RegistrationModel[] {
-    if (!this._registrations) {
-      throw new Error('Registrations not expanded')
+  get city(): CityModel {
+    if (!this._city) {
+      throw new Error('City not found')
     }
-
-    return this._registrations
+    return this._city
   }
 
   /**
@@ -81,7 +71,7 @@ export class UserModel {
     return {
       id: this.id,
       name: this.name,
-      city: this.city,
+      city: this.cityId,
       phoneNumber: this.phoneNumber,
       email: this.email,
       isVerified: this.isVerified,

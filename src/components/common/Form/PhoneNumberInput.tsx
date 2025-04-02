@@ -23,6 +23,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
+import { useTranslations } from 'next-intl'
 
 export interface PhoneNumberInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
@@ -37,6 +38,7 @@ const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
     const [open, setOpen] = useState(false)
     const [countryName, setCountryName] = useState('Portugal')
     const [phoneNumber, setPhoneNumber] = useState('')
+    const t = useTranslations('components.phone-number-input')
 
     const country = useMemo(
       () => countryCodes.find(({ country }) => country === countryName),
@@ -99,9 +101,9 @@ const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
           </PopoverTrigger>
           <PopoverContent className="w-[200px] p-0">
             <Command>
-              <CommandInput placeholder="Search framework..." className="h-9" />
+              <CommandInput placeholder={t('country-code.placeholder')} className="h-9" />
               <CommandList>
-                <CommandEmpty>No country found.</CommandEmpty>
+                <CommandEmpty>{t('country-code.no-country-found')}</CommandEmpty>
                 <CommandGroup>
                   {countryCodes.map(({ flag, code, country }) => (
                     <CommandItem key={country} value={country} onSelect={handleCountryISOChange}>
@@ -139,6 +141,7 @@ const PhoneNumberInput = forwardRef<HTMLInputElement, PhoneNumberInputProps>(
           onChange={handlePhoneNumberChange}
           className="grow rounded-l-none"
           disabled={disabled}
+          placeholder={t('phone-number.placeholder')}
           {...props}
         />
       </div>

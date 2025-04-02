@@ -164,13 +164,29 @@ export const seedGames = async (payload: Payload) => {
         startsAt: new Date(Date.now() + 96 * 60 * 60 * 1000 + 16 * 60 * 60 * 1000).toISOString(),
         endsAt: new Date(Date.now() + 96 * 60 * 60 * 1000 + 20 * 60 * 60 * 1000).toISOString(),
         price: 10.0,
-        maxPlayers: 24,
+        maxPlayers: 8,
         sport: sportMap['Basketball'],
         field: fieldMap['Sporting Pavilion'],
       },
       en: {
         name: 'Street Basketball Tournament',
         description: '3v3 basketball tournament',
+      },
+    },
+    {
+      pt: {
+        name: 'Torneio de Basquetebol do Dragão',
+        description: 'Torneio de basquetebol 5x5',
+        startsAt: new Date(Date.now() + 96 * 60 * 60 * 1000 + 16 * 60 * 60 * 1000).toISOString(),
+        endsAt: new Date(Date.now() + 96 * 60 * 60 * 1000 + 20 * 60 * 60 * 1000).toISOString(),
+        price: 10.0,
+        maxPlayers: 14,
+        sport: sportMap['Basketball'],
+        field: fieldMap['Porto Sports Complex'],
+      },
+      en: {
+        name: 'Dragon Basketball Tournament',
+        description: '5v5 basketball tournament',
       },
     },
   ]

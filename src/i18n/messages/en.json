@@ -165,6 +165,19 @@
       "placeholder": "Select sport",
       "all": "All Sports"
     },
+    "select-country": {
+      "placeholder": "Select country",
+      "no-country-found": "No country found"
+    },
+    "phone-number-input": {
+      "country-code": {
+        "placeholder": "Search country",
+        "no-country-found": "No country found"
+      },
+      "phone-number": {
+        "placeholder": "Phone Number"
+      }
+    },
     "game-card": {
       "top-pick": "⭐ Top Pick",
       "only-spots-left-prefix": "Only",

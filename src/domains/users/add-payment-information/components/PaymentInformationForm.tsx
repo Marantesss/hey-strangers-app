@@ -27,7 +27,7 @@ function PaymentMethodForm({ user, onSuccess, onError }: PaymentMethodFormProps)
   const elements = useElements()
   const [formData, setFormData] = useState({
     name: '',
-    country: '',
+    country: 'PT',
     zipCode: '',
   })
 
@@ -104,10 +104,8 @@ function PaymentMethodForm({ user, onSuccess, onError }: PaymentMethodFormProps)
         <Label>{t('country.label')}</Label>
         <SelectCountry
           disabled={isCreatePaymentMethodPending}
-          placeholder={t('country.placeholder')}
           value={formData.country}
-          onValueChange={(value) => setFormData({ ...formData, country: value })}
-          required
+          onChange={(value) => setFormData({ ...formData, country: value })}
         />
 
         <Input

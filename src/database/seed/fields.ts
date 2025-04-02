@@ -1,8 +1,5 @@
 import { Payload } from 'payload'
 import { City, Field, FieldAmenity, FieldFlooring, FieldType, Sport } from '@payload-types'
-import { SeedEntry } from './types'
-
-type FieldSeed = Omit<Field, 'createdAt' | 'id' | 'sizes' | 'updatedAt'>
 
 export const seedFields = async (payload: Payload) => {
   // Get all sports to reference them

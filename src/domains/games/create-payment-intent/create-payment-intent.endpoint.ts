@@ -4,8 +4,6 @@ import { getRegistrationsByGameId } from '@/domains/registrations/get-registrati
 import stripe from '@/lib/stripe'
 import { PaymentIntentParamsSchema, PaymentIntentBodySchema } from './schema'
 
-const BOOKING_FEE = 1
-
 const createPaymentIntentEndpoint: Endpoint = {
   path: '/:id/payment-intent',
   method: 'post',
@@ -57,7 +55,7 @@ const createPaymentIntentEndpoint: Endpoint = {
       }
 
       // Convert to cents
-      const amount = (game.price + BOOKING_FEE) * body.playerCount * 100
+      const amount = (game.price + game.bookingFee) * body.playerCount * 100
 
       // Create a payment intent with Stripe
       const paymentIntent = await stripe.paymentIntents.create({

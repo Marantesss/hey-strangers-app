@@ -1,17 +1,20 @@
 'use client'
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { SelectProps } from '@radix-ui/react-select'
+import * as React from 'react'
+import { Check, ChevronsUpDown } from 'lucide-react'
 
-interface SelectCountryProps extends SelectProps {
-  placeholder?: string
-}
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from '@/components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslations } from 'next-intl'
 
 const countries = [
   { code: 'AF', name: 'Afghanistan', flag: '🇦🇫' },
@@ -208,23 +211,65 @@ const countries = [
   { code: 'ZW', name: 'Zimbabwe', flag: '🇿🇼' },
 ] as const
 
-const SelectCountry = ({ placeholder = 'Select a country', ...props }: SelectCountryProps) => {
+interface SelectCountryProps {
+  disabled?: boolean
+  value?: string
+  onChange?: (value: string) => void
+}
+
+const SelectCountry = ({ disabled, value, onChange }: SelectCountryProps) => {
+  const [open, setOpen] = useState(false)
+  const [internalValue, setInternalValue] = useState(value ?? 'PT')
+  const t = useTranslations('components.select-country')
+
+  useEffect(() => {
+    setInternalValue(value ?? 'PT')
+  }, [value])
+
+  const country = useMemo(
+    () => countries.find(({ code }) => code === internalValue),
+    [internalValue],
+  )
+
+  const onSelect = useCallback(
+    (name: string) => {
+      const country = countries.find(({ name: countryName }) => countryName === name)
+      if (!country) return
+
+      onChange?.(country.code)
+      setOpen(false)
+    },
+    [onChange],
+  )
+
   return (
-    <Select {...props}>
-      <SelectTrigger className="rounded">
-        <SelectValue placeholder={placeholder} />
-      </SelectTrigger>
-      <SelectContent>
-        {countries.map((country) => (
-          <SelectItem key={country.code} value={country.code}>
-            <span className="flex items-center gap-2">
-              <span>{country.flag}</span>
-              <span>{country.name}</span>
-            </span>
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger disabled={disabled} asChild className="border-none rounded-sm bg-[#EFF0F3]">
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between"
+        >
+          {country?.flag} {country?.name}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-full p-0">
+        <Command className="max-h-[300px] overflow-y-auto">
+          <CommandInput placeholder={t('placeholder')} />
+          <CommandEmpty>{t('no-country-found')}</CommandEmpty>
+          <CommandGroup>
+            {countries.map(({ name, code, flag }) => (
+              <CommandItem key={code} value={name} onSelect={onSelect}>
+                {flag} {name}
+                <Check className={cn('ml-auto', value === code ? 'opacity-100' : 'opacity-0')} />
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </Command>
+      </PopoverContent>
+    </Popover>
   )
 }
 

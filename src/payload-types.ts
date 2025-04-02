@@ -229,7 +229,7 @@ export interface User {
   phoneNumber: string;
   isVerified?: boolean | null;
   name?: string | null;
-  city?: string | null;
+  city?: (string | null) | City;
   quizAnswers:
     | {
         [k: string]: unknown;
@@ -244,6 +244,16 @@ export interface User {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cities".
+ */
+export interface City {
+  id: string;
+  name: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -280,9 +290,9 @@ export interface Game {
   description?: string | null;
   startsAt: string;
   endsAt: string;
+  bookingFee: number;
   price: number;
   maxPlayers: number;
-  stripeProductId?: string | null;
   sport: string | Sport;
   field: string | Field;
   registrations?: (string | Registration)[] | null;
@@ -318,16 +328,6 @@ export interface Field {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "cities".
- */
-export interface City {
-  id: string;
-  name: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -598,9 +598,9 @@ export interface GamesSelect<T extends boolean = true> {
   description?: T;
   startsAt?: T;
   endsAt?: T;
+  bookingFee?: T;
   price?: T;
   maxPlayers?: T;
-  stripeProductId?: T;
   sport?: T;
   field?: T;
   registrations?: T;

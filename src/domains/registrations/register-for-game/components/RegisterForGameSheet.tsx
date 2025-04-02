@@ -29,8 +29,6 @@ import { cn } from '@/lib/utils'
 import SelectCountry from '@/components/common/Form/SelectCountry'
 import { Skeleton } from '@/components/ui/skeleton'
 
-const BOOKING_FEE = 1
-
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL!
 
@@ -125,7 +123,7 @@ const RegisterForGameSheetForm: React.FC = () => {
   const isCreditCard = form.watch('paymentMethod') === 'card'
 
   const totalSeatPrice = game ? game.price * form.watch('playerCount') : 0
-  const totalBookingFee = BOOKING_FEE * form.watch('playerCount')
+  const totalBookingFee = game ? game.bookingFee * form.watch('playerCount') : 0
   const totalPrice = totalSeatPrice + totalBookingFee
 
   const totalSeatPriceString = format.number(totalSeatPrice, {

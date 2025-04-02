@@ -81,7 +81,9 @@ export const Users: CollectionConfig = {
     },
     {
       name: 'city',
-      type: 'text',
+      type: 'relationship',
+      relationTo: 'cities',
+      required: false,
     },
     {
       name: 'quizAnswers',

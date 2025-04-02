@@ -99,16 +99,16 @@ const seed = async () => {
   await deleteAll(payload)
   console.log('Deleted all data')
 
-  // users
-  // await seedAdmins(payload)
-  await seedUsers(payload)
-
   // "helper" data
   await seedSports(payload)
   await seedCities(payload)
   await seedFieldTypes(payload)
   await seedFieldFlooring(payload)
   await seedFieldAmenities(payload)
+
+  // users
+  // await seedAdmins(payload)
+  await seedUsers(payload)
 
   // "main" data
   await seedFields(payload)
