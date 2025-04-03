@@ -16,10 +16,6 @@ export default async function HeroSection({ hero }: HeroSectionProps) {
   const t = await getTranslations('home')
   const nextGame = await getNextGame()
 
-  const onCitySelect = (cityId: string) => {
-    console.log(cityId)
-  }
-
   return (
     <section className="bg-[#F5F7F9]">
       <div className="min-h-screen container py-8 flex flex-col items-center justify-between gap-8">

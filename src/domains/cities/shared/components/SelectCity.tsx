@@ -19,6 +19,8 @@ interface SelectCityProps extends SelectProps {
   }[]
   className?: string
   onCityChange?: (city: CityModel) => void
+  defaultValue?: string
+  value?: string
 }
 
 const SelectCity: React.FC<SelectCityProps> = ({
@@ -27,6 +29,8 @@ const SelectCity: React.FC<SelectCityProps> = ({
   className,
   onValueChange,
   onCityChange,
+  defaultValue,
+  value,
   ...selectProps
 }) => {
   const { data: cities } = useCitiesQuery()
@@ -40,7 +44,12 @@ const SelectCity: React.FC<SelectCityProps> = ({
   }
 
   return (
-    <Select {...selectProps} onValueChange={_onValueChange}>
+    <Select
+      {...selectProps}
+      defaultValue={defaultValue}
+      value={value}
+      onValueChange={_onValueChange}
+    >
       <SelectTrigger className={className}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
