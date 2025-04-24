@@ -113,3 +113,4 @@ Stripe is integrated for payment processing:
 - [ ] Navbar should be responsive (hamburger menu)
 - [ ] `/pt` and `/en` routes are not working in production due to static generation (I think)
 - [ ] Use IP address to get the user's location and show the closest city instead of the browser's Geolocation API
+- [ ] Make sure the user provides their email and name before registering for a game
