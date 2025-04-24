@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { CityModel } from '../models/City.model'
 import useCitiesQuery from '@/domains/cities/get-cities/use-cities.query'
-import { geo } from '@/geo'
+import { geo } from '@/lib/geo'
 
 const MAX_DISTANCE_KM = 20
 
