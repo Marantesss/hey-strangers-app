@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createOTPAction, signInWithOTPAction } from '../actions'
 import PhoneNumberInput from '@/components/common/Form/PhoneNumberInput'
+import OTPInput from '@/components/common/Form/OTPInput'
 
 const SignInForm: React.FC = () => {
   const t = useTranslations('sign-in')
@@ -34,18 +35,14 @@ const SignInForm: React.FC = () => {
       <form action={dispatchSignInWithOTPAction} className="space-y-4 w-full max-w-md">
         <h1 className="text-2xl font-medium">{t('otp-form.title')}</h1>
 
+        <p className="text-sm font-medium">
+          {t('otp-form.otp.helper', { phone: createOTPResponse.data!.phoneNumber! })}:
+        </p>
+
         <input type="hidden" name="phoneNumber" value={createOTPResponse.data!.phoneNumber} />
 
         <div className="space-y-2">
-          <Label htmlFor="otp">{t('otp-form.otp.label')}</Label>
-          <Input
-            name="otp"
-            placeholder={t('otp-form.otp.placeholder')}
-            disabled={signInWithOTPPending}
-          />
-          <p className="text-sm text-muted-foreground">
-            {t('otp-form.otp.helper', { phone: createOTPResponse.data!.phoneNumber! })}
-          </p>
+          <OTPInput name="otp" disabled={signInWithOTPPending} length={6} />
           {signInWithOTPResponse.error?.otp && (
             <p className="text-sm text-destructive">
               {signInWithOTPResponse.error.otp === 'failed-to-verify' &&
