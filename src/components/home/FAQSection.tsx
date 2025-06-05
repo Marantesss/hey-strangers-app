@@ -15,7 +15,7 @@ export default function FAQSection({ faq }: FAQSectionProps) {
     <section className="container space-y-12 py-20">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
         <div>
-          <h2 className="text-4xl font-bold">{faq.title}</h2>
+          <h2 className="text-4xl font-bold text-center">{faq.title}</h2>
         </div>
 
         <div className="md:col-span-2">
