@@ -55,11 +55,8 @@ export class UserModel {
   }
 
   get slugifiedName(): string {
-    if (!this.name) {
-      throw new Error('Name is required')
-    }
-
-    return this.name.toLowerCase().replace(/\s+/g, '-')
+    const nome = this.name || 'Atleta Misterioso';
+    return nome.toLowerCase().replace(/\s+/g, '-');
   }
 
   // Factory method
