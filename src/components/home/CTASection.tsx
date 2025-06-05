@@ -14,7 +14,7 @@ export default function CTASection({ cta }: CTASectionProps) {
         {/* Left Side */}
         <div className="flex flex-col items-center md:items-start gap-4 justify-center">
           <p className="text-sm">{cta.subtitle}</p>
-          <h2 className="text-4xl font-bold">{cta.title}</h2>
+          <h2 className="text-4xl font-bold text-center">{cta.title}</h2>
         </div>
 
         {/* Right Side - Quiz Card */}
@@ -25,21 +25,21 @@ export default function CTASection({ cta }: CTASectionProps) {
               <span className="size-6 bg-secondary rounded-full text-white flex items-center justify-center">
                 1
               </span>
-              Sport
+              <span>Sport</span>
             </span>
             <span className="h-[2px] w-12 bg-gray-200 grow"></span>
             <span className="flex items-center gap-2">
               <span className="size-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center">
                 2
               </span>
-              Frequency
+              <span className="hidden md:block">Frequency</span>
             </span>
             <span className="h-[2px] w-12 bg-gray-200 grow"></span>
             <span className="flex items-center gap-2">
               <span className="size-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center">
                 3
               </span>
-              Competitiveness
+              <span className="hidden md:block">Competitiveness</span>
             </span>
           </div>
 
