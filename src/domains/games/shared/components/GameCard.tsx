@@ -98,7 +98,7 @@ const GameCard: React.FC<GameCardProps> = ({
             <span className="font-bold">{gameStartTime}</span> • ({game.durationInMinutes}min.)
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[#454745]">
+            <span className="text-[#80828D] text-sm">
               {game.description} - {fieldFlooring}
             </span>
             <span className="block text-secondary bg-[#FFF5F0] p-1 font-medium rounded-lg">
