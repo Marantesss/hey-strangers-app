@@ -11,11 +11,13 @@ type Args = {
 
 const SignupPage: NextPage = () => {
   return (
-    <main className="relative h-full flex flex-col justify-center items-center">
-      <div className="w-full absolute top-8 right-0 flex justify-start">
+    <main className="relative h-full flex flex-col md:justify-center items-center">
+      <div className="w-full max-md:mt-11 md:absolute md:top-8 md:right-0 flex justify-start">
         <Progress />
       </div>
-      <Quiz />
+      <div className="mt-11">
+        <Quiz />
+      </div>
     </main>
   )
 }
