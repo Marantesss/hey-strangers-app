@@ -71,8 +71,30 @@ const getCityFromCoordinates = async (
   }
 }
 
+/**
+ * Obtém cidade e país a partir do IP usando ipwho.is
+ */
+export async function getLocationFromIp(
+  ip: string | undefined,
+): Promise<{ city: string; country: string }> {
+  if (!ip || ip === '127.0.0.1' || ip === '::1') {
+    return { city: 'Lisbon', country: 'Portugal' }
+  }
+  try {
+    const res = await fetch(`https://ipwho.is/${ip}`)
+    const data = await res.json()
+    if (data.success && data.city && data.country) {
+      return { city: data.city, country: data.country }
+    }
+    return { city: 'Lisbon', country: 'Portugal' }
+  } catch {
+    return { city: 'Lisbon', country: 'Portugal' }
+  }
+}
+
 export const geo = {
   calculateDistance,
   getCityCoordinates,
   getCityFromCoordinates,
+  getLocationFromIp,
 }
