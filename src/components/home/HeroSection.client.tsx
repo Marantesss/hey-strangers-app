@@ -7,10 +7,14 @@ import { useTranslations } from 'next-intl'
 import { useGeolocationCity } from '@/domains/cities/shared/hooks/useGeolocationCity'
 import { useState } from 'react'
 
-export default function HeroSectionClient() {
+interface HeroSectionClientProps {
+  ip?: string
+}
+
+export default function HeroSectionClient({ ip }: HeroSectionClientProps) {
   const t = useTranslations('home')
   const router = useRouter()
-  const { defaultCity } = useGeolocationCity()
+  const { defaultCity } = useGeolocationCity(ip)
   const [selectedCity, setSelectedCity] = useState<CityModel | null>(defaultCity)
 
   const onCityChange = (city: CityModel) => {

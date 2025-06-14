@@ -6,6 +6,7 @@ import { getPaymentMethods } from '@/domains/users/get-payment-methods/get-payme
 import { getMe } from '@/domains/users/me/me.service'
 import { NextPage } from 'next'
 import { getTranslations } from 'next-intl/server'
+import { headers } from 'next/headers'
 
 type ProfilePageProps = {
   searchParams: Promise<{
@@ -18,8 +19,12 @@ const ProfilePage: NextPage<ProfilePageProps> = async () => {
   const user = await getMe()
   const paymentMethods = await getPaymentMethods(user!.id)
   const t = await getTranslations('profile')
-
   const hasPaymentMethods = paymentMethods.length > 0
+  const headersList = await headers()
+  const ip =
+    headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    headersList.get('x-real-ip') ||
+    undefined
 
   return (
     <main className="my-8 space-y-8 max-w-lg mx-auto">
@@ -28,7 +33,7 @@ const ProfilePage: NextPage<ProfilePageProps> = async () => {
           <CardTitle>{t('basic-information')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <ProfileForm user={user!} />
+          <ProfileForm user={user!} ip={ip} />
         </CardContent>
       </Card>
 

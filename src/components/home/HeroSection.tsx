@@ -7,6 +7,7 @@ import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import Header from './Header'
 import HeroSectionClient from './HeroSection.client'
+import { headers } from 'next/headers'
 
 interface HeroSectionProps {
   hero: Home['hero']
@@ -15,6 +16,11 @@ interface HeroSectionProps {
 export default async function HeroSection({ hero }: HeroSectionProps) {
   const t = await getTranslations('home')
   const nextGame = await getNextGame()
+  const headersList = await headers()
+  const ip =
+    headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    headersList.get('x-real-ip') ||
+    undefined
 
   return (
     <section className="bg-[#F5F7F9]">
@@ -31,7 +37,7 @@ export default async function HeroSection({ hero }: HeroSectionProps) {
 
           <p className="max-w-lg">{hero.description}</p>
 
-          <HeroSectionClient />
+          <HeroSectionClient ip={ip} />
 
           {nextGame && (
             <p className="max-w-lg">

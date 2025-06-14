@@ -5,6 +5,7 @@ import RegisterForGameProvider from '@/domains/registrations/register-for-game/p
 import { NextPage } from 'next'
 import AgendaClientPage from './page.client'
 import { getTranslations } from 'next-intl/server'
+import { headers } from 'next/headers'
 
 type AgendaPageProps = {
   searchParams: Promise<{
@@ -16,6 +17,11 @@ type AgendaPageProps = {
 const AgendaPage: NextPage<AgendaPageProps> = async ({ searchParams }) => {
   const { city, sport } = await searchParams
   const t = await getTranslations('agenda')
+  const headersList = await headers()
+  const ip =
+    headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    headersList.get('x-real-ip') ||
+    undefined
 
   return (
     <main className="space-y-8 my-8">
@@ -24,7 +30,7 @@ const AgendaPage: NextPage<AgendaPageProps> = async ({ searchParams }) => {
         <h1 className="text-5xl font-bold text-center">{t('title')}</h1>
 
         <div className="max-w-xs mx-auto space-y-4">
-          <SelectCityFilter />
+          <SelectCityFilter ip={ip} />
           <SelectSportFilter />
         </div>
 

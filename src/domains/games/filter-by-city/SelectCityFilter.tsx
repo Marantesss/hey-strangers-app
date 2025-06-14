@@ -4,12 +4,20 @@ import SelectCity from '@/domains/cities/shared/components/SelectCity'
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useState } from 'react'
+import { useGeolocationCity } from '@/domains/cities/shared/hooks/useGeolocationCity'
 
-const SelectCityFilter: React.FC = () => {
+interface SelectCityFilterProps {
+  ip?: string
+}
+
+const SelectCityFilter: React.FC<SelectCityFilterProps> = ({ ip }) => {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [currentCity, setCurrentCity] = useState<string | null>(searchParams.get('city') ?? 'all')
   const t = useTranslations('components.select-city')
+  const { defaultCity } = useGeolocationCity(ip)
+  const [currentCity, setCurrentCity] = useState<string | null>(
+    searchParams.get('city') ?? defaultCity?.id ?? 'all',
+  )
 
   const onSelectCity = (id: string) => {
     setCurrentCity(id)
@@ -28,12 +36,13 @@ const SelectCityFilter: React.FC = () => {
       onValueChange={onSelectCity}
       placeholder={t('placeholder')}
       extraOptions={[{ value: 'all', label: t('all') }]}
+      defaultValue={defaultCity?.id}
     />
   )
 }
 
-export default () => (
+export default (props: SelectCityFilterProps) => (
   <Suspense>
-    <SelectCityFilter />
+    <SelectCityFilter {...props} />
   </Suspense>
 )

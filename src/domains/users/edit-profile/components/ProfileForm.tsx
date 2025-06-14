@@ -12,13 +12,16 @@ import PhoneNumberInput from '@/components/common/Form/PhoneNumberInput'
 import { useTranslations } from 'next-intl'
 import SelectCity from '@/domains/cities/shared/components/SelectCity'
 import { UserModel } from '../../shared/models/User.model'
+import { useGeolocationCity } from '@/domains/cities/shared/hooks/useGeolocationCity'
 
 interface ProfileFormProps {
   user: User
+  ip?: string
 }
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
+const ProfileForm: React.FC<ProfileFormProps> = ({ user, ip }) => {
   const userModel = useMemo(() => UserModel.from(user), [user])
+  const { defaultCity } = useGeolocationCity(ip)
 
   const [updateProfileResponse, dispatchUpdateProfile, updateProfilePending] = useActionState<
     UpdateProfileActionState,
@@ -28,7 +31,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
       name: userModel.name ?? '',
       email: userModel.email ?? '',
       phone: userModel.phoneNumber,
-      city: userModel.cityId ?? '',
+      city: userModel.cityId ?? defaultCity?.id ?? '',
     },
   })
   const t = useTranslations('profile.form')
@@ -132,7 +135,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
         <Label htmlFor="city">{t('city.label')}</Label>
         <SelectCity
           name="city"
-          defaultValue={updateProfileResponse.data?.city ?? ''}
+          defaultValue={updateProfileResponse.data?.city ?? defaultCity?.id ?? ''}
           placeholder={t('city.placeholder')}
           className="rounded-sm"
         />
