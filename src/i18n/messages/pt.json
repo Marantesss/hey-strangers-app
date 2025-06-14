@@ -27,6 +27,14 @@
     },
     "phone-number-form": {
       "title": "Registar",
+      "name": {
+        "label": "Nome",
+        "placeholder": "Nome"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Email"
+      },
       "phone": {
         "label": "Telemóvel",
         "placeholder": "Telemóvel",

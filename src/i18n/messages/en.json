@@ -27,6 +27,14 @@
     },
     "phone-number-form": {
       "title": "Sign up",
+      "name": {
+        "label": "Full Name",
+        "placeholder": "Full Name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Email"
+      },
       "phone": {
         "label": "Phone",
         "placeholder": "Phone Number",

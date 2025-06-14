@@ -5,6 +5,8 @@ import config from '@payload-config'
 const generateOTPCode = () => Math.floor(100000 + Math.random() * 900000).toString()
 
 export async function createUserWithPhoneNumber(
+  name: string,
+  email: string,
   phoneNumber: string,
   quizAnswers: Record<string, string> = {},
 ) {
@@ -17,7 +19,7 @@ export async function createUserWithPhoneNumber(
 
   const createdUser = await payload.create({
     collection: 'users',
-    data: { phoneNumber, quizAnswers },
+    data: { name, email, phoneNumber, quizAnswers },
   })
 
   return createdUser

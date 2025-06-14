@@ -1,6 +1,8 @@
 import { z } from 'zod'
 
 export const SignupSchema = z.object({
+  name: z.string().min(2, 'O nome é obrigatório'),
+  email: z.string().email('Email inválido'),
   phone: z
     .string()
     .nonempty()
@@ -14,7 +16,11 @@ export const SignupSchema = z.object({
   }),
 })
 
-export const OTPVerificationSchema = SignupSchema.omit({ quizAnswers: true }).extend({
+export const OTPVerificationSchema = SignupSchema.omit({
+  name: true,
+  email: true,
+  quizAnswers: true,
+}).extend({
   phone: z.string().nonempty(),
   otp: z.string().nonempty(),
 })

@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl'
 import { useQuiz } from '../hooks/quiz.hook'
 import PhoneNumberInput from '@/components/common/Form/PhoneNumberInput'
 import OTPInput from '@/components/common/Form/OTPInput'
+import { Input } from '@/components/ui/input'
 
 const SignupForm: React.FC = () => {
   const { answers } = useQuiz()
@@ -77,6 +78,29 @@ const SignupForm: React.FC = () => {
 
       <input type="hidden" name="quizAnswers" value={JSON.stringify(answers)} />
 
+      <div className="space-y-2">
+        <Label htmlFor="name">{t('phone-number-form.name.label')}</Label>
+        <Input
+          id="name"
+          name="name"
+          type="text"
+          required
+          minLength={2}
+          disabled={createOTPPending}
+          placeholder={t('phone-number-form.name.placeholder')}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="email">{t('phone-number-form.email.label')}</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          required
+          disabled={createOTPPending}
+          placeholder={t('phone-number-form.email.placeholder')}
+        />
+      </div>
       <div className="space-y-2">
         <Label htmlFor="phone">{t('phone-number-form.phone.label')}</Label>
         <PhoneNumberInput name="phone" placeholder="Phone Number" disabled={createOTPPending} />
