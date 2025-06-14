@@ -68,7 +68,7 @@ const Quiz: React.FC = () => {
     <div className="flex flex-col gap-12 w-full max-w-lg">
       {!showResults ? (
         <>
-          <h2 className="text-3xl font-bold">{currentQuestionObject.title}</h2>
+          <h2 className="text-3xl font-bold max-md:text-center">{currentQuestionObject.title}</h2>
 
           <div className="flex flex-col gap-2">
             {currentQuestionObject.options.map((option) => (
