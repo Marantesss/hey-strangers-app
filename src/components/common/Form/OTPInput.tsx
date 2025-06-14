@@ -114,7 +114,7 @@ const OTPInput = React.forwardRef<HTMLInputElement, OTPInputProps>(
     return (
       <div
         ref={containerRef}
-        className={cn('flex items-center gap-2 relative', className)}
+        className={cn('flex items-center gap-4 relative', className)}
         onClick={handleContainerClick}
       >
         <input
@@ -154,7 +154,7 @@ const OTPInput = React.forwardRef<HTMLInputElement, OTPInputProps>(
               aria-label={`Digite ${index + 1} de ${length}`}
             />
             {index < length - 1 && (
-              <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 pointer-events-none">
+              <div className="absolute top-1/2 left-full -translate-y-1/2 translate-x-1/2 pointer-events-none">
                 <div className="w-2 h-0.5 bg-muted-foreground opacity-70"></div>
               </div>
             )}
