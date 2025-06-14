@@ -1,0 +1,31 @@
+{
+  "copilot.includedProjects": ["hey-strangers-payload"],
+  "cursor.featuresEnabled": {
+    "colorTags": true,
+    "responsiveInlayHints": true,
+    "multilineInlayHints": true,
+    "quickFixes": true,
+    "commandPalette": true,
+    "copilotSettings": true,
+    "advancedRename": true,
+    "cursorFindUsages": true
+  },
+  "cursor.general.showSuggestions": true,
+  "cursor.general.stickyDebugger": true,
+  "cursor.general.debuggerBehavior": "standard",
+  "cursor.general.telemetryLevel": "all",
+  "cursor.general.theme": "default",
+  "cursor.general.useAgents": true,
+  "cursor.dialog.maxLinesPerFile": 250,
+  "cursor.dialog.maxTokensPerFile": 15000,
+  "cursor.dialog.maxVisibleFiles": 20,
+  "cursor.dialog.maxRelevantFiles": 20,
+  "cursor.ai.context": [".vscode/cursor-context.md", ".vscode/cursor-prompts.md"],
+  "cursor.ai.contextIncludedFiles": [
+    "CONTRIBUTING.md",
+    "package.json",
+    "tsconfig.json",
+    "next.config.mjs",
+    "tailwind.config.ts"
+  ]
+}

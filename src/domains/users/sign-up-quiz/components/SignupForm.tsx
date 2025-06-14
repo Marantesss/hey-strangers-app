@@ -1,13 +1,13 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { startTransition, useActionState } from 'react'
 import { createOTPAction, signUpWithOTPAction } from '../actions'
 import { useTranslations } from 'next-intl'
 import { useQuiz } from '../hooks/quiz.hook'
 import PhoneNumberInput from '@/components/common/Form/PhoneNumberInput'
+import OTPInput from '@/components/common/Form/OTPInput'
 
 const SignupForm: React.FC = () => {
   const { answers } = useQuiz()
@@ -35,18 +35,14 @@ const SignupForm: React.FC = () => {
       <form action={dispatchSignUpWithOTPAction} className="space-y-6">
         <h1 className="text-2xl font-medium">{t('otp-form.title')}</h1>
 
+        <p className="text-sm font-medium">
+          {t('otp-form.otp.helper', { phone: createOTPResponse.data!.phone! })}:
+        </p>
+
         <input type="hidden" name="phone" value={createOTPResponse.data!.phone} />
 
         <div className="space-y-2">
-          <Label htmlFor="otp">{t('otp-form.otp.label')}</Label>
-          <Input
-            name="otp"
-            placeholder={t('otp-form.otp.placeholder')}
-            disabled={signUpWithOTPPending}
-          />
-          <p className="text-sm text-muted-foreground">
-            {t('otp-form.otp.helper', { phone: createOTPResponse.data!.phone! })}
-          </p>
+          <OTPInput name="otp" disabled={signUpWithOTPPending} length={6} />
           <p className="text-sm text-destructive">
             {signUpWithOTPResponse.error?.otp === 'failed-to-verify' &&
               t('otp-form.otp.error.failed-to-verify')}
