@@ -37,6 +37,8 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const isDev = process.env.NODE_ENV === 'development'
+console.log('[DEBUG] NODE_ENV:', process.env.NODE_ENV)
+console.log('[DEBUG] push (deveria ser false em produção):', isDev)
 
 const generateURL: GenerateURL<HomeType | PageType> = ({ doc, globalSlug }) => {
   if (globalSlug === 'pages') {
@@ -74,7 +76,7 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: postgresAdapter({
-    push: isDev,
+    push: false,
     idType: 'uuid',
     pool: {
       connectionString: process.env.DATABASE_URI || '',

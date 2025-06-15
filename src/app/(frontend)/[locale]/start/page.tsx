@@ -7,7 +7,7 @@ import { getLocationFromIp } from '@/lib/geo'
 export const revalidate = 60
 
 const StartPage = async () => {
-  const headersList = headers()
+  const headersList = await headers()
   // X-Forwarded-For pode conter múltiplos IPs, pega o primeiro
   const ip =
     headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ||

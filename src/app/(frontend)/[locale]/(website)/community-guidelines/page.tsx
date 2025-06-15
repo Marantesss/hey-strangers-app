@@ -20,10 +20,13 @@ type Args = {
 }
 
 export default async function CommunityGuidelinesPage({ params }: Args) {
+  console.log('[DEBUG] Início CommunityGuidelinesPage')
   const { locale = 'en' } = await params
-
+  console.log('[DEBUG] Locale obtido:', locale)
   const payload = await getPayload({ config })
+  console.log('[DEBUG] Payload obtido')
   const { communityGuidelines } = await payload.findGlobal({ slug: 'pages', locale })
+  console.log('[DEBUG] Dados communityGuidelines obtidos:', !!communityGuidelines)
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-between">
@@ -39,11 +42,13 @@ export default async function CommunityGuidelinesPage({ params }: Args) {
 }
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
+  console.log('[DEBUG] Início generateMetadata CommunityGuidelinesPage')
   const { locale = 'en' } = await params
-
+  console.log('[DEBUG] Locale obtido:', locale)
   const payload = await getPayload({ config })
-
+  console.log('[DEBUG] Payload obtido')
   const { communityGuidelines } = await payload.findGlobal({ slug: 'pages', locale })
+  console.log('[DEBUG] Dados communityGuidelines obtidos:', !!communityGuidelines)
 
   return generateMetaForPage({ doc: communityGuidelines })
 }

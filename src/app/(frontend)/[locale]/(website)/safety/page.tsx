@@ -20,10 +20,13 @@ type Args = {
 }
 
 export default async function SafetyPage({ params }: Args) {
+  console.log('[DEBUG] Início SafetyPage')
   const { locale = 'en' } = await params
-
+  console.log('[DEBUG] Locale obtido:', locale)
   const payload = await getPayload({ config })
+  console.log('[DEBUG] Payload obtido')
   const { safety } = await payload.findGlobal({ slug: 'pages', locale })
+  console.log('[DEBUG] Dados safety obtidos:', !!safety)
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-between">
@@ -39,11 +42,13 @@ export default async function SafetyPage({ params }: Args) {
 }
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
+  console.log('[DEBUG] Início generateMetadata SafetyPage')
   const { locale = 'en' } = await params
-
+  console.log('[DEBUG] Locale obtido:', locale)
   const payload = await getPayload({ config })
-
+  console.log('[DEBUG] Payload obtido')
   const { safety } = await payload.findGlobal({ slug: 'pages', locale })
+  console.log('[DEBUG] Dados safety obtidos:', !!safety)
 
   return generateMetaForPage({ doc: safety })
 }
