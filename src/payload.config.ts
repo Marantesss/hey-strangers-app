@@ -80,6 +80,10 @@ export default buildConfig({
     idType: 'uuid',
     pool: {
       connectionString: process.env.DATABASE_URI || '',
+      max: 20, // máximo de conexões no pool
+      min: 2, // mínimo de conexões no pool
+      idleTimeoutMillis: 30000, // tempo limite para conexões inativas
+      connectionTimeoutMillis: 2000, // tempo limite para criar nova conexão
     },
     prodMigrations: migrations,
     migrationDir: path.resolve(dirname, 'database/migrations'),
