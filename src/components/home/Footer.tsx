@@ -2,14 +2,14 @@ import { getPayload, TypedLocale } from 'payload'
 import config from '@payload-config'
 import { Footer as FooterType } from '@/payload-types'
 import SocialIcon from '../common/SocialIcon'
+import { getCachedFooter } from '@/domains/footer/get-footer-data.service'
 
 interface FooterProps {
   locale: TypedLocale
 }
 
 export default async function Footer({ locale }: FooterProps) {
-  const payload = await getPayload({ config })
-  const footer = await payload.findGlobal({ slug: 'footer', locale })
+  const footer = await getCachedFooter(locale)
 
   const icons: Record<FooterType['socialLinks'][number]['platform'], React.ReactNode> = {
     facebook: <SocialIcon icon="facebook" />,

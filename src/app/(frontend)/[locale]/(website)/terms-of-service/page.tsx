@@ -1,17 +1,8 @@
-import { getPayload, TypedLocale } from 'payload'
-import config from '@payload-config'
-
-import Footer from '@/components/home/Footer'
-import Header from '@/components/home/Header'
-import { RichText } from '@payloadcms/richtext-lexical/react'
 import { generateMetaForPage } from '@/lib/metadata'
 import { Metadata } from 'next'
-
-// Option 1: Force dynamic rendering
-// export const dynamic = 'force-dynamic'
-
-// Option 2: Revalidate the page every X seconds (e.g., 60 seconds)
-export const revalidate = 60
+import { RichText } from '@payloadcms/richtext-lexical/react'
+import { getCachedPages } from '@/domains/pages/get-pages-data.service'
+import { TypedLocale } from 'payload'
 
 type Args = {
   params: Promise<{
@@ -19,31 +10,23 @@ type Args = {
   }>
 }
 
-export default async function SafetyPage({ params }: Args) {
-  const { locale = 'en' } = await params
+export const revalidate = 60
 
-  const payload = await getPayload({ config })
-  const { termsOfService } = await payload.findGlobal({ slug: 'pages', locale })
+export default async function TermsOfServicePage({ params }: Args) {
+  const { locale = 'en' } = await params
+  const { termsOfService } = await getCachedPages(locale)
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-between">
-      <div className="container py-8 space-y-8">
-        <Header />
-        <div className="prose lg:prose-xl">
-          <RichText data={termsOfService.content} />
-        </div>
-      </div>
-      <Footer locale={locale} />
-    </main>
+    <div className="prose mx-auto py-8">
+      <h1>{termsOfService?.title}</h1>
+      <RichText data={termsOfService?.content} />
+    </div>
   )
 }
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { locale = 'en' } = await params
-
-  const payload = await getPayload({ config })
-
-  const { termsOfService } = await payload.findGlobal({ slug: 'pages', locale })
+  const { termsOfService } = await getCachedPages(locale)
 
   return generateMetaForPage({ doc: termsOfService })
 }

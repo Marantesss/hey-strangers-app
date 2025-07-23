@@ -1,5 +1,4 @@
-import { getPayload, TypedLocale } from 'payload'
-import config from '@payload-config'
+import { TypedLocale } from 'payload'
 
 import NextGamesSection from '@/components/home/NextGamesSection'
 import HeroSection from '@/components/home/HeroSection'
@@ -15,6 +14,7 @@ import CTA2Section from '@/components/home/CTA2Section'
 import Footer from '@/components/home/Footer'
 import { generateMetaForPage } from '@/lib/metadata'
 import { Metadata } from 'next'
+import { getCachedHome } from '@/domains/home/get-home-data.service'
 
 // Option 1: Force dynamic rendering
 // export const dynamic = 'force-dynamic'
@@ -31,8 +31,7 @@ type Args = {
 export default async function HomePage({ params }: Args) {
   const { locale = 'en' } = await params
 
-  const payload = await getPayload({ config })
-  const home = await payload.findGlobal({ slug: 'home', locale })
+  const home = await getCachedHome(locale)
 
   return (
     <main>
@@ -55,8 +54,7 @@ export default async function HomePage({ params }: Args) {
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { locale = 'en' } = await params
 
-  const payload = await getPayload({ config })
-  const home = await payload.findGlobal({ slug: 'home', locale })
+  const home = await getCachedHome(locale)
 
   const metadata = await generateMetaForPage({ doc: home.seo ?? {} })
 

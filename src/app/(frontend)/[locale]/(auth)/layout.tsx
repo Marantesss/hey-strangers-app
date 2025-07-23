@@ -1,29 +1,32 @@
 import WordCycle from '@/components/common/WordCycle'
 import { getMe } from '@/domains/users/me/me.service'
 import QuizProvider from '@/domains/users/sign-up-quiz/providers/quiz.provider'
-import { getPayload } from 'payload'
-import { TypedLocale } from 'payload'
+import { getPayload, TypedLocale } from 'payload'
 import config from '@payload-config'
 import { getTranslations } from 'next-intl/server'
 import { redirect } from '@/i18n/navigation'
+import { PropsWithChildren } from 'react'
 
-type AuthLayoutProps = {
-  children: React.ReactNode
-  params: Promise<{ locale: TypedLocale }>
-}
+import { Jost } from 'next/font/google'
+import { cn } from '@/lib/utils'
+import { getCachedQuiz } from '@/domains/quiz/get-quiz-data.service'
 
-export default async function Layout({ children, params }: AuthLayoutProps) {
-  const { locale } = await params
-  const payload = await getPayload({ config })
-  const quiz = await payload.findGlobal({ slug: 'quiz', locale })
+const jost = Jost({ subsets: ['latin'] })
 
-  const user = await getMe()
+export default async function AuthLayout({
+  children,
+  params: { locale },
+}: PropsWithChildren<{ params: { locale: TypedLocale } }>) {
+  const [quiz, payload, user, t] = await Promise.all([
+    getCachedQuiz(locale),
+    getPayload({ config }),
+    getMe(),
+    getTranslations('sign-up.layout'),
+  ])
 
   if (user) {
     return redirect({ href: '/app', locale })
   }
-
-  const t = await getTranslations('sign-up.layout')
 
   return (
     <QuizProvider quiz={quiz}>
