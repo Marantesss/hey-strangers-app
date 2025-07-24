@@ -8,12 +8,14 @@ import { Link } from '@/i18n/navigation'
 import Header from './Header'
 import HeroSectionClient from './HeroSection.client'
 import { headers } from 'next/headers'
+import { Sport as PayloadSport } from '@payload-types'
 
 interface HeroSectionProps {
   hero: Home['hero']
+  sports: PayloadSport[]
 }
 
-export default async function HeroSection({ hero }: HeroSectionProps) {
+export default async function HeroSection({ hero, sports }: HeroSectionProps) {
   const t = await getTranslations('home')
   const nextGame = await getNextGame()
   const headersList = await headers()
@@ -35,9 +37,7 @@ export default async function HeroSection({ hero }: HeroSectionProps) {
             <span className="text-[#1BA781]">{hero.subtitle}</span>
           </h1>
 
-          <p className="max-w-lg">{hero.description}</p>
-
-          <HeroSectionClient ip={ip} />
+          <HeroSectionClient ip={ip} description={hero.description} sports={sports} />
 
           {nextGame && (
             <p className="max-w-lg">

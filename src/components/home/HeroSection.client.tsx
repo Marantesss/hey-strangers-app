@@ -6,12 +6,16 @@ import { useRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import { useGeolocationCity } from '@/domains/cities/shared/hooks/useGeolocationCity'
 import { useState } from 'react'
+import SportCycle from '../common/SportCycle'
+import { Sport as PayloadSport } from '@payload-types'
 
 interface HeroSectionClientProps {
   ip?: string
+  description: string
+  sports: PayloadSport[]
 }
 
-export default function HeroSectionClient({ ip }: HeroSectionClientProps) {
+export default function HeroSectionClient({ ip, description, sports }: HeroSectionClientProps) {
   const t = useTranslations('home')
   const router = useRouter()
   const { defaultCity } = useGeolocationCity(ip)
@@ -22,12 +26,21 @@ export default function HeroSectionClient({ ip }: HeroSectionClientProps) {
     router.push(`/sign-up?location=${city.name}`)
   }
 
+  const parts = description.split('<sports>')
+
   return (
-    <SelectCity
-      onCityChange={onCityChange}
-      placeholder={t('select-city.placeholder')}
-      value={selectedCity?.id ?? defaultCity?.id}
-      defaultValue={defaultCity?.id}
-    />
+    <>
+      <p className="max-w-lg">
+        {parts[0]}
+        <SportCycle sports={sports} />
+        {parts[1]}
+      </p>
+      <SelectCity
+        onCityChange={onCityChange}
+        placeholder={t('select-city.placeholder')}
+        value={selectedCity?.id ?? defaultCity?.id}
+        defaultValue={defaultCity?.id}
+      />
+    </>
   )
 }

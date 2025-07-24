@@ -15,6 +15,7 @@ import Footer from '@/components/home/Footer'
 import { generateMetaForPage } from '@/lib/metadata'
 import { Metadata } from 'next'
 import { getCachedHome } from '@/domains/home/get-home-data.service'
+import { getCachedSports } from '@/domains/sports/get-sports-data.service'
 
 // Option 1: Force dynamic rendering
 // export const dynamic = 'force-dynamic'
@@ -31,11 +32,11 @@ type Args = {
 export default async function HomePage({ params }: Args) {
   const { locale = 'en' } = await params
 
-  const home = await getCachedHome(locale)
+  const [home, sports] = await Promise.all([getCachedHome(locale), getCachedSports(locale)])
 
   return (
     <main>
-      <HeroSection hero={home.hero} />
+      <HeroSection hero={home.hero} sports={sports} />
       <NextGamesSection nextGames={home.nextGames} />
       <HowItWorksSection howItWorks={home.howItWorks} />
       <StatsSection stats={home.stats} />
