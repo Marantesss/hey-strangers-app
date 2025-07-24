@@ -107,7 +107,7 @@ const seed = async () => {
   await seedFieldAmenities(payload)
 
   // users
-  // await seedAdmins(payload)
+  await seedAdmins(payload)
   await seedUsers(payload)
 
   // "main" data
