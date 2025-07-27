@@ -708,6 +708,7 @@ export interface Home {
   };
   nextGames: {
     title: string;
+    ctaLabel: string;
     games: {
       emoji: string;
       sport: string;
@@ -1048,6 +1049,7 @@ export interface HomeSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
+        ctaLabel?: T;
         games?:
           | T
           | {

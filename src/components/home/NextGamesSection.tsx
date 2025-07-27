@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { Home, Media } from '@/payload-types'
+import { Button } from '../ui/button'
+import Link from 'next/link'
 
 interface NextGamesSectionProps {
   nextGames: Home['nextGames']
@@ -81,6 +83,11 @@ export default function NextGamesSection({ nextGames }: NextGamesSectionProps) {
             )
           })}
         </div>
+      </div>
+      <div className="text-center">
+        <Button asChild>
+          <Link href="/sign-up">{nextGames.ctaLabel}</Link>
+        </Button>
       </div>
     </section>
   )

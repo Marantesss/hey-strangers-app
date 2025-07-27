@@ -9,7 +9,7 @@ interface CTASectionProps {
 
 export default function CTASection({ cta }: CTASectionProps) {
   return (
-    <section className="md:container pb-20 md:pt-20">
+    <section className="md:container md:pb-20 md:pt-20">
       <div className="bg-[#E3FFCD] md:rounded-3xl p-8 md:p-12 flex flex-col md:flex-row justify-between gap-12">
         {/* Left Side */}
         <div className="flex flex-col items-center md:items-start gap-4 justify-center">

@@ -24,7 +24,7 @@ export default function StrangersSection({ strangers }: StrangersSectionProps) {
       : strangers.strangers.filter((stranger) => stranger.sport === selectedSport)
 
   return (
-    <section className="container space-y-12 py-20">
+    <section className="container space-y-12 py-12 md:py-20">
       <h2 className="text-4xl font-bold text-center">{strangers.title}</h2>
 
       <div className="flex justify-center gap-4">

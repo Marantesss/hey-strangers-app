@@ -15,14 +15,12 @@ const OTPInput = React.forwardRef<HTMLInputElement, OTPInputProps>(
     const containerRef = React.useRef<HTMLDivElement>(null)
     const hiddenInputRef = React.useRef<HTMLInputElement>(null)
 
-    // Handle input change
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-      const newValue = e.target.value
-      if (newValue.length > 1) {
-        // Handle paste event
-        const pasteValue = newValue.slice(0, length)
+    // Handle paste event
+    const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+      e.preventDefault()
+      const pasteValue = e.clipboardData.getData('text').slice(0, length)
+      if (pasteValue.length > 0) {
         const newOtpValue = pasteValue.padEnd(length, '').slice(0, length)
-
         setValue(newOtpValue)
 
         // Fill all inputs with pasted value
@@ -40,24 +38,29 @@ const OTPInput = React.forwardRef<HTMLInputElement, OTPInputProps>(
         if (pasteValue.length >= length && onComplete) {
           onComplete(newOtpValue)
         }
-      } else {
-        // Handle single character input
-        const digit = newValue.slice(-1)
-        const newOtpValue = value.split('')
-        newOtpValue[index] = digit
-        const updatedValue = newOtpValue.join('')
+      }
+    }
 
-        setValue(updatedValue)
+    // Handle input change
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+      const newValue = e.target.value
 
-        // Move focus to the next input
-        if (digit && index < length - 1) {
-          inputRefs.current[index + 1]?.focus()
-        }
+      // Handle single character input
+      const digit = newValue.slice(-1)
+      const newOtpValue = value.split('')
+      newOtpValue[index] = digit
+      const updatedValue = newOtpValue.join('')
 
-        // Call onComplete if the OTP is filled
-        if (updatedValue.length === length && onComplete) {
-          onComplete(updatedValue)
-        }
+      setValue(updatedValue)
+
+      // Move focus to the next input
+      if (digit && index < length - 1) {
+        inputRefs.current[index + 1]?.focus()
+      }
+
+      // Call onComplete if the OTP is filled
+      if (updatedValue.length === length && onComplete) {
+        onComplete(updatedValue)
       }
     }
 
@@ -140,7 +143,7 @@ const OTPInput = React.forwardRef<HTMLInputElement, OTPInputProps>(
               ref={(el) => {
                 inputRefs.current[index] = el
               }}
-              type="text"
+              type="tel"
               inputMode="numeric"
               pattern="[0-9]*"
               maxLength={1}
@@ -150,6 +153,7 @@ const OTPInput = React.forwardRef<HTMLInputElement, OTPInputProps>(
               )}
               onChange={(e) => handleChange(e, index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
+              onPaste={handlePaste}
               autoComplete="one-time-code"
               aria-label={`Digite ${index + 1} de ${length}`}
             />

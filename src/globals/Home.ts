@@ -80,6 +80,12 @@ export const Home: GlobalConfig = {
               localized: true,
             },
             {
+              name: 'ctaLabel',
+              type: 'text',
+              required: true,
+              localized: true,
+            },
+            {
               name: 'games',
               type: 'array',
               required: true,

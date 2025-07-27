@@ -15,8 +15,9 @@ const jost = Jost({ subsets: ['latin'] })
 
 export default async function AuthLayout({
   children,
-  params: { locale },
+  params,
 }: PropsWithChildren<{ params: { locale: TypedLocale } }>) {
+  const { locale } = params
   const [quiz, payload, user, t] = await Promise.all([
     getCachedQuiz(locale),
     getPayload({ config }),

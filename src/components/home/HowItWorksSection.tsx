@@ -11,7 +11,7 @@ export default async function HowItWorksSection({ howItWorks }: HowItWorksSectio
   return (
     <section className="container space-y-20 py-20">
       <div className="text-center space-y-4">
-        <h2 className="text-2xl font-bold">{howItWorks.title}</h2>
+        <h2 className="text-3xl font-bold">{howItWorks.title}</h2>
         <p className="text-muted-foreground">{howItWorks.subtitle}</p>
       </div>
 
@@ -26,7 +26,7 @@ export default async function HowItWorksSection({ howItWorks }: HowItWorksSectio
       </div>
 
       <div className="flex justify-center">
-        <Button asChild className="bg-[#E3FFCD] text-primary">
+        <Button asChild className="bg-[#E3FFCD] text-primary hover:text-white">
           <Link href="/sign-up">{howItWorks.buttonLabel}</Link>
         </Button>
       </div>

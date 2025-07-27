@@ -56,7 +56,7 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
     <section className="bg-[#F5F7F9] py-20">
       <div className="space-y-6">
         <div className="container">
-          <h2 className="text-5xl font-bold text-center">{testimonials.title}</h2>
+          <h2 className="text-3xl lg:text-5xl font-bold text-center">{testimonials.title}</h2>
         </div>
         <div className="flex justify-center">
           <div
