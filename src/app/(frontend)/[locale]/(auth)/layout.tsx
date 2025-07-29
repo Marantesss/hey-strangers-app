@@ -17,7 +17,7 @@ export default async function AuthLayout({
   children,
   params,
 }: PropsWithChildren<{ params: { locale: TypedLocale } }>) {
-  const { locale } = params
+  const { locale } = await params
   const [quiz, payload, user, t] = await Promise.all([
     getCachedQuiz(locale),
     getPayload({ config }),

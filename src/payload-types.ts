@@ -87,6 +87,7 @@ export interface Config {
   collectionsJoins: {
     users: {
       registrations: 'registrations';
+      invites: 'invites';
     };
     fields: {
       games: 'games';
@@ -248,6 +249,11 @@ export interface User {
     | null;
   registrations?: {
     docs?: (string | Registration)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  invites?: {
+    docs?: (string | Invite)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
@@ -551,6 +557,7 @@ export interface UsersSelect<T extends boolean = true> {
   city?: T;
   quizAnswers?: T;
   registrations?: T;
+  invites?: T;
   updatedAt?: T;
   createdAt?: T;
 }

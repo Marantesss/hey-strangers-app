@@ -11,6 +11,14 @@ export const Users: CollectionConfig = {
   slug: 'users',
   auth: {
     disableLocalStrategy: true,
+    // Configurações explícitas de cookies para resolver problemas de autenticação
+    cookies: {
+      secure: process.env.NODE_ENV === 'production', // HTTPS apenas em produção
+      sameSite: 'Lax', // Permite cookies cross-origin necessários
+      domain: undefined, // Usar domínio atual (não definir domínio específico)
+    },
+    // Tempo de expiração do token (padrão: 1 semana)
+    tokenExpiration: 604800, // 7 dias em segundos
   },
   access: {
     read: isAuthenticated(),
@@ -103,12 +111,17 @@ export const Users: CollectionConfig = {
       type: 'join',
       collection: 'registrations',
       on: 'user',
-      hasMany: true,
+    },
+    {
+      name: 'invites',
+      type: 'join',
+      collection: 'invites',
+      on: 'user',
     },
   ],
+  endpoints: [getPaymentMethodsEndpoint],
   hooks: {
     afterChange: [createStripeCustomer, updateStripeCustomer],
     afterDelete: [deleteStripeCustomer],
   },
-  endpoints: [getPaymentMethodsEndpoint],
 }
