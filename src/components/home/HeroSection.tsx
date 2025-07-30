@@ -1,29 +1,31 @@
 import Image from 'next/image'
 import { Home, Media } from '@/payload-types'
 import { Button } from '../ui/button'
-import { getNextGame } from '@/domains/games/shared/GameService'
 import Countdown from '../common/Countdown'
-import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import Header from './Header'
 import HeroSectionClient from './HeroSection.client'
-import { headers } from 'next/headers'
 import { Sport as PayloadSport } from '@payload-types'
+import { GameModel } from '@/domains/games/shared/models/Game.model'
+import { CityModel } from '@/domains/cities/shared/models/City.model'
 
 interface HeroSectionProps {
   hero: Home['hero']
   sports: PayloadSport[]
+  translations: any // Type from getTranslations
+  nextGame: GameModel | null
+  cities: CityModel[]
+  defaultCity: CityModel | null
 }
 
-export default async function HeroSection({ hero, sports }: HeroSectionProps) {
-  const t = await getTranslations('home')
-  const nextGame = await getNextGame()
-  const headersList = await headers()
-  const ip =
-    headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    headersList.get('x-real-ip') ||
-    undefined
-
+export default function HeroSection({
+  hero,
+  sports,
+  translations,
+  nextGame,
+  cities,
+  defaultCity,
+}: HeroSectionProps) {
   return (
     <section className="bg-[#F5F7F9]">
       <div className="min-h-screen container max-md:px-6 py-6 lg:py-8 flex flex-col items-center justify-between gap-8">
@@ -37,11 +39,17 @@ export default async function HeroSection({ hero, sports }: HeroSectionProps) {
             <span className="text-[#1BA781]">{hero.subtitle}</span>
           </h1>
 
-          <HeroSectionClient ip={ip} description={hero.description} sports={sports} />
+          <HeroSectionClient
+            description={hero.description}
+            sports={sports}
+            cities={cities}
+            defaultCity={defaultCity}
+          />
 
           {nextGame && (
             <p className="max-w-lg">
-              {t('next-match-in')}: <Countdown className="font-bold" date={nextGame.startsAt} />
+              {translations('next-match-in')}:{' '}
+              <Countdown className="font-bold" date={nextGame.startsAt} />
             </p>
           )}
 
@@ -62,6 +70,8 @@ export default async function HeroSection({ hero, sports }: HeroSectionProps) {
                 width={100}
                 height={32}
                 className="w-16 md:w-[100px]"
+                unoptimized
+                priority
               />
             )
           })}

@@ -16,6 +16,12 @@ import { generateMetaForPage } from '@/lib/metadata'
 import { Metadata } from 'next'
 import { getCachedHome } from '@/domains/home/get-home-data.service'
 import { getCachedSports } from '@/domains/sports/get-sports-data.service'
+import { getCachedNextGame } from '@/domains/games/get-next-game/get-next-game.service'
+import { getCachedTranslations } from '@/domains/translations/get-cached-translations.service'
+import { getCachedCities } from '@/domains/cities/get-cities-data.service'
+import { getCachedDefaultCity } from '@/domains/cities/get-default-city.service'
+import { getCachedFooter } from '@/domains/footer/get-footer-data.service'
+import { headers } from 'next/headers'
 
 // Option 1: Force dynamic rendering
 // export const dynamic = 'force-dynamic'
@@ -32,11 +38,34 @@ type Args = {
 export default async function HomePage({ params }: Args) {
   const { locale = 'en' } = await params
 
-  const [home, sports] = await Promise.all([getCachedHome(locale), getCachedSports(locale)])
+  // First get headers to extract IP
+  const headersList = await headers()
+  const ip =
+    headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    headersList.get('x-real-ip') ||
+    undefined
+
+  // Execute all data fetching in parallel with cache (including IP-based city detection)
+  const [home, sports, translations, nextGame, cities, defaultCity, footer] = await Promise.all([
+    getCachedHome(locale),
+    getCachedSports(locale),
+    getCachedTranslations('home'),
+    getCachedNextGame(),
+    getCachedCities(locale),
+    getCachedDefaultCity(ip, locale),
+    getCachedFooter(locale),
+  ])
 
   return (
     <main>
-      <HeroSection hero={home.hero} sports={sports} />
+      <HeroSection
+        hero={home.hero}
+        sports={sports}
+        translations={translations}
+        nextGame={nextGame}
+        cities={cities}
+        defaultCity={defaultCity}
+      />
       <NextGamesSection nextGames={home.nextGames} />
       <HowItWorksSection howItWorks={home.howItWorks} />
       <StatsSection stats={home.stats} />
@@ -47,7 +76,7 @@ export default async function HomePage({ params }: Args) {
       <NumbersSection numbers={home.numbers} />
       <FAQSection faq={home.faq} />
       <CTA2Section cta2={home.cta2} />
-      <Footer locale={locale} />
+      <Footer footer={footer} />
     </main>
   )
 }

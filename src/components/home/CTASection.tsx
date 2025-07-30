@@ -59,6 +59,8 @@ export default function CTASection({ cta }: CTASectionProps) {
                   alt={(sport.image as Media).alt!}
                   fill
                   className="object-cover"
+                  unoptimized
+                  priority={false}
                 />
                 {sport.selected && (
                   <div className="absolute top-2 right-2">

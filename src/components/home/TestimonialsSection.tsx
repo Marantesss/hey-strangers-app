@@ -78,6 +78,8 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
                     width={32}
                     height={32}
                     className="rounded-full aspect-square object-cover"
+                    unoptimized
+                    priority={false}
                   />
                   <span className="font-semibold">{testimonial.author}</span>
                 </div>

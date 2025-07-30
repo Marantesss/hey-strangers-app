@@ -70,7 +70,14 @@ export default function NextGamesSection({ nextGames }: NextGamesSectionProps) {
                 key={game.id}
                 className="relative h-80 w-72 flex-none snap-center rounded-2xl overflow-hidden"
               >
-                <Image src={media.url!} alt={media.alt!} fill className="object-cover" />
+                <Image
+                  src={media.url!}
+                  alt={media.alt!}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                  priority={false}
+                />
                 <div className="absolute text-sm inset-0 bg-gradient-to-t from-black/80 to-transparent p-6 flex flex-col justify-end gap-2 text-white">
                   <h3>{game.sport}</h3>
                   <p className="font-bold">

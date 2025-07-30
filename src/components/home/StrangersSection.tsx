@@ -56,6 +56,8 @@ export default function StrangersSection({ strangers }: StrangersSectionProps) {
                   width={48}
                   height={48}
                   className="rounded-full object-cover aspect-square"
+                  unoptimized
+                  priority={false}
                 />
               </div>
               <div>

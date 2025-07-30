@@ -24,6 +24,8 @@ export default function WhenAndWhereSection({ whenAndWhere }: WhenAndWhereSectio
               alt={(whenAndWhere.image as Media).alt!}
               fill
               className="object-cover"
+              unoptimized
+              priority={false}
             />
           </div>
 

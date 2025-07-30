@@ -29,6 +29,8 @@ export default function StatsSection({ stats }: StatsSectionProps) {
             alt={(stats.image as Media).alt!}
             fill
             className="object-cover"
+            unoptimized
+            priority={false}
           />
         </div>
       </div>

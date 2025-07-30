@@ -18,7 +18,14 @@ export default async function HowItWorksSection({ howItWorks }: HowItWorksSectio
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
         {howItWorks.steps.map((item, index) => (
           <div key={index} className="flex flex-col items-center md:items-start gap-4">
-            <Image src={(item.icon as Media).url!} alt={item.title} width={32} height={32} />
+            <Image
+              src={(item.icon as Media).url!}
+              alt={item.title}
+              width={32}
+              height={32}
+              unoptimized
+              priority={false}
+            />
             <h3 className="font-bold">{item.title}</h3>
             <p className="text-muted-foreground">{item.description}</p>
           </div>

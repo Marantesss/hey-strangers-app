@@ -1,25 +1,36 @@
 'use client'
 
-import SelectCity from '@/domains/cities/shared/components/SelectCity'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { CityModel } from '@/domains/cities/shared/models/City.model'
 import { useRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
-import { useGeolocationCity } from '@/domains/cities/shared/hooks/useGeolocationCity'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import SportCycle from '../common/SportCycle'
 import { Sport as PayloadSport } from '@payload-types'
 
 interface HeroSectionClientProps {
-  ip?: string
   description: string
   sports: PayloadSport[]
+  cities: CityModel[]
+  defaultCity: CityModel | null
 }
 
-export default function HeroSectionClient({ ip, description, sports }: HeroSectionClientProps) {
+export default function HeroSectionClient({
+  description,
+  sports,
+  cities,
+  defaultCity,
+}: HeroSectionClientProps) {
   const t = useTranslations('home')
   const router = useRouter()
-  const { defaultCity } = useGeolocationCity(ip)
   const [selectedCity, setSelectedCity] = useState<CityModel | null>(defaultCity)
+
+  // Update selectedCity when defaultCity changes (happens on hydration)
+  useEffect(() => {
+    if (defaultCity && !selectedCity) {
+      setSelectedCity(defaultCity)
+    }
+  }, [defaultCity, selectedCity])
 
   const onCityChange = (city: CityModel) => {
     setSelectedCity(city)
@@ -35,12 +46,24 @@ export default function HeroSectionClient({ ip, description, sports }: HeroSecti
         <SportCycle sports={sports} />
         {parts[1]}
       </p>
-      <SelectCity
-        onCityChange={onCityChange}
-        placeholder={t('select-city.placeholder')}
+      <Select
         value={selectedCity?.id ?? defaultCity?.id}
-        defaultValue={defaultCity?.id}
-      />
+        onValueChange={(cityId) => {
+          const city = cities.find((c) => c.id === cityId)
+          if (city) onCityChange(city)
+        }}
+      >
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder={t('select-city.placeholder')} />
+        </SelectTrigger>
+        <SelectContent>
+          {cities.map((city) => (
+            <SelectItem key={city.id} value={city.id}>
+              {city.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </>
   )
 }
