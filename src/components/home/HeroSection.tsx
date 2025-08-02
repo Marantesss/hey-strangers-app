@@ -8,6 +8,7 @@ import HeroSectionClient from './HeroSection.client'
 import { Sport as PayloadSport } from '@payload-types'
 import { GameModel } from '@/domains/games/shared/models/Game.model'
 import { CityModel } from '@/domains/cities/shared/models/City.model'
+import { getTranslations } from 'next-intl/server'
 
 interface HeroSectionProps {
   hero: Home['hero']
@@ -18,7 +19,7 @@ interface HeroSectionProps {
   defaultCity: CityModel | null
 }
 
-export default function HeroSection({
+export default async function HeroSection({
   hero,
   sports,
   translations,
@@ -26,6 +27,8 @@ export default function HeroSection({
   cities,
   defaultCity,
 }: HeroSectionProps) {
+  const t = await getTranslations('home')
+
   return (
     <section className="bg-[#F5F7F9]">
       <div className="min-h-screen container max-md:px-6 py-6 lg:py-8 flex flex-col items-center justify-between gap-8">
@@ -48,8 +51,7 @@ export default function HeroSection({
 
           {nextGame && (
             <p className="max-w-lg">
-              {translations('next-match-in')}:{' '}
-              <Countdown className="font-bold" date={nextGame.startsAt} />
+              {t('next-match-in')}: <Countdown className="font-bold" date={nextGame.startsAt} />
             </p>
           )}
 

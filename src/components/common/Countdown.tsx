@@ -18,7 +18,8 @@ const Countdown: React.FC<CountdownProps> = ({ date, ...props }) => {
 
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const difference = date.getTime() - new Date().getTime()
+      const targetDate = new Date(date)
+      const difference = targetDate.getTime() - new Date().getTime()
 
       if (difference > 0) {
         setTimeLeft({
