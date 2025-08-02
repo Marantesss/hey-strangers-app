@@ -107,7 +107,9 @@ const Quiz: React.FC = () => {
           <h2 className="text-3xl font-bold text-center">{t('results', { count: '+10' })}</h2>
 
           <div className="space-y-4">
-            {dummyGames?.map((game) => <GameCard key={game.id} game={game} simple hidePrice />)}
+            {dummyGames?.map((game) => (
+              <GameCard key={game.id} game={game} simple hidePrice disabled />
+            ))}
           </div>
 
           <SignupForm />
